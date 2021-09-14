@@ -34,11 +34,11 @@ class Employee(Person) :
     def showInfo(self) :
         return super().showInfo() + f' and works in {self.position} with {self.salary}$.\n'
 # making objects
-p1 = Person('sarvin','nami',19,'female')
+p1 = Person(input('please enter your name here : '),input('please enter your family name here : '),input('please enter your age here : '),input('please enter your gender here : '))
 print(p1.showInfo() )
-t1 = Teacher('sarvin','nami',19,1818,'female')
+t1 = Teacher(input('please enter your name here : '),input('please enter your family name here : '),input('please enter your age here : '),input('please enter your teaching code here : '),input('please enter your gender here : '))
 print(t1.showInfo() )
-s1 = Student('sarvin','nami',19,1818,'female','ce')
+s1 = Student(input('please enter your name here : '),input('please enter your family name here : '),input('please enter your age here : '),input('please enter your education code here : '),input('please enter your gender here : '),input('please enter your major here : '))
 print(s1.showInfo() )
-e1 = Employee('sarvin','nami',19,'female','student',19)
+e1 = Employee(input('please enter your name here : '),input('please enter your family name here : '),input('please enter your age here : '),input('please enter your gender here : '),input('please enter your job position here : '),input('please enter your salary average here : '))
 print(e1.showInfo() )
