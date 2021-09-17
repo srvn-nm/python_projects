@@ -24,7 +24,7 @@ class Supplier(Person) :
         self.productNumbers = productNumbers
         self.products = []
         for i in range(int(self.productNumbers)):
-            self.products.append(input(f'please enter new product number {i + 1} here : '))
+            self.products.append(input(f'Please enter new product number {i + 1} here : '))
     def showInfo(self) : 
         return super().showInfo() + f' provide {self.products} from company {self.company} with factor number {self.factorNumber}.\n'
 class Owner(Person) : 
@@ -33,14 +33,14 @@ class Owner(Person) :
         self.brachName = brachName
         self.rent = rent
     def showInfo(self) : 
-        return super().showInfo() + f' is the owner of {self.brachName} which we give them {self.rent} as our rent monthly.\n'
+        return super().showInfo() + f' is the owner of {self.brachName} which we give them {self.rent}$ as our rent monthly.\n'
 class Branch :
     def __init__(self):
         self.supplier = Supplier(input('Supplier name '),input('Supplier family '),input('Supplier phone number '),input('Supplier gender '),input('Supplier company '),input('Supplier factor number '),input('Supplier product number '))
         print ('\n')
         self.costumer = Costumer(input('Costumer name '),input('Costumer family '),input('Costumer phone number '),input('Costumer gender '),input('Costumer type of order '))
         print ('\n')
-        self.costumer = Owner(input('Owner name '),input('Owner family '),input('Owner phone number '),input('Owner gender '),input('Owner name of branch '),input('Owner rate of rent '))
+        self.owner = Owner(input('Owner name '),input('Owner family '),input('Owner phone number '),input('Owner gender '),input('Owner name of branch '),input('Owner rate of rent '))
 branch1 = Branch()
 branch1.costumer.showInfo()
 branch1.supplier.showInfo()
