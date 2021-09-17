@@ -6,9 +6,9 @@ class Person :
         self.gender = gender
     def showInfo(self) :
         if self.gender == 'male' or self.gender == 'Male' or self.gender == 'm' or self.gender == 'M':
-            return '\nMr.' + self.name + self.family + ' has ' +str(self.phoneNumber) + " as their phone number."
+            return '\nMr.' + self.name + self.family + ' has ' +str(self.phoneNumber) + " as their phone number"
         elif self.gender == 'female' or self.gender == 'Female' or self.gender == 'f' or self.gender == 'F' : 
-            return '\nMiss.' + self.name + self.family + ' has ' +str(self.phoneNumber) + " as their phone number."
+            return '\nMiss.' + self.name + self.family + ' has ' +str(self.phoneNumber) + " as their phone number"
 class Costumer(Person) : 
     def __init__(self, name, family, phoneNumber, gender, typeOfOrder) : 
         super().__init__(name, family, phoneNumber, gender)
@@ -40,9 +40,9 @@ class Branch :
         self.costumer = []
         self.owner = []
 branch1 = Branch()
-choice = int
+choice = str
 while choice != 'Exit' or choice != '7' or choice != 'exit' :
-    print('1) add new supplier\n2)show any supplier info\n3)add new costumer\n4)show any costumer info\n5)add mew owner\n6)show any owner info\n7)Exit\n')
+    print('\n1) add new supplier\n2)show any supplier info\n3)add new costumer\n4)show any costumer info\n5)add mew owner\n6)show any owner info\n7)Exit\n')
     choice = input('Press your choice here : ')
     if choice == '3' :
         branch1.costumer.append(Costumer(input('Costumer name '),input('Costumer family '),input('Costumer phone number '),input('Costumer gender '),input('Costumer type of order ')))
@@ -59,6 +59,5 @@ while choice != 'Exit' or choice != '7' or choice != 'exit' :
     elif choice == '6' :
         for i in range(len(branch1.owner)):
             print(branch1.owner[i].showInfo())
-    elif choice == '7' :
-        print('\nIt was realy nice to have you here. ^-^\n')
-        break
+else :
+    print('\nIt was realy nice to have you here. ^-^\n')
