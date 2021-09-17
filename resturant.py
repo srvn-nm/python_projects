@@ -36,12 +36,29 @@ class Owner(Person) :
         return super().showInfo() + f' is the owner of {self.brachName} which we give them {self.rent}$ as our rent monthly.\n'
 class Branch :
     def __init__(self):
-        self.supplier = Supplier(input('Supplier name '),input('Supplier family '),input('Supplier phone number '),input('Supplier gender '),input('Supplier company '),input('Supplier factor number '),input('Supplier product number '))
-        print ('\n')
-        self.costumer = Costumer(input('Costumer name '),input('Costumer family '),input('Costumer phone number '),input('Costumer gender '),input('Costumer type of order '))
-        print ('\n')
-        self.owner = Owner(input('Owner name '),input('Owner family '),input('Owner phone number '),input('Owner gender '),input('Owner name of branch '),input('Owner rate of rent '))
+        self.supplier = []
+        self.costumer = []
+        self.owner = []
 branch1 = Branch()
-print(branch1.costumer.showInfo())
-print(branch1.supplier.showInfo())
-print(branch1.owner.showInfo())
+choice = int
+while choice != 'Exit' or choice != '7' or choice != 'exit' :
+    print('1) add new supplier\n2)show any supplier info\n3)add new costumer\n4)show any costumer info\n5)add mew owner\n6)show any owner info\n7)Exit\n')
+    choice = input('Press your choice here : ')
+    if choice == '3' :
+        branch1.costumer.append(Costumer(input('Costumer name '),input('Costumer family '),input('Costumer phone number '),input('Costumer gender '),input('Costumer type of order ')))
+    elif choice == '1' :
+        branch1.supplier.append(Supplier(input('Supplier name '),input('Supplier family '),input('Supplier phone number '),input('Supplier gender '),input('Supplier company '),input('Supplier factor number '),input('Supplier product number ')))
+    elif choice == '2' :
+        for i in range(len(branch1.supplier)):
+            print(branch1.supplier[i].showInfo())
+    elif choice == '4' :
+        for i in range(len(branch1.costumer)):
+            print(branch1.costumer[i].showInfo())
+    elif choice == '5' :
+        branch1.owner.append(Owner(input('Owner name '),input('Owner family '),input('Owner phone number '),input('Owner gender '),input('Owner name of branch '),input('Owner rate of rent ')))
+    elif choice == '6' :
+        for i in range(len(branch1.owner)):
+            print(branch1.owner[i].showInfo())
+    elif choice == '7' :
+        print('\nIt was realy nice to have you here. ^-^\n')
+        break
