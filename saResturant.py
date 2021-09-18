@@ -72,7 +72,7 @@ class Branch(Resturant) :
         self.score = sale / (supplimentaryCost + rent + sale) *100
         Resturant.branch.append(self)
         Resturant.branch.sort()
-        self.rank = Resturant.branch.index(self)
+        self.rank = Resturant.branch.index(self) + 1
     def showInfo(self) : 
         print("----------------------------------")
         print(f'Branch name : {self.name}')
