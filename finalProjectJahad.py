@@ -37,7 +37,7 @@ class Sponsors(Person) :
             self.balance = balance
     def showInfo(self) :
        return super().showInfo() + f' is the sponsor of {self.loaner} with the balance of {self.balance}$.\n'
-class loaners(Person) : 
+class Loaners(Person) : 
     def __init__(self, name, family, phoneNumber, gender, ID, loanAmount, installmentPeriod, balance):
         super().__init__(name, family, phoneNumber, gender, ID)
         self.loanAmount = loanAmount
@@ -55,3 +55,30 @@ class loaners(Person) :
             print('You don\'t have enough money to pay it back!\n')
     def showInfo(self) : 
         return super().showInfo() + f' has got {self.loanAmount}$ loan with {self.installmentPeriod} months installment period which {self.payment} months remains.\n' + 'There are their sponsors:\n' + s1.showInfo() + '\n' + s2.showInfo
+class AppInstallers(Person):
+    def __init__(self, name, family, phoneNumber, gender, ID, usage) :
+        super().__init__(name, family, phoneNumber, gender, ID, usage)
+        self.usage = usage
+        print(f'Congratulations! You have successfully insalled our app for {self.usage}.\n' + 'You can now install your app now.')
+    def showInfo(self):
+        return super().showInfo() + f' has bank application for {self.usage}.\n' + 'You can now install your app now.'
+choice = str
+p = Person(input('Please enter your name here : '),input('Please enter your family name here : '),input('Please enter your phone number here : '),input('Please enter your gender here m or f : '), int(input('Please enter your ID number here : ')))
+def menu():
+    print('\n1)Create a new account\n2)show the new account information\n3)loan\n4)show the loan information\n5)install the bank application\n6)show the bank application information\n7)pay loan bill\n8)exit\n')
+while choice != 'Exit' or choice !='exit' or choice != '8' :
+    if choice == '1' : 
+        c = NewAccountCreators(p.name,p.family,p.phoneNumber,p.gender,p.ID,int(input('Please type the amount of money you want to add to you new account here : ')))
+    if choice == '2' :
+        print(c.showInfo())
+    if choice == '3' :
+        l = Loaners(p.name,p.family,p.phoneNumber,p.gender,p.ID,int(input('Please type the amount of money you want to loan her : ')),int(input('Please type the installment Period of the loan here : ')), int(input('Please type your bank account balance here : ')))
+    if choice  == '4' :
+        print(l.showInfo())
+    if choice == '5' :
+        a = AppInstallers(p.name,p.family,p.phoneNumber,p.gender,p.ID,input('Please type the reason you want to instaal our bank application here : '))
+    if choice == '6' :
+        print(a.showInfo())
+    if choice == '7' : 
+        l.loanPayments()
+else : print(f'\nGoodbye {p.name} {p.family}. Have a nice day! ^-^\n') 
