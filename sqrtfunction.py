@@ -1,4 +1,3 @@
-import sys
 def sqrtfunction(num):
     guess = round(num / (num-1) , 10)
     i = 0
@@ -11,5 +10,4 @@ def sqrtfunction(num):
         else :
             guess = newGuess
     return guess
-# print('\nthe resault of the sqrtfunction is : ' + str(sqrtfunction(int(input('enter the number you want to see its square value here : ')))) + '\n')
-# print(sys.path)
+print(sqrtfunction(int(input('Please enter ther number you want to se it\'s square here : '))))
