@@ -19,5 +19,6 @@
   "kite.developerMode": true,
   "kite.enableOptionalCompletionsTriggers": true,
   "cmake.ignoreKitEnv": true,
-  "kite.codefinder.enableLineDecoration": true
+  "kite.codefinder.enableLineDecoration": true,
+  "DockerRun.DisableDockerrc": true
 }
