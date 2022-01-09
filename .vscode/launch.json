@@ -12,11 +12,13 @@
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
       "request": "launch",
-      "args": [],
+      "args": [
+        ""
+      ],
       "stopAtEntry": false,
-      "cwd": "c:\\Users\\ASUS.PIESC\\Desktop\\python",
+      "cwd": "c:/Users/ASUS.PIESC/Desktop/python",
       "environment": [],
-      "program": "c:\\Users\\ASUS.PIESC\\Desktop\\python\\build\\Debug\\outDebug",
+      "program": "c:/Users/ASUS.PIESC/Desktop/python/build/Debug/outDebug",
       "internalConsoleOptions": "openOnSessionStart",
       "MIMode": "gdb",
       "miDebuggerPath": "C:\\MinGW\\bin\\gdb.exe",
