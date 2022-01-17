@@ -48,7 +48,7 @@ plt.show()
 
 
 plt.scatter(simpleRow.EngineSize, simpleRow.Cylinders , color='blue')
-plt.xlabel("Engine size")
+plt.xlabel("EngineSize")
 plt.ylabel("Cylinders")
 plt.show()
 
