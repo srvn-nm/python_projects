@@ -1,19 +1,25 @@
-def check_numbers(numbers,array_lenght):
-    danger_numbers = 0
-    index = 0
-    while(index < array_lenght):
-        for number in range(index+1,array_lenght):
-            if numbers[number] * 2 < numbers[index]:
-                danger_numbers -=-1
-        index -=-1
+def mergeSort(array,DangerNumber):
+    
+    if len(array) > 1:
+        
+        MiddleIndex = len(array)//2
+        firstSection = array[:MiddleIndex]
+        secondsection = array[MiddleIndex:]
 
-    print(danger_numbers,end="")
+        i = j  = 0
+        while i < MiddleIndex and j < MiddleIndex:
+            if firstSection[i] > 2*secondsection[j]:
+                dangarous += 1
+                j += 1
+            elif j == MiddleIndex - 1:
+                i += 1
+                j = 0
 
-
+        mergeSort(firstSection,DangerNumber)
+        mergeSort(secondsection,DangerNumber)
+         
+    return DangerNumber
 
 len_of_array = int(input())
-number_string_array = input()
-numbers_splited = map(int , number_string_array.replace(" ",""))
-
-numbers = list(numbers_splited)
-check_numbers(numbers,len_of_array)
+numbers = list(map(int , input().replace(" ","")))
+print(mergeSort(numbers,0))
