@@ -1,1 +1,1 @@
-square value here : ')))))
+print(mydb)
