@@ -3,7 +3,6 @@ import os
 from PIL import Image
 from matplotlib import pyplot as plt
 
-
 def get_input(file_name):
     img = Image.open(file_name)
     img = np.asarray(img)
@@ -98,19 +97,12 @@ def Filter(img, filter_matrix):
 
 
 def warpPerspective(img, transform_matrix, output_width, output_height):
-    """
-    TODO : find warp perspective of image_matrix and return it
-    :return a (width x height) warped image
-    """
-    pass
+    result = img.warpPerspective([(264,21),(594,180),(259,982),(623,906)], transform_matrix, (output_width, output_height))
 
 
 def grayScaledFilter(img):
-    """
-    TODO : Complete this part based on the description in the manual!
-    """
-    pass
-
+    img1 = img.convert("L")
+    img1.show()
 
 def crazyFilter(img):
     """
@@ -120,10 +112,9 @@ def crazyFilter(img):
 
 
 def scaleImg(img, scale_width, scale_height):
-    """
-    TODO : Complete this part based on the description in the manual!
-    """
-    pass
+    resized_image = img.resize(scale_width, scale_height)
+    resized_image.show()
+    
 
 
 def permuteFilter(img):
