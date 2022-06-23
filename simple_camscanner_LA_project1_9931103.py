@@ -106,6 +106,9 @@ def grayScaledFilter(img):
     return img1
 
 def crazyFilter(img):
+    green = np.copy(img)
+    green[:,:,1]=green[:,:,1]/2
+    green[:,:,2] , green[:,:,0]=green[:,:,0],green[:,:,0]
     avg = 0
     for pixel in img:
         pixel2 = pixel
@@ -139,26 +142,26 @@ if __name__ == "__main__":
 
     showImage(image_matrix, title="Input Image")
     
-    for pixel in image_matrix:
-        print(pixel.getgreensize())
-    # TODO : Find coordinates of four corners of your inner Image ( X,Y format)
-    #  Order of coordinates: Upper Left, Upper Right, Down Left, Down Right
-    # pts1 = np.float32([[264, 21], [594, 180], [259, 982], [623, 906]])
-    # pts2 = np.float32([[0, 0], [width, 0], [0, height], [width, height]])
-    # m = getPerspectiveTransform(pts1, pts2)
+    """
+    TODO : Find coordinates of four corners of your inner Image ( X,Y format)
+     Order of coordinates: Upper Left, Upper Right, Down Left, Down Right
+     """
+    pts1 = np.float32([[264, 21], [594, 180], [259, 982], [623, 906]])
+    pts2 = np.float32([[0, 0], [width, 0], [0, height], [width, height]])
+    m = getPerspectiveTransform(pts1, pts2)
 
-    # warpedImage = warpPerspective(image_matrix, m, width, height)
-    # showWarpPerspective(warpedImage)
+    warpedImage = warpPerspective(image_matrix, m, width, height)
+    showWarpPerspective(warpedImage)
 
-    # grayScalePic = grayScaledFilter(warpedImage)
-    # showImage(grayScalePic, title="Gray Scaled")
+    grayScalePic = grayScaledFilter(warpedImage)
+    showImage(grayScalePic, title="Gray Scaled")
 
-    # crazyImage, invertedCrazyImage = crazyFilter(warpedImage)
-    # showImage(crazyImage, title="Crazy Filter")
-    # showImage(invertedCrazyImage, title="Inverted Crazy Filter")
+    crazyImage, invertedCrazyImage = crazyFilter(warpedImage)
+    showImage(crazyImage, title="Crazy Filter")
+    showImage(invertedCrazyImage, title="Inverted Crazy Filter")
 
-    # scaledImage = scaleImg(warpedImage, 3, 4)
-    # showImage(scaledImage, title="Scaled Image")
+    scaledImage = scaleImg(warpedImage, 3, 4)
+    showImage(scaledImage, title="Scaled Image")
 
-    # permuteImage = permuteFilter(warpedImage)
-    # showImage(permuteImage, title="Permuted Image")
+    permuteImage = permuteFilter(warpedImage)
+    showImage(permuteImage, title="Permuted Image")
