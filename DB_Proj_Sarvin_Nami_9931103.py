@@ -7,4 +7,5 @@ db = mysql.connect(
 cursor = db.cursor()
 cursor.execute("CREATE DATABASE datacamp")
 
-cursor.execute("CREATE TABLE users (uname VARCHAR(255), ulname  VARCHAR(255), uID VARCHAR(255)), phone VARCHAR(255), email VARCHAR(255), upassword VARCHAR(255), useccheck VARCHAR(255), time VARCHAR(255), limited_login Int, limited_password Int")
+cursor.execute("CREATE TABLE users (uname VARCHAR(255), ulname  VARCHAR(255), uID Int, phone VARCHAR(255), email VARCHAR(255), upassword VARCHAR(255), useccheck VARCHAR(255), time VARCHAR(255), limited_login Int, limited_password Int")
+cursor.execute("CREATE TABLE friends (u1ID Int, u2ID Int, fID Int")
