@@ -12,13 +12,14 @@ db = mysql.connect(
 cursor = db.cursor()
 cursor.execute("CREATE DATABASE datacamp")
 
-cursor.execute("CREATE TABLE users (uname VARCHAR(255) not null, ulname  VARCHAR(255) not null, uID Int NOT NULL unique PRIMARY KEY, phone VARCHAR(255) not null unique, email VARCHAR(255) not null unique, upassword VARCHAR(255) not null, useccheck VARCHAR(255) not null unique, time VARCHAR(255) not null, limited_login Int default='0', limited_password Int default='0', login int default='0'")
+cursor.execute("CREATE TABLE users (uname VARCHAR(255) not null, ulname  VARCHAR(255) not null, uID Int NOT NULL unique PRIMARY KEY, phone VARCHAR(255) not null unique, email VARCHAR(255) not null unique, upassword VARCHAR(255) not null, useccheck VARCHAR(255) not null unique, time VARCHAR(255) not null, login int default='0'")
 cursor.execute("CREATE TABLE friends (u1ID Int, u2ID Int, fID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(u1ID, u2ID) REFERENCES Users(uID, uID)")
 cursor.execute("CREATE TABLE blocked (blockerID Int, blockedID Int, bID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, time VARCHAR(255), FOREIGN KEY(blockerID, blockedID) REFERENCES Users(uID, uID)")
 cursor.execute("CREATE TABLE request (u1ID Int, u2ID Int, fID Int, bID Int, friendship smallint, message smallint, block smallint, iID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(u1ID, u2ID) REFERENCES Users(uID, uID), FOREIGN KEY(fID) REFERENCES friends(fID), FOREIGN KEY(bID) REFERENCES blocked(bID)")
 cursor.execute("CREATE TABLE messages (sID Int, rID Int, time VARCHAR(255), text VARCHAR(255), seen smallint, like smallint, mID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(sID, rID) REFERENCES Users(uID, uID)")
-cursor.execute("CREATE TABLE log_login (uID Int, useccheck VARCHAR(255), loginAttempts Int, time VARCHAR(255), newPass VARCHAR(255), FOREIGN KEY(uID, useccheck) REFERENCES Users(uID, useccheck)")
-cursor.execute("CREATE TABLE log_wrongPassword (uID Int, useccheck VARCHAR(255), time VARCHAR(255), attempts Int, FOREIGN KEY(uID, useccheck) REFERENCES Users(uID, useccheck)")
+cursor.execute("CREATE TABLE log_login (uID Int, useccheck VARCHAR(255), loginAttempts Int default='0', time VARCHAR(255), newPass VARCHAR(255), FOREIGN KEY(uID, useccheck) REFERENCES Users(uID, useccheck)")
+cursor.execute("CREATE TABLE log_wrongPassword (uID Int, useccheck VARCHAR(255), time VARCHAR(255), attempts Int default='0', FOREIGN KEY(uID, useccheck) REFERENCES Users(uID, useccheck)")
+cursor.execute("CREATE TABLE limited_users (uID Int, time VARCHAR(255), FOREIGN KEY(uID) REFERENCES Users(uID)")
 
 def register(name, lname, ID, phoneNo, gmail, password):
     while not password.isalpha():
@@ -86,14 +87,18 @@ def passwordRecovery(username):
 
 def wrongPassword(username):
     print("invalid inputs for login attempt!")
-    temp = int(cursor.execute('SELECT loginAttempts FROM users WHERE uId = username'))
+    if int(cursor.execute('SELECT attempts FROM log_wrongPassword WHERE uId = username')) + 1 < 5 :
+        temp = int(cursor.execute('SELECT attempts FROM log_wrongPassword WHERE uId = username')) + 1
+        # not logging in any more
+    else: 
+        pass
     update_query = f"""
     UPDATE
     users
     SET
-        limited_login = (int(limited_login) + '1')
+        limited_login = {temp}
      WHERE
-        uId = {username} and limited_login < 5
+        uId = {username}
     """
     cursor.execute(update_query)
     db.commit()
@@ -112,6 +117,7 @@ def Login():
             menu()
         else:
             wrongPassword(username)
+
 def menu():
     pass
 
