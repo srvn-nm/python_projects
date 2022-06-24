@@ -17,29 +17,36 @@ cursor.execute("CREATE TABLE messages (sID Int, rID Int, time VARCHAR(255), text
 cursor.execute("CREATE TABLE log_login (uID Int, useccheck VARCHAR(255), loginAttempts Int, time VARCHAR(255), FOREIGN KEY(uID, useccheck) REFERENCES Users(uID, useccheck)")
 cursor.execute("CREATE TABLE log_passwordChange (uID Int, useccheck VARCHAR(255), time VARCHAR(255), newPass VARCHAR(255), FOREIGN KEY(uID, useccheck) REFERENCES Users(uID, useccheck)")
 
-def register(uname, ulname, uID, phone, email, password):
+def register(name, lname, ID, phoneNo, gmail, password):
     while not password.isalpha():
         print("Password should have alphabets, too!\ntry again:\n")
         password = input()
-    while phone.isalpha():
+    while phoneNo.isalpha():
         print("phone should not have alphabets!\ntry again:\n")
-        phone = input()
-    while uname.isnumeric():
+        phoneNo = input()
+    while name.isnumeric():
         print("Name should have alphabets!\ntry again:\n")
-        uname = input()
-    while ulname.isnumeric():
+        name = input()
+    while lname.isnumeric():
         print("Last name should have alphabets!\ntry again:\n")
-        ulname = input()
-    while email.isnumeric() or not email.endwith("@gmail.com"):
+        lname = input()
+    while gmail.isnumeric() or not gmail.endwith("@gmail.com"):
         print("Email should be a valid gmail address!\ntry again:\n")
-        email = input()
-    time = datetime.now().strftime("%H:%M:%S")
-    useccheck = input("what is your favorite color?")
+        gmail = input()
+    current_time = datetime.now().strftime("%H:%M:%S")
+    seccheck = input("what is your favorite color?")
     Q1 ="""
     INSERT INTO users (uname, ulname, uID, phone, email, upassword, useccheck, time)
-    VALUES(uname, ulname, uID, phone, email, useccheck, time)
+    VALUES(name, lname, ID, phoneNo, email, password, seccheck, current_time)
     """
-    with connection.cursor() as cursor:
+    with db.cursor() as cursor:
     cursor.execute(Q1)
-    connection.commit()
+    db.commit()
+    menu()
     
+def Login():
+    username = input("type your username here:")
+    password = input("type your password here or if you don't remember it just type 0:")
+    if password == 0:
+        seccheck = input("what was youe answer to security question?")
+    menu()
