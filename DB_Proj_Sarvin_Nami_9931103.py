@@ -16,7 +16,7 @@ cursor.execute("CREATE TABLE users (uname VARCHAR(255) not null, ulname  VARCHAR
 cursor.execute("CREATE TABLE friends (u1ID Int, u2ID Int, fID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(u1ID, u2ID) REFERENCES Users(uID, uID)")
 cursor.execute("CREATE TABLE blocked (blockerID Int, blockedID Int, bID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, time VARCHAR(255), FOREIGN KEY(blockerID, blockedID) REFERENCES Users(uID, uID)")
 cursor.execute("CREATE TABLE request (u1ID Int, u2ID Int, fID Int, bID Int, friendship smallint, message smallint, block smallint, iID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(u1ID, u2ID) REFERENCES Users(uID, uID), FOREIGN KEY(fID) REFERENCES friends(fID), FOREIGN KEY(bID) REFERENCES blocked(bID)")
-cursor.execute("CREATE TABLE messages (sID Int, rID Int, time VARCHAR(255), text VARCHAR(255), seen smallint, like smallint, mID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(sID, rID) REFERENCES Users(uID, uID)")
+cursor.execute("CREATE TABLE messages (sID Int, rID Int, time VARCHAR(255), text VARCHAR(255), seen smallint default='0', like smallint default='0', mID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(sID, rID) REFERENCES Users(uID, uID)")
 cursor.execute("CREATE TABLE log_login (uID Int, useccheck VARCHAR(255), loginAttempts Int default='0', time VARCHAR(255), newPass VARCHAR(255), FOREIGN KEY(uID, useccheck) REFERENCES Users(uID, useccheck)")
 cursor.execute("CREATE TABLE log_wrongPassword (uID Int, useccheck VARCHAR(255), time VARCHAR(255), attempts Int default='0', FOREIGN KEY(uID, useccheck) REFERENCES Users(uID, useccheck)")
 cursor.execute("CREATE TABLE limited_users (uID Int, time VARCHAR(255), FOREIGN KEY(uID) REFERENCES Users(uID)")
@@ -255,7 +255,10 @@ def serachMenu(ids,username):
         menu(username)
 
 def sendmessage(sender,reciever):
-    pass
+    msg = input("Please type your message here: ")
+    current_time = datetime.now().strftime("%H:%M:%S")
+    cursor.execute(f'INSERT INTO messages (sID, rID, time, text) VALUES ({sender}, {reciever}, {current_time}, {msg})')
+    db.commit()
    
 def menu(username):
     choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)log out\n3)delete account\n4)search\n5)")
