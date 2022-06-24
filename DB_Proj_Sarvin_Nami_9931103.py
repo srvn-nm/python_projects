@@ -78,6 +78,11 @@ def passwordRecovery(username):
     cursor.execute(Q2)
     db.commit()
     changePassword(username)
+    new_password = str(cursor.execute('SELECT upassword FROM users WHERE uId = username'))
+    update_query2 = f" UPDATE log_login SET newPass = {new_password} WHERE uId = {username}"
+    cursor.execute(update_query2)
+    db.commit()
+    
 
 def wrongPassword(username):
     print("invalid inputs for login attempt!")
@@ -126,4 +131,24 @@ def menu(username):
         changePassword(username)
 
 def changePassword(username):
-    pass
+    questionCount = 0
+    seccheck = input("what was your answer to security question? ")
+    while cursor.execute("SELECT * from users WHERE uId = %s and useccheck = %s", (username, seccheck)) == None and questionCount < 5 :
+        seccheck = input("what was your answer to security question?")
+        print(f"login attempts = {questionCount}")
+        questionCount += 1
+    randomCode = random.randint(10000,100000)
+    code_check = True
+    reciever = str(cursor.execute('SELECT email FROM users WHERE uId = username'))
+    while code_check and cursor.execute("SELECT * FROM users WHERE uId = %s and useccheck = %s", (username, seccheck)) == None and questionCount == 5 :
+        sendMail(reciever, "login code", randomCode)
+        entered_code = input("type the code we have sended to you here: ")
+        if entered_code == randomCode:
+            code_check = False
+    new_password = input("Enter your new password here: ")
+    while not new_password.isalpha():
+        print("Password should have alphabets, too!\ntry again:\n")
+        new_password = input()
+    update_query = f" UPDATE users SET upassword = {new_password} WHERE uId = {username}"
+    cursor.execute(update_query)
+    db.commit()
