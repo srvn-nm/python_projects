@@ -1,3 +1,5 @@
+import random
+import textwrap
 import mysql.connector as mysql
 from datetime import datetime
 import smtplib
@@ -40,10 +42,9 @@ def register(name, lname, ID, phoneNo, gmail, password):
     INSERT INTO users (uname, ulname, uID, phone, email, upassword, useccheck, time , login)
     VALUES(name, lname, ID, phoneNo, email, password, seccheck, current_time, '1')
     """
-    with db.cursor() as cursor:
     cursor.execute(Q1)
     db.commit()
-    sendMail(gmail,"succsessfully registered!^-^",f"Hi {Name}.\nYou are a member of our family now!<3")
+    sendMail(gmail,"succsessfully registered!^-^",f"Hi {name}.\nYou are a member of our family now!<3")
     menu()
     
 def sendMail(TO,SUBJECT,TEXT):
@@ -52,38 +53,40 @@ def sendMail(TO,SUBJECT,TEXT):
         To: %s
         Subject: %s
         %s
-        """ % (snnn99554@gmail.com, ", ".join(TO), SUBJECT, TEXT))
+        """ % ("snnn99554@gmail.com", ", ".join(TO), SUBJECT, TEXT))
     server = smtplib.SMTP('localhost')
-    server.sendmail(snnn99554@gmail.com, TO, message)
+    server.sendmail("snnn99554@gmail.com", TO, message)
     server.quit()
     
 succsess = False
 def Login():
     username = input("type your username here: ")
     password = input("type your password here or if you don't remember it just type 0:  ")
-    user = null
+    user = None
     questionCount = 0
     if password == 0:
         seccheck = input("what was your answer to security question? ")
-        while cursor.execute("SELECT * from users WHERE uId = %s and useccheck = %s", (username, seccheck)) == null and questionCount < 5 :
+        while cursor.execute("SELECT * from users WHERE uId = %s and useccheck = %s", (username, seccheck)) == None and questionCount < 5 :
             seccheck = input("what was your answer to security question?")
-            print(f"login attempts = {questioncount}")
+            print(f"login attempts = {questionCount}")
             questionCount += 1
         randomCode = random.randint(10000,100000)
-        code_check = true
+        code_check = True
         reciever = str(cursor.execute('SELECT email FROM users WHERE uId = username'))
-        while code_check and cursor.execute("SELECT * FROM users WHERE uId = %s and useccheck = %s", (username, seccheck)) == null and questionCount == 5 :
+        while code_check and cursor.execute("SELECT * FROM users WHERE uId = %s and useccheck = %s", (username, seccheck)) == None and questionCount == 5 :
             sendMail(reciever, "login code", randomCode)
             entered_code = input("type the code we have sended to you here: ")
+            if entered_code == randomCode:
+                code_check = False
         user = cursor.fetchone()
         print(user)
     else:
         cursor.execute("SELECT * from users WHERE uId = %s and upassword = %s", (username, password))
         user = cursor.fetchone()
         print(user)
-    if not user == null:
+    if not user == None:
         menu()
-    elif user == null :
+    elif user == None :
         print("invalid inputs for login attempt!")
         update_query = """
         UPDATE
@@ -93,6 +96,5 @@ def Login():
         WHERE
             uId = username and limited_login < 5
         """
-    with db.cursor() as cursor:
         cursor.execute(update_query)
         db.commit()
