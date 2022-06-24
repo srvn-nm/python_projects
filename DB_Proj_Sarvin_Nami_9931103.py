@@ -38,9 +38,9 @@ def register(name, lname, ID, phoneNo, gmail, password):
         gmail = input()
     current_time = datetime.now().strftime("%H:%M:%S")
     seccheck = input("what is your favorite color?")
-    Q1 ="""
+    Q1 =f"""
     INSERT INTO users (uname, ulname, uID, phone, email, upassword, useccheck, time , login)
-    VALUES(name, lname, ID, phoneNo, email, password, seccheck, current_time, '1')
+    VALUES({name}, {lname}, {ID}, {phoneNo}, {gmail}, {password}, {seccheck}, {current_time}, '1')
     """
     cursor.execute(Q1)
     db.commit()
@@ -57,44 +57,58 @@ def sendMail(TO,SUBJECT,TEXT):
     server = smtplib.SMTP('localhost')
     server.sendmail("snnn99554@gmail.com", TO, message)
     server.quit()
-    
-succsess = False
+
+def passwordRecovery(username):
+    questionCount = 0
+    seccheck = input("what was your answer to security question? ")
+    while cursor.execute("SELECT * from users WHERE uId = %s and useccheck = %s", (username, seccheck)) == None and questionCount < 5 :
+        seccheck = input("what was your answer to security question?")
+        print(f"login attempts = {questionCount}")
+        questionCount += 1
+    randomCode = random.randint(10000,100000)
+    code_check = True
+    reciever = str(cursor.execute('SELECT email FROM users WHERE uId = username'))
+    while code_check and cursor.execute("SELECT * FROM users WHERE uId = %s and useccheck = %s", (username, seccheck)) == None and questionCount == 5 :
+        sendMail(reciever, "login code", randomCode)
+        entered_code = input("type the code we have sended to you here: ")
+        if entered_code == randomCode:
+            code_check = False
+    user = cursor.fetchone()
+    print(user)
+    current_time = datetime.now().strftime("%H:%M:%S")
+    Q2 = f"""
+    INSERT INTO log_login (uID, useccheck, loginAttempts, time)
+    VALUES({username}, {seccheck}, {questionCount}, {current_time})
+    """
+    cursor.execute(Q2)
+    db.commit()
+
+def wrongPassword(username):
+    print("invalid inputs for login attempt!")
+    update_query = f"""
+    UPDATE
+    users
+    SET
+        limited_login = (int(limited_login) + '1')
+     WHERE
+        uId = {username} and limited_login < 5
+    """
+    cursor.execute(update_query)
+    db.commit()
+
 def Login():
     username = input("type your username here: ")
     password = input("type your password here or if you don't remember it just type 0:  ")
     user = None
-    questionCount = 0
     if password == 0:
-        seccheck = input("what was your answer to security question? ")
-        while cursor.execute("SELECT * from users WHERE uId = %s and useccheck = %s", (username, seccheck)) == None and questionCount < 5 :
-            seccheck = input("what was your answer to security question?")
-            print(f"login attempts = {questionCount}")
-            questionCount += 1
-        randomCode = random.randint(10000,100000)
-        code_check = True
-        reciever = str(cursor.execute('SELECT email FROM users WHERE uId = username'))
-        while code_check and cursor.execute("SELECT * FROM users WHERE uId = %s and useccheck = %s", (username, seccheck)) == None and questionCount == 5 :
-            sendMail(reciever, "login code", randomCode)
-            entered_code = input("type the code we have sended to you here: ")
-            if entered_code == randomCode:
-                code_check = False
-        user = cursor.fetchone()
-        print(user)
+        passwordRecovery(username,)
     else:
         cursor.execute("SELECT * from users WHERE uId = %s and upassword = %s", (username, password))
         user = cursor.fetchone()
-        print(user)
-    if not user == None:
-        menu()
-    elif user == None :
-        print("invalid inputs for login attempt!")
-        update_query = """
-        UPDATE
-        users
-        SET
-            limited_login = (int(limited_login) + '1')
-        WHERE
-            uId = username and limited_login < 5
-        """
-        cursor.execute(update_query)
-        db.commit()
+        print("Hello!\nWelcome Back!\n" + user)
+        if str(cursor.execute('SELECT upassword FROM users WHERE uId = username')) == password:
+            menu()
+        else:
+            wrongPassword(username)
+def menu():
+    pass
