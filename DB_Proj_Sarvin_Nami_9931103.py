@@ -59,34 +59,48 @@ def sendMail(TO,SUBJECT,TEXT):
 def passwordRecovery(username):
     questionCount = 0
     seccheck = input("what was your answer to security question? ")
-    while cursor.execute("SELECT * from users WHERE uId = %s and useccheck = %s", (username, seccheck)) == None and questionCount < 5 :
+    cursor.execute("SELECT * from users WHERE uId = %s and useccheck = %s", (username, seccheck))
+    checking = cursor.fetchall()
+    db.commit()
+    while checking == None and questionCount < 5 :
         seccheck = input("what was your answer to security question?")
         print(f"login attempts = {questionCount}")
         questionCount += 1
     randomCode = random.randint(10000,100000)
     code_check = True
-    reciever = str(cursor.execute('SELECT email FROM users WHERE uId = username'))
-    while code_check and cursor.execute("SELECT * FROM users WHERE uId = %s and useccheck = %s", (username, seccheck)) == None and questionCount == 5 :
+    cursor.execute('SELECT email FROM users WHERE uId = username')
+    reciever = str(cursor.fetchone())
+    db.commit()
+    cursor.execute("SELECT * from users WHERE uId = %s and useccheck = %s", (username, seccheck))
+    checking = cursor.fetchall()
+    db.commit()
+    while code_check and checking == None and questionCount == 5 :
         sendMail(reciever, "login code", randomCode)
         entered_code = input("type the code we have sended to you here: ")
         if entered_code == randomCode:
             code_check = False
     user = cursor.fetchone()
     print(user)
+    db.commit()
     current_time = datetime.now().strftime("%H:%M:%S")
     Q2 = f"INSERT INTO log_login (uID, useccheck, loginAttempts, time) VALUES({username}, {seccheck}, {questionCount}, {current_time})"
     cursor.execute(Q2)
     db.commit()
     changePassword(username)
-    new_password = str(cursor.execute('SELECT upassword FROM users WHERE uId = username'))
+    cursor.execute('SELECT upassword FROM users WHERE uId = username')
+    new_password = str(cursor.fetchone())
+    db.commit()
     update_query2 = f" UPDATE log_login SET newPass = {new_password} WHERE uId = {username}"
     cursor.execute(update_query2)
     db.commit()    
 
 def wrongPassword(username):
     print("invalid inputs for login attempt!")
-    if int(cursor.execute('SELECT attempts FROM log_wrongPassword WHERE uId = username')) + 1 < 3 :
-        temp = int(cursor.execute('SELECT attempts FROM log_wrongPassword WHERE uId = username')) + 1
+    cursor.execute('SELECT attempts FROM log_wrongPassword WHERE uId = username')
+    number = cursor.fetchone()
+    db.commit()
+    if int(number) + 1 < 3 :
+        temp = int(number) + 1
         update_query = f" UPDATE log_wrongPassword SET attempts = {temp} WHERE uId = {username}"
         cursor.execute(update_query)
         db.commit()
@@ -107,9 +121,12 @@ def login():
     if (not (username == limited_username)) and (not(username == loggedin_username)):
         password = input("type your password here or if you don't remember it just type 0:  ")
         if password == 0:
-            passwordRecovery(username,)
+            passwordRecovery(username)
         else:
-            if str(cursor.execute('SELECT upassword FROM users WHERE uId = username')) == password:
+            cursor.execute('SELECT upassword FROM users WHERE uId = username')
+            oldpass = cursor.fetchone()
+            db.commit()
+            if str(oldpass) == password:
                 cursor.execute("SELECT * from users WHERE uId = %s and upassword = %s", (username, password))
                 user = cursor.fetchone()
                 print("Hello!\nWelcome Back!\n" + user)
@@ -127,14 +144,23 @@ def login():
 def changePassword(username):
     questionCount = 0
     seccheck = input("what was your answer to security question? ")
-    while cursor.execute("SELECT * from users WHERE uId = %s and useccheck = %s", (username, seccheck)) == None and questionCount < 5 :
+    cursor.execute("SELECT * from users WHERE uId = %s and useccheck = %s", (username, seccheck))
+    checking = cursor.fetchone()
+    db.commit()
+    while checking == None and questionCount < 5 :
         seccheck = input("what was your answer to security question?")
         print(f"login attempts = {questionCount}")
         questionCount += 1
     randomCode = random.randint(10000,100000)
     code_check = True
-    reciever = str(cursor.execute('SELECT email FROM users WHERE uId = username'))
-    while code_check and cursor.execute("SELECT * FROM users WHERE uId = %s and useccheck = %s", (username, seccheck)) == None and questionCount == 5 :
+    cursor.execute('SELECT email FROM users WHERE uId = username')
+    checking_email = cursor.fetchone()
+    reciever = str(checking_email)
+    db.commit()
+    cursor.execute("SELECT * from users WHERE uId = %s and useccheck = %s", (username, seccheck))
+    checking2 = cursor.fetchone()
+    db.commit()
+    while code_check and checking2 == None and questionCount == 5 :
         sendMail(reciever, "login code", randomCode)
         entered_code = input("type the code we have sended to you here: ")
         if entered_code == randomCode:
