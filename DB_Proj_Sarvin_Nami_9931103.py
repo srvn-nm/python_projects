@@ -191,6 +191,7 @@ def serachMenu(ids,username):
         i = int(input("Enter the number of one person")) - 1
         cursor.execute(f'SELECT blockerID, blockedID, u1ID, u2ID FROM friends OUTER JOIN blocked WHERE (blockerID == {ids[i]} and blockedID == {username}) or (u1ID == {ids[i]}and u2ID == {username}) or (u2ID == {ids[i]}and u1ID == {username})')
         checking = cursor.fetchall()
+        db.commit()
         if checking == None:
             Q6 = f"INSERT INTO friends (u1ID, u2ID) VALUES ({username}, {ids[i]})"
             cursor.execute(Q6)
@@ -207,6 +208,7 @@ def serachMenu(ids,username):
         i = int(input("Enter the number of one person")) - 1
         cursor.execute(f'SELECT fID FROM friends WHERE (u1ID == {ids[i]}and u2ID == {username}) or (u2ID == {ids[i]}and u1ID == {username})')
         checking = list(cursor.fetchall())
+        db.commit()
         if not checking == None:
             Q6 = f"DELETE FROM friends WHERE fID = {checking[0]}"
             cursor.execute(Q6)
@@ -220,8 +222,11 @@ def serachMenu(ids,username):
             print(no + ") " + id)
             no += 1
         i = int(input("Enter the number of one person")) - 1
+        current_time = datetime.now().strftime("%H:%M:%S")
+        cursor.execute(f'INSERT INTO blocked (blockerID, blockedID, time) VALUES ({username}, {ids[i]}, {current_time})')
         cursor.execute(f'SELECT fID FROM friends WHERE (u1ID == {ids[i]}and u2ID == {username}) or (u2ID == {ids[i]}and u1ID == {username})')
         checking = list(cursor.fetchall())
+        db.commit()
         if not checking == None:
             Q6 = f"DELETE FROM friends WHERE fID = {checking[0]}"
             cursor.execute(Q6)
@@ -229,7 +234,29 @@ def serachMenu(ids,username):
             cursor.execute(Q7)
             db.commit()
         choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
-        
+    elif choice == "4":
+        no = 1
+        for id in ids:
+            print(no + ") " + id)
+            no += 1
+        i = int(input("Enter the number of one person")) - 1
+        current_time = datetime.now().strftime("%H:%M:%S")
+        cursor.execute(f'DELETE FROM blocked WHERE blockerID = {username} and blockedID= {ids[i]} and time = {current_time}')
+        db.commit()
+        choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
+    elif choice == "5":
+        no = 1
+        for id in ids:
+            print(no + ") " + id)
+            no += 1
+        i = int(input("Enter the number of one person")) - 1
+        sendmessage(username , id[i])
+    elif choice == "6":
+        menu(username)
+
+def sendmessage(sender,reciever):
+    pass
+   
 def menu(username):
     choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)log out\n3)delete account\n4)search\n5)")
     if choice == "1":
