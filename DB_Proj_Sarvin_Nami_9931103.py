@@ -206,15 +206,9 @@ def serachMenu(ids,username):
             print(no + ") " + id)
             no += 1
         i = int(input("Enter the number of one person")) - 1
-        cursor.execute(f'SELECT fID FROM friends WHERE (u1ID == {ids[i]}and u2ID == {username}) or (u2ID == {ids[i]}and u1ID == {username})')
-        checking = list(cursor.fetchall())
+        Q6 = f"DELETE FROM friends WHERE (u1ID == {ids[i]}and u2ID == {username}) or (u2ID == {ids[i]}and u1ID == {username})"
+        cursor.execute(Q6)
         db.commit()
-        if not checking == None:
-            Q6 = f"DELETE FROM friends WHERE fID = {checking[0]}"
-            cursor.execute(Q6)
-            Q7 = f"DELETE FROM friends WHERE fID = {checking[1]}"
-            cursor.execute(Q7)
-            db.commit()
         choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
     elif choice == "3":
         no = 1
@@ -313,15 +307,15 @@ def menu(username):
         friends = cursor.fetchall()
         db.commit()
         no = 1
-        for msg in messages:
-            print(no + ") " + msg)
+        for fr in friends:
+            print(no + ") " + fr)
             no += 1
-        cursor.execute(f"UPDATE messages SET seen = '1' WHERE seen = '0'")
-        db.commit()
-        choice2 = input("If you want to like a message type its number or type 0")
+        choice2 = input("If you want to unfriend a friend type their number or type 0")
         if choice2 == "0": 
             menu(username)
         else:
-            cursor.execut(f"UPDATE messages SET liked = '1' WHERE mID = {messages[int(choice2)-1][6]}")
+            i = int(choice2) - 1
+            Q6 = f"DELETE FROM friends WHERE (u1ID == {friends[i]}and u2ID == {username}) or (u2ID == {friends[i]}and u1ID == {username})"
+            cursor.execute(Q6)
             db.commit()
             menu(username)
