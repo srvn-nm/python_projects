@@ -81,7 +81,7 @@ def passwordRecovery(username):
 
 def wrongPassword(username):
     print("invalid inputs for login attempt!")
-    if int(cursor.execute('SELECT attempts FROM log_wrongPassword WHERE uId = username')) + 1 < 5 :
+    if int(cursor.execute('SELECT attempts FROM log_wrongPassword WHERE uId = username')) + 1 < 3 :
         temp = int(cursor.execute('SELECT attempts FROM log_wrongPassword WHERE uId = username')) + 1
         update_query = f" UPDATE log_wrongPassword SET attempts = {temp} WHERE uId = {username}"
         cursor.execute(update_query)
@@ -95,9 +95,9 @@ def wrongPassword(username):
 def Login():
     username = input("type your username here: ")
     limited_query = f"SELECT uID From limited_users WHERE uID = {username}"
-    username = cursor.execute(limited_query)
+    limited_username = cursor.execute(limited_query)
     db.commit()
-    if felan:
+    if not username == limited_username:
         password = input("type your password here or if you don't remember it just type 0:  ")
         if password == 0:
             passwordRecovery(username,)
@@ -110,9 +110,14 @@ def Login():
                 menu()
             else:
                 wrongPassword(username)
-
+    else:
+        Q5 = f"SELECT uname From users WHERE uID = {username}"
+        limited_name = cursor.execute(Q5)
+        db.commit()
+        print(f"Sorry {limited_name}!\nYou are limited because of wrong passwords.>-<\n")
+    
 def menu():
-    pass
+    choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)")
 
 def changePassword(username):
     pass
