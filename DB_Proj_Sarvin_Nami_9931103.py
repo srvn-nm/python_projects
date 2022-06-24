@@ -321,3 +321,4 @@ def menu(username):
             menu(username)
     elif choice == "7":
         print(f"Goodbye {username}!\nHope to see you again soon.^-^\n")
+firstMenu()
