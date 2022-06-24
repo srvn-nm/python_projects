@@ -43,6 +43,7 @@ def register(name, lname, ID, phoneNo, gmail, password):
     with db.cursor() as cursor:
     cursor.execute(Q1)
     db.commit()
+    sendMail(gmail,"succsessfully registered!^-^",f"Hi {Name}.\nYou are a member of our family now!<3")
     menu()
     
 def sendMail(TO,SUBJECT,TEXT):
@@ -79,13 +80,13 @@ def Login():
     elif user == null :
         print("invalid inputs for login attempt!")
         update_query = """
-UPDATE
-    users
-SET
-    limited_login = (int(limited_login) + '1')
-WHERE
-    uId = username and limited_login < 5
-"""
+        UPDATE
+        users
+        SET
+            limited_login = (int(limited_login) + '1')
+        WHERE
+            uId = username and limited_login < 5
+        """
 with db.cursor() as cursor:
     cursor.execute(update_query)
     db.commit()
