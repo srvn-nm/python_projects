@@ -255,7 +255,7 @@ def sendmessage(sender,reciever):
     db.commit()
    
 def menu(username):
-    choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)log out\n3)delete account\n4)search\n5)messages\n6)")
+    choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)log out\n3)delete account\n4)search\n5)messages\n6)friends\n7)shutdown")
     if choice == "1":
         changePassword(username)
         menu(username)
@@ -319,3 +319,5 @@ def menu(username):
             cursor.execute(Q6)
             db.commit()
             menu(username)
+    elif choice == "7":
+        print(f"Goodbye {username}!\nHope to see you again soon.^-^\n")
