@@ -181,9 +181,55 @@ def firstMenu():
     if choice == "2":
         login()
 
-def serachMenu(ids):
-    choice = input("Please select one of the options below:\n1)")
-    
+def serachMenu(ids,username):
+    choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
+    if choice == "1":
+        no = 1
+        for id in ids:
+            print(no + ") " + id)
+            no += 1
+        i = int(input("Enter the number of one person")) - 1
+        cursor.execute(f'SELECT blockerID, blockedID, u1ID, u2ID FROM friends OUTER JOIN blocked WHERE (blockerID == {ids[i]} and blockedID == {username}) or (u1ID == {ids[i]}and u2ID == {username}) or (u2ID == {ids[i]}and u1ID == {username})')
+        checking = cursor.fetchall()
+        if checking == None:
+            Q6 = f"INSERT INTO friends (u1ID, u2ID) VALUES ({username}, {ids[i]})"
+            cursor.execute(Q6)
+            db.commit()
+            Q7 = f"DELETE FROM blocked WHERE blockerID = {username} and blockedID = {ids[i]}"
+            cursor.execute(Q7)
+            db.commit()
+        choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
+    elif choice == "2":
+        no = 1
+        for id in ids:
+            print(no + ") " + id)
+            no += 1
+        i = int(input("Enter the number of one person")) - 1
+        cursor.execute(f'SELECT fID FROM friends WHERE (u1ID == {ids[i]}and u2ID == {username}) or (u2ID == {ids[i]}and u1ID == {username})')
+        checking = list(cursor.fetchall())
+        if not checking == None:
+            Q6 = f"DELETE FROM friends WHERE fID = {checking[0]}"
+            cursor.execute(Q6)
+            Q7 = f"DELETE FROM friends WHERE fID = {checking[1]}"
+            cursor.execute(Q7)
+            db.commit()
+        choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
+    elif choice == "3":
+        no = 1
+        for id in ids:
+            print(no + ") " + id)
+            no += 1
+        i = int(input("Enter the number of one person")) - 1
+        cursor.execute(f'SELECT fID FROM friends WHERE (u1ID == {ids[i]}and u2ID == {username}) or (u2ID == {ids[i]}and u1ID == {username})')
+        checking = list(cursor.fetchall())
+        if not checking == None:
+            Q6 = f"DELETE FROM friends WHERE fID = {checking[0]}"
+            cursor.execute(Q6)
+            Q7 = f"DELETE FROM friends WHERE fID = {checking[1]}"
+            cursor.execute(Q7)
+            db.commit()
+        choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
+        
 def menu(username):
     choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)log out\n3)delete account\n4)search\n5)")
     if choice == "1":
@@ -211,4 +257,4 @@ def menu(username):
         for id in searched_IDs:
             print(no + ") " + id)
             no += 1
-        serachMenu(searched_IDs)        
+        serachMenu(searched_IDs,username)        
