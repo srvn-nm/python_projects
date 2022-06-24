@@ -97,7 +97,10 @@ def Login():
     limited_query = f"SELECT uID From limited_users WHERE uID = {username}"
     limited_username = cursor.execute(limited_query)
     db.commit()
-    if not username == limited_username:
+    login_query =f"SELECT uID FROM users WHERE login = '1' and uID = {username}"
+    loggedin_username = cursor.execute(login_query)
+    db.commit()
+    if (not (username == limited_username)) and (not(username == loggedin_username)):
         password = input("type your password here or if you don't remember it just type 0:  ")
         if password == 0:
             passwordRecovery(username,)
@@ -107,14 +110,15 @@ def Login():
             print("Hello!\nWelcome Back!\n" + user)
             db.commit()
             if str(cursor.execute('SELECT upassword FROM users WHERE uId = username')) == password:
+                print("Congratulations!\nYou successfully logged in!\n" + user)
+                update_query = f" UPDATE users SET login = '1' WHERE uId = {username}"
+                cursor.execute(update_query)
+                db.commit()
                 menu()
             else:
                 wrongPassword(username)
     else:
-        Q5 = f"SELECT uname From users WHERE uID = {username}"
-        limited_name = cursor.execute(Q5)
-        db.commit()
-        print(f"Sorry {limited_name}!\nYou are limited because of wrong passwords.>-<\n")
+        print("Sorry!\nYou can't login.>-<\n")
     
 def menu():
     choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)")
