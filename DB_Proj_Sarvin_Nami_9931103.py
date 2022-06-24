@@ -43,7 +43,7 @@ def register(name, lname, ID, phoneNo, gmail, password):
     cursor.execute(Q1)
     db.commit()
     sendMail(gmail,"succsessfully registered!^-^",f"Hi {name}.\nYou are a member of our family now!<3")
-    menu()
+    menu(ID)
     
 def sendMail(TO,SUBJECT,TEXT):
     message = textwrap.dedent("""\
@@ -105,23 +105,25 @@ def Login():
         if password == 0:
             passwordRecovery(username,)
         else:
-            cursor.execute("SELECT * from users WHERE uId = %s and upassword = %s", (username, password))
-            user = cursor.fetchone()
-            print("Hello!\nWelcome Back!\n" + user)
-            db.commit()
             if str(cursor.execute('SELECT upassword FROM users WHERE uId = username')) == password:
+                cursor.execute("SELECT * from users WHERE uId = %s and upassword = %s", (username, password))
+                user = cursor.fetchone()
+                print("Hello!\nWelcome Back!\n" + user)
+                db.commit()
                 print("Congratulations!\nYou successfully logged in!\n" + user)
                 update_query = f" UPDATE users SET login = '1' WHERE uId = {username}"
                 cursor.execute(update_query)
                 db.commit()
-                menu()
+                menu(username)
             else:
                 wrongPassword(username)
     else:
         print("Sorry!\nYou can't login.>-<\n")
     
-def menu():
+def menu(username):
     choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)")
+    if choice == "1":
+        changePassword(username)
 
 def changePassword(username):
     pass
