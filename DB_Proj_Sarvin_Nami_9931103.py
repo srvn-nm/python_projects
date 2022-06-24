@@ -180,7 +180,10 @@ def firstMenu():
         register()
     if choice == "2":
         login()
-        
+
+def serachMenu(ids):
+    choice = input("Please select one of the options below:\n1)")
+    
 def menu(username):
     choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)log out\n3)delete account\n4)search\n5)")
     if choice == "1":
@@ -200,4 +203,12 @@ def menu(username):
         searching_name = searched_username[0:searching_number]
         search_query = f"SELECT uID FROM users WHERE uID like {searching_name}%"
         cursor.execute(search_query)
-        db.commit()        
+        searched_IDs = []
+        for row in cursor:
+            searched_IDs.append(row)
+        db.commit()
+        no = 1
+        for id in searched_IDs:
+            print(no + ") " + id)
+            no += 1
+        serachMenu(searched_IDs)        
