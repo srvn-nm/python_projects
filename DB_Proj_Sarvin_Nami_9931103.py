@@ -12,7 +12,7 @@ db = mysql.connect(
 cursor = db.cursor()
 cursor.execute("CREATE DATABASE datacamp")
 
-cursor.execute("CREATE TABLE users (uname VARCHAR(255) not null, ulname  VARCHAR(255) not null, uID Int NOT NULL unique PRIMARY KEY, phone VARCHAR(255) not null unique, email VARCHAR(255) not null unique, upassword VARCHAR(255) not null, useccheck VARCHAR(255) not null unique, time VARCHAR(255) not null, login int default='0'")
+cursor.execute("CREATE TABLE users (uname VARCHAR(255) not null, ulname  VARCHAR(255) not null, uID Int NOT NULL unique PRIMARY KEY, phone VARCHAR(255) not null unique, email VARCHAR(255) not null unique, upassword VARCHAR(255) not null, useccheck VARCHAR(255) not null unique, time VARCHAR(255) not null, log_in int default='0'")
 cursor.execute("CREATE TABLE friends (u1ID Int, u2ID Int, fID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(u1ID, u2ID) REFERENCES Users(uID, uID)")
 cursor.execute("CREATE TABLE blocked (blockerID Int, blockedID Int, bID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, time VARCHAR(255), FOREIGN KEY(blockerID, blockedID) REFERENCES Users(uID, uID)")
 cursor.execute("CREATE TABLE request (u1ID Int, u2ID Int, fID Int, bID Int, friendship smallint, message smallint, block smallint, iID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(u1ID, u2ID) REFERENCES Users(uID, uID), FOREIGN KEY(fID) REFERENCES friends(fID), FOREIGN KEY(bID) REFERENCES blocked(bID)")
@@ -39,7 +39,7 @@ def register(name, lname, ID, phoneNo, gmail, password):
         gmail = input()
     current_time = datetime.now().strftime("%H:%M:%S")
     seccheck = input("what is your favorite color?")
-    Q1 =f"INSERT INTO users (uname, ulname, uID, phone, email, upassword, useccheck, time , login) VALUES({name}, {lname}, {ID}, {phoneNo}, {gmail}, {password}, {seccheck}, {current_time}, '1')"
+    Q1 =f"INSERT INTO users (uname, ulname, uID, phone, email, upassword, useccheck, time , log_in) VALUES({name}, {lname}, {ID}, {phoneNo}, {gmail}, {password}, {seccheck}, {current_time}, '1')"
     cursor.execute(Q1)
     db.commit()
     sendMail(gmail,"succsessfully registered!^-^",f"Hi {name}.\nYou are a member of our family now!<3")
@@ -101,7 +101,7 @@ def login():
     limited_query = f"SELECT uID From limited_users WHERE uID = {username}"
     limited_username = cursor.execute(limited_query)
     db.commit()
-    login_query =f"SELECT uID FROM users WHERE login = '1' and uID = {username}"
+    login_query =f"SELECT uID FROM users WHERE log_in = '1' and uID = {username}"
     loggedin_username = cursor.execute(login_query)
     db.commit()
     if (not (username == limited_username)) and (not(username == loggedin_username)):
@@ -115,7 +115,7 @@ def login():
                 print("Hello!\nWelcome Back!\n" + user)
                 db.commit()
                 print("Congratulations!\nYou successfully logged in!\n" + user)
-                update_query = f" UPDATE users SET login = '1' WHERE uId = {username}"
+                update_query = f" UPDATE users SET log_in = '1' WHERE uId = {username}"
                 cursor.execute(update_query)
                 db.commit()
                 menu(username)
@@ -156,12 +156,15 @@ def firstMenu():
         login()
         
 def menu(username):
-    choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)log out\n3)")
+    choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)log out\n3)delete account\n4)")
     if choice == "1":
         changePassword(username)
     elif choice == "2":
-        update_query = f" UPDATE users SET login = '0' WHERE uId = {username}"
+        update_query = f" UPDATE users SET log_in = '0' WHERE uId = {username}"
         cursor.execute(update_query)
         db.commit()
         firstMenu()
-    
+    elif choice == "3":
+        update_query = f" UPDATE users SET upassword = None SET uname = None and SET ulname = None and SET phone = None and SET email = None and SET useccheck = None and SET time = None and SET log_in = '0' WHERE uId = {username}"
+        cursor.execute(update_query)
+        db.commit()
