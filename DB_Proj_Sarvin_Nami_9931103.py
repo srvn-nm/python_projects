@@ -156,7 +156,7 @@ def firstMenu():
         login()
         
 def menu(username):
-    choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)log out\n3)delete account\n4)")
+    choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)log out\n3)delete account\n4)search\n5)")
     if choice == "1":
         changePassword(username)
     elif choice == "2":
@@ -168,3 +168,10 @@ def menu(username):
         update_query = f" UPDATE users SET upassword = None SET uname = None and SET ulname = None and SET phone = None and SET email = None and SET useccheck = None and SET time = None and SET log_in = '0' WHERE uId = {username}"
         cursor.execute(update_query)
         db.commit()
+    elif choice == "4":
+        searched_username = input("Please enter the username you want to search for: ")
+        searching_number = int(len(searched_username)*0.5)
+        searching_name = searched_username[0:searching_number]
+        search_query = f"SELECT uID FROM users WHERE uID like {searching_name}%"
+        cursor.execute(search_query)
+        db.commit()        
