@@ -17,8 +17,8 @@ cursor.execute("CREATE TABLE friends (u1ID Int, u2ID Int, fID Int NOT NULL AUTO_
 cursor.execute("CREATE TABLE blocked (blockerID Int, blockedID Int, bID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, time VARCHAR(255), FOREIGN KEY(blockerID, blockedID) REFERENCES Users(uID, uID)")
 cursor.execute("CREATE TABLE request (u1ID Int, u2ID Int, fID Int, bID Int, friendship smallint, message smallint, block smallint, iID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(u1ID, u2ID) REFERENCES Users(uID, uID), FOREIGN KEY(fID) REFERENCES friends(fID), FOREIGN KEY(bID) REFERENCES blocked(bID)")
 cursor.execute("CREATE TABLE messages (sID Int, rID Int, time VARCHAR(255), text VARCHAR(255), seen smallint, like smallint, mID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(sID, rID) REFERENCES Users(uID, uID)")
-cursor.execute("CREATE TABLE log_login (uID Int, useccheck VARCHAR(255), loginAttempts Int, time VARCHAR(255), FOREIGN KEY(uID, useccheck) REFERENCES Users(uID, useccheck)")
-cursor.execute("CREATE TABLE log_passwordChange (uID Int, useccheck VARCHAR(255), time VARCHAR(255), newPass VARCHAR(255), FOREIGN KEY(uID, useccheck) REFERENCES Users(uID, useccheck)")
+cursor.execute("CREATE TABLE log_login (uID Int, useccheck VARCHAR(255), loginAttempts Int, time VARCHAR(255), newPass VARCHAR(255), FOREIGN KEY(uID, useccheck) REFERENCES Users(uID, useccheck)")
+cursor.execute("CREATE TABLE log_wrongPassword (uID Int, useccheck VARCHAR(255), time VARCHAR(255), attempts Int, FOREIGN KEY(uID, useccheck) REFERENCES Users(uID, useccheck)")
 
 def register(name, lname, ID, phoneNo, gmail, password):
     while not password.isalpha():
@@ -82,9 +82,11 @@ def passwordRecovery(username):
     """
     cursor.execute(Q2)
     db.commit()
+    changePassword(username)
 
 def wrongPassword(username):
     print("invalid inputs for login attempt!")
+    temp = int(cursor.execute('SELECT loginAttempts FROM users WHERE uId = username'))
     update_query = f"""
     UPDATE
     users
@@ -111,4 +113,7 @@ def Login():
         else:
             wrongPassword(username)
 def menu():
+    pass
+
+def changePassword(username):
     pass
