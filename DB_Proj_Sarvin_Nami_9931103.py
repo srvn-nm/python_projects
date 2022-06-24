@@ -47,6 +47,15 @@ def register(name, lname, ID, phoneNo, gmail, password):
 def Login():
     username = input("type your username here:")
     password = input("type your password here or if you don't remember it just type 0:")
+    user = null
     if password == 0:
         seccheck = input("what was youe answer to security question?")
-    menu()
+        cursor.execute("SELECT * from users WHERE uId = %s and useccheck = %s", (username, seccheck))
+        user = cursor.fetchone()
+        print(user)
+    else:
+        cursor.execute("SELECT * from users WHERE uId = %s and upassword = %s", (username, password))
+        user = cursor.fetchone()
+        print(user)
+    if user:
+        menu()
