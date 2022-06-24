@@ -96,7 +96,7 @@ def wrongPassword(username):
         cursor.execute(Q4)
         db.commit()
         
-def Login():
+def login():
     username = input("type your username here: ")
     limited_query = f"SELECT uID From limited_users WHERE uID = {username}"
     limited_username = cursor.execute(limited_query)
@@ -146,8 +146,22 @@ def changePassword(username):
     update_query = f" UPDATE users SET upassword = {new_password} WHERE uId = {username}"
     cursor.execute(update_query)
     db.commit()
-    
+
+def firstMenu():
+    print("Hello.Welcome here.Please enter the number of one of the choices below: ")
+    choice = input("1)register for a new account\n2)login to an existing account")
+    if choice == "1":
+        register()
+    if choice == "2":
+        login()
+        
 def menu(username):
-    choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)")
+    choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)log out\n3)")
     if choice == "1":
         changePassword(username)
+    elif choice == "2":
+        update_query = f" UPDATE users SET login = '0' WHERE uId = {username}"
+        cursor.execute(update_query)
+        db.commit()
+        firstMenu()
+    
