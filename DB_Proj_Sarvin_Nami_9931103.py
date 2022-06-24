@@ -16,7 +16,7 @@ cursor.execute("CREATE TABLE users (uname VARCHAR(255) not null, ulname  VARCHAR
 cursor.execute("CREATE TABLE friends (u1ID Int, u2ID Int, fID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(u1ID, u2ID) REFERENCES Users(uID, uID)")
 cursor.execute("CREATE TABLE blocked (blockerID Int, blockedID Int, bID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, time VARCHAR(255), FOREIGN KEY(blockerID, blockedID) REFERENCES Users(uID, uID)")
 cursor.execute("CREATE TABLE request (u1ID Int, u2ID Int, fID Int, bID Int, friendship smallint, message smallint, block smallint, iID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(u1ID, u2ID) REFERENCES Users(uID, uID), FOREIGN KEY(fID) REFERENCES friends(fID), FOREIGN KEY(bID) REFERENCES blocked(bID)")
-cursor.execute("CREATE TABLE messages (sID Int, rID Int, time VARCHAR(255), text VARCHAR(255), seen smallint default='0', like smallint default='0', mID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(sID, rID) REFERENCES Users(uID, uID)")
+cursor.execute("CREATE TABLE messages (sID Int, rID Int, time VARCHAR(255), text VARCHAR(255), seen smallint default='0', liked smallint default='0', mID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(sID, rID) REFERENCES Users(uID, uID)")
 cursor.execute("CREATE TABLE log_login (uID Int, useccheck VARCHAR(255), loginAttempts Int default='0', time VARCHAR(255), newPass VARCHAR(255), FOREIGN KEY(uID, useccheck) REFERENCES Users(uID, useccheck)")
 cursor.execute("CREATE TABLE log_wrongPassword (uID Int, useccheck VARCHAR(255), time VARCHAR(255), attempts Int default='0', FOREIGN KEY(uID, useccheck) REFERENCES Users(uID, useccheck)")
 cursor.execute("CREATE TABLE limited_users (uID Int, time VARCHAR(255), FOREIGN KEY(uID) REFERENCES Users(uID)")
@@ -261,9 +261,10 @@ def sendmessage(sender,reciever):
     db.commit()
    
 def menu(username):
-    choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)log out\n3)delete account\n4)search\n5)")
+    choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)log out\n3)delete account\n4)search\n5)messages\n6)")
     if choice == "1":
         changePassword(username)
+        menu(username)
     elif choice == "2":
         update_query = f" UPDATE users SET log_in = '0' WHERE uId = {username}"
         cursor.execute(update_query)
@@ -287,4 +288,40 @@ def menu(username):
         for id in searched_IDs:
             print(no + ") " + id)
             no += 1
-        serachMenu(searched_IDs,username)        
+        serachMenu(searched_IDs,username)  
+    elif choice == "5":
+        search_query = f"SELECT * FROM messages WHERE rID = {username}"
+        cursor.execute(search_query)
+        messages = cursor.fetchall()
+        db.commit()
+        no = 1
+        for msg in messages:
+            print(no + ") " + msg)
+            no += 1
+        cursor.execute(f"UPDATE messages SET seen = '1' WHERE seen = '0'")
+        db.commit()
+        choice2 = input("If you want to like a message type its number or type 0")
+        if choice2 == "0": 
+            menu(username)
+        else:
+            cursor.execut(f"UPDATE messages SET liked = '1' WHERE mID = {messages[int(choice2)-1][6]}")
+            db.commit()
+            menu(username)
+    elif choice == "6":
+        search_query = f"SELECT * FROM friends WHERE u1ID = {username} or u2ID = {username}"
+        cursor.execute(search_query)
+        friends = cursor.fetchall()
+        db.commit()
+        no = 1
+        for msg in messages:
+            print(no + ") " + msg)
+            no += 1
+        cursor.execute(f"UPDATE messages SET seen = '1' WHERE seen = '0'")
+        db.commit()
+        choice2 = input("If you want to like a message type its number or type 0")
+        if choice2 == "0": 
+            menu(username)
+        else:
+            cursor.execut(f"UPDATE messages SET liked = '1' WHERE mID = {messages[int(choice2)-1][6]}")
+            db.commit()
+            menu(username)
