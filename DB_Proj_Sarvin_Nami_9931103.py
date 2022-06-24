@@ -81,8 +81,7 @@ def passwordRecovery(username):
     new_password = str(cursor.execute('SELECT upassword FROM users WHERE uId = username'))
     update_query2 = f" UPDATE log_login SET newPass = {new_password} WHERE uId = {username}"
     cursor.execute(update_query2)
-    db.commit()
-    
+    db.commit()    
 
 def wrongPassword(username):
     print("invalid inputs for login attempt!")
@@ -124,11 +123,6 @@ def Login():
                 wrongPassword(username)
     else:
         print("Sorry!\nYou can't login.>-<\n")
-    
-def menu(username):
-    choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)")
-    if choice == "1":
-        changePassword(username)
 
 def changePassword(username):
     questionCount = 0
@@ -152,3 +146,8 @@ def changePassword(username):
     update_query = f" UPDATE users SET upassword = {new_password} WHERE uId = {username}"
     cursor.execute(update_query)
     db.commit()
+    
+def menu(username):
+    choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)")
+    if choice == "1":
+        changePassword(username)
