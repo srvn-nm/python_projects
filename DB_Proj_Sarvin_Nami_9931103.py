@@ -39,10 +39,7 @@ def register(name, lname, ID, phoneNo, gmail, password):
         gmail = input()
     current_time = datetime.now().strftime("%H:%M:%S")
     seccheck = input("what is your favorite color?")
-    Q1 =f"""
-    INSERT INTO users (uname, ulname, uID, phone, email, upassword, useccheck, time , login)
-    VALUES({name}, {lname}, {ID}, {phoneNo}, {gmail}, {password}, {seccheck}, {current_time}, '1')
-    """
+    Q1 =f"INSERT INTO users (uname, ulname, uID, phone, email, upassword, useccheck, time , login) VALUES({name}, {lname}, {ID}, {phoneNo}, {gmail}, {password}, {seccheck}, {current_time}, '1')"
     cursor.execute(Q1)
     db.commit()
     sendMail(gmail,"succsessfully registered!^-^",f"Hi {name}.\nYou are a member of our family now!<3")
@@ -77,10 +74,7 @@ def passwordRecovery(username):
     user = cursor.fetchone()
     print(user)
     current_time = datetime.now().strftime("%H:%M:%S")
-    Q2 = f"""
-    INSERT INTO log_login (uID, useccheck, loginAttempts, time)
-    VALUES({username}, {seccheck}, {questionCount}, {current_time})
-    """
+    Q2 = f"INSERT INTO log_login (uID, useccheck, loginAttempts, time) VALUES({username}, {seccheck}, {questionCount}, {current_time})"
     cursor.execute(Q2)
     db.commit()
     changePassword(username)
@@ -89,34 +83,33 @@ def wrongPassword(username):
     print("invalid inputs for login attempt!")
     if int(cursor.execute('SELECT attempts FROM log_wrongPassword WHERE uId = username')) + 1 < 5 :
         temp = int(cursor.execute('SELECT attempts FROM log_wrongPassword WHERE uId = username')) + 1
-        # not logging in any more
+        update_query = f" UPDATE log_wrongPassword SET attempts = {temp} WHERE uId = {username}"
+        cursor.execute(update_query)
+        db.commit()
     else: 
-        pass
-    update_query = f"""
-    UPDATE
-    users
-    SET
-        limited_login = {temp}
-     WHERE
-        uId = {username}
-    """
-    cursor.execute(update_query)
-    db.commit()
-
+        current_time = datetime.now().strftime("%H:%M:%S")
+        Q4 = f"INSERT INTO limited_users (uID, time) VALUES({username}, {current_time})"
+        cursor.execute(Q4)
+        db.commit()
+        
 def Login():
     username = input("type your username here: ")
-    password = input("type your password here or if you don't remember it just type 0:  ")
-    user = None
-    if password == 0:
-        passwordRecovery(username,)
-    else:
-        cursor.execute("SELECT * from users WHERE uId = %s and upassword = %s", (username, password))
-        user = cursor.fetchone()
-        print("Hello!\nWelcome Back!\n" + user)
-        if str(cursor.execute('SELECT upassword FROM users WHERE uId = username')) == password:
-            menu()
+    limited_query = f"SELECT uID From limited_users WHERE uID = {username}"
+    username = cursor.execute(limited_query)
+    db.commit()
+    if felan:
+        password = input("type your password here or if you don't remember it just type 0:  ")
+        if password == 0:
+            passwordRecovery(username,)
         else:
-            wrongPassword(username)
+            cursor.execute("SELECT * from users WHERE uId = %s and upassword = %s", (username, password))
+            user = cursor.fetchone()
+            print("Hello!\nWelcome Back!\n" + user)
+            db.commit()
+            if str(cursor.execute('SELECT upassword FROM users WHERE uId = username')) == password:
+                menu()
+            else:
+                wrongPassword(username)
 
 def menu():
     pass
