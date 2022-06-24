@@ -1,5 +1,6 @@
 import mysql.connector as mysql
 from datetime import datetime
+import smtplib
 
 db = mysql.connect(
     host = "localhost",
@@ -9,7 +10,7 @@ db = mysql.connect(
 cursor = db.cursor()
 cursor.execute("CREATE DATABASE datacamp")
 
-cursor.execute("CREATE TABLE users (uname VARCHAR(255) not null, ulname  VARCHAR(255) not null, uID Int NOT NULL unique PRIMARY KEY, phone VARCHAR(255) not null unique, email VARCHAR(255) not null unique, upassword VARCHAR(255) not null, useccheck VARCHAR(255) not null unique, time VARCHAR(255) not null, limited_login Int default='0', limited_password Int default='0'")
+cursor.execute("CREATE TABLE users (uname VARCHAR(255) not null, ulname  VARCHAR(255) not null, uID Int NOT NULL unique PRIMARY KEY, phone VARCHAR(255) not null unique, email VARCHAR(255) not null unique, upassword VARCHAR(255) not null, useccheck VARCHAR(255) not null unique, time VARCHAR(255) not null, limited_login Int default='0', limited_password Int default='0', login int default='0'")
 cursor.execute("CREATE TABLE friends (u1ID Int, u2ID Int, fID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(u1ID, u2ID) REFERENCES Users(uID, uID)")
 cursor.execute("CREATE TABLE blocked (blockerID Int, blockedID Int, bID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, time VARCHAR(255), FOREIGN KEY(blockerID, blockedID) REFERENCES Users(uID, uID)")
 cursor.execute("CREATE TABLE request (u1ID Int, u2ID Int, fID Int, bID Int, friendship smallint, message smallint, block smallint, iID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(u1ID, u2ID) REFERENCES Users(uID, uID), FOREIGN KEY(fID) REFERENCES friends(fID), FOREIGN KEY(bID) REFERENCES blocked(bID)")
@@ -36,26 +37,56 @@ def register(name, lname, ID, phoneNo, gmail, password):
     current_time = datetime.now().strftime("%H:%M:%S")
     seccheck = input("what is your favorite color?")
     Q1 ="""
-    INSERT INTO users (uname, ulname, uID, phone, email, upassword, useccheck, time)
-    VALUES(name, lname, ID, phoneNo, email, password, seccheck, current_time)
+    INSERT INTO users (uname, ulname, uID, phone, email, upassword, useccheck, time , login)
+    VALUES(name, lname, ID, phoneNo, email, password, seccheck, current_time, '1')
     """
     with db.cursor() as cursor:
     cursor.execute(Q1)
     db.commit()
     menu()
     
+def sendMail(TO,SUBJECT,TEXT):
+    message = textwrap.dedent("""\
+        From: %s
+        To: %s
+        Subject: %s
+        %s
+        """ % (snnn99554@gmail.com, ", ".join(TO), SUBJECT, TEXT))
+    server = smtplib.SMTP('localhost')
+    server.sendmail(snnn99554@gmail.com, TO, message)
+    server.quit()
+    
+succsess = False
 def Login():
     username = input("type your username here:")
     password = input("type your password here or if you don't remember it just type 0:")
     user = null
+    questionCount = 0
     if password == 0:
         seccheck = input("what was youe answer to security question?")
-        cursor.execute("SELECT * from users WHERE uId = %s and useccheck = %s", (username, seccheck))
+        while cursor.execute("SELECT * from users WHERE uId = %s and useccheck = %s", (username, seccheck)) == null and questionCount < 5 :
+            seccheck = input(f"what was youe answer to security question?\nlogin attempts = {questioncount}")
+            questionCount += 1
+        
         user = cursor.fetchone()
         print(user)
     else:
         cursor.execute("SELECT * from users WHERE uId = %s and upassword = %s", (username, password))
         user = cursor.fetchone()
         print(user)
-    if user:
+    if not user == null:
         menu()
+    elif user == null :
+        print("invalid inputs for login attempt!")
+        update_query = """
+UPDATE
+    users
+SET
+    limited_login = (int(limited_login) + '1')
+WHERE
+    uId = username and limited_login < 5
+"""
+with db.cursor() as cursor:
+    cursor.execute(update_query)
+    db.commit()
+        
