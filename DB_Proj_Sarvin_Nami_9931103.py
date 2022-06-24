@@ -1,4 +1,6 @@
 import mysql.connector as mysql
+from datetime import datetime
+
 db = mysql.connect(
     host = "localhost",
     user = "root",
@@ -14,3 +16,20 @@ cursor.execute("CREATE TABLE request (u1ID Int, u2ID Int, fID Int, bID Int, frie
 cursor.execute("CREATE TABLE messages (sID Int, rID Int, time VARCHAR(255), text VARCHAR(255), seen smallint, like smallint, mID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(sID, rID) REFERENCES Users(uID, uID)")
 cursor.execute("CREATE TABLE log_login (uID Int, useccheck VARCHAR(255), loginAttempts Int, time VARCHAR(255), FOREIGN KEY(uID, useccheck) REFERENCES Users(uID, useccheck)")
 cursor.execute("CREATE TABLE log_passwordChange (uID Int, useccheck VARCHAR(255), time VARCHAR(255), newPass VARCHAR(255), FOREIGN KEY(uID, useccheck) REFERENCES Users(uID, useccheck)")
+def register(uname, ulname, uID, phone, email, password):
+    while not password.isalpha():
+        print("Password should have alphabets, too!\ntry again:\n")
+        password = input()
+    while phone.isalpha():
+        print("phone should not have alphabets!\ntry again:\n")
+        phone = input()
+    while uname.isnumeric():
+        print("Name should have alphabets!\ntry again:\n")
+        uname = input()
+    while ulname.isnumeric():
+        print("Last name should have alphabets!\ntry again:\n")
+        ulname = input()
+    while email.isnumeric() or not email.endwith("@gmail.com"):
+        print("Email should be a valid gmail address!\ntry again:\n")
+        email = input()
+    time = datetime.now().strftime("%H:%M:%S")
