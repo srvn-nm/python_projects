@@ -59,16 +59,22 @@ def sendMail(TO,SUBJECT,TEXT):
     
 succsess = False
 def Login():
-    username = input("type your username here:")
-    password = input("type your password here or if you don't remember it just type 0:")
+    username = input("type your username here: ")
+    password = input("type your password here or if you don't remember it just type 0:  ")
     user = null
     questionCount = 0
     if password == 0:
-        seccheck = input("what was youe answer to security question?")
+        seccheck = input("what was your answer to security question? ")
         while cursor.execute("SELECT * from users WHERE uId = %s and useccheck = %s", (username, seccheck)) == null and questionCount < 5 :
-            seccheck = input(f"what was youe answer to security question?\nlogin attempts = {questioncount}")
+            seccheck = input("what was your answer to security question?")
+            print(f"login attempts = {questioncount}")
             questionCount += 1
-        
+        randomCode = random.randint(10000,100000)
+        code_check = true
+        reciever = str(cursor.execute('SELECT email FROM users WHERE uId = username'))
+        while code_check and cursor.execute("SELECT * FROM users WHERE uId = %s and useccheck = %s", (username, seccheck)) == null and questionCount == 5 :
+            sendMail(reciever, "login code", randomCode)
+            entered_code = input("type the code we have sended to you here: ")
         user = cursor.fetchone()
         print(user)
     else:
@@ -87,7 +93,6 @@ def Login():
         WHERE
             uId = username and limited_login < 5
         """
-with db.cursor() as cursor:
-    cursor.execute(update_query)
-    db.commit()
-        
+    with db.cursor() as cursor:
+        cursor.execute(update_query)
+        db.commit()
