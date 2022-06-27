@@ -92,8 +92,7 @@ class Comparator:
     
         
 class substraction:
-    def __init__(self, si , f , s):
-        self.signal = si
+    def __init__(self , f , s):
         self.first = f
         self.second = s
         self.alphabet = "10B#" 
@@ -192,8 +191,7 @@ class substraction:
             return self._tape
     
 class addition:
-    def __init__(self,si,f,s):
-        self.signal = si 
+    def __init__(self,f,s): 
         self.first = f
         self.second = s
         self.alphabet = "10B#" 
@@ -252,13 +250,17 @@ class addition:
             return self._tape
         
         
-
-firstNumber = int(input("enter firstNumber: "))
-secondNumber = int(input("enter secondNumber: "))
-comp = Comparator(firstNumber,secondNumber)
-sub = substraction(comp.compare(),comp.first,comp.second)
-add = addition(comp.compare(),comp.first,comp.second)
-if comp.compare() == 1:
-    print(sub.substract())
-else:
-    print(add.add())
+class final_turing_machine:
+    def __init__(self):
+        firstNumber = int(input("enter firstNumber: "))
+        secondNumber = int(input("enter secondNumber: "))
+        comp = Comparator(firstNumber,secondNumber)
+        self.first = comp.first
+        self.second = comp.second
+        
+        sub = substraction(comp.compare(),comp.first,comp.second)
+        add = addition(comp.compare(),comp.first,comp.second)
+        if comp.compare() == 1:
+            print(sub.substract())
+        else:
+            print(add.add())
