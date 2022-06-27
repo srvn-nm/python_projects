@@ -33,6 +33,8 @@ class Comparator:
         for character in self._tape:
             if self.head_position < 0 or character not in self.alphabet:
                 return self._tape[self.head_position]
+            if self.head_position == 0 and character == 'B':
+                self.head_position += 1
             elif character == '1' and self.state == 'q0':
                 self._tape[self.head_position] = 'X'
                 self.head_position += 1
@@ -117,6 +119,8 @@ class substraction:
         for character in self._tape:
             if self.head_position < 0 or character not in self.alphabet:
                 return self._tape[self.head_position]
+            if self.head_position == 0 and character == 'B':
+                self.head_position += 1
             elif character == 'B' and self.state == 'q0':
                 self._tape[self.head_position] = 'B'
                 self.head_position += 1
@@ -217,6 +221,8 @@ class addition:
         for character in self._tape:
             if self.head_position < 0 or character not in self.alphabet:
                 return self._tape[self.head_position]
+            if self.head_position == 0 and character == 'B':
+                self.head_position += 1
             elif character == 'B' and self.state == 'q0':
                 self._tape[self.head_position] = 'B'
                 self.head_position += 1
