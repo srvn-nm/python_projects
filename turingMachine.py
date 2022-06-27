@@ -30,7 +30,7 @@ class Comparator:
         self._tape = list(tape)
     
     def write_move(self):
-        for i in range(0,len(self._tape)):
+        while True:
             if self.head_position < 0 or self._tape[self.head_position] not in self.alphabet:
                 return self._tape[self.head_position]
             if self.head_position == 0 and self._tape[self.head_position] == 'B':
@@ -116,7 +116,7 @@ class substraction:
         self._tape = list(tape)
     
     def write_move(self):
-        for i in range(0,len(self._tape)):
+        while True:
             if self.head_position < 0 or self._tape[self.head_position] not in self.alphabet:
                 return self._tape[self.head_position]
             if self.head_position == 0 and self._tape[self.head_position] == 'B':
@@ -218,7 +218,7 @@ class addition:
         self._tape = list(tape)
         
     def write_move(self):
-        for i in range(0,len(self._tape)):
+        while True:
             if self.head_position < 0 or self._tape[self.head_position] not in self.alphabet:
                 return self._tape[self.head_position]
             if self.head_position == 0 and self._tape[self.head_position] == 'B':
