@@ -68,140 +68,167 @@ def register(name, lname, ID, phoneNo, gmail, password):
     current_time = datetime.now().strftime("%H:%M:%S")
     temp = 1
     seccheck = input("what is your favorite color?")
-    Q1 ="INSERT INTO users (uname, ulname, userID, phone, email, upassword, useccheck, timing , log_in) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %d)"
-    values = (name, lname, ID, phoneNo, gmail, password, seccheck, current_time, temp)
-    cursor.execute(Q1, values)
-    db.commit()
+    try:
+        Q1 ="INSERT INTO users (uname, ulname, userID, phone, email, upassword, useccheck, timing , log_in) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %d)"
+        values = (name, lname, ID, phoneNo, gmail, password, seccheck, current_time, temp)
+        cursor.execute(Q1, values)
+        db.commit()
+    except mysql.error as e:
+        print(e)
     sendMail(gmail,"succsessfully registered!^-^",f"Hi {name}.\nYou are a member of our family now!<3")
     menu(ID)
     
 def sendMail(TO,SUBJECT,TEXT):
-    message = textwrap.dedent("""\
-        From: %s
-        To: %s
-        Subject: %s
-        %s
-        """ % ("snnn99554@gmail.com", ", ".join(TO), SUBJECT, TEXT))
-    server = smtplib.SMTP('localhost')
-    server.sendmail("snnn99554@gmail.com", TO, message)
-    server.quit()
+    try:
+        message = textwrap.dedent("""\
+            From: %s
+            To: %s
+            Subject: %s
+            %s
+            """ % ("snnn99554@gmail.com", ", ".join(TO), SUBJECT, TEXT))
+        server = smtplib.SMTP('localhost')
+        server.sendmail("snnn99554@gmail.com", TO, message)
+        server.quit()
+    except smtplib.error as e:
+        print(e)
 
 def passwordRecovery(username):
     questionCount = 0
     seccheck = input("what was your answer to security question? ")
-    cursor.execute("SELECT * from users WHERE userID = %s and useccheck = %s", (username, seccheck))
-    checking = cursor.fetchall()
-    db.commit()
+    try:
+        cursor.execute("SELECT * from users WHERE userID = %s and useccheck = %s", (username, seccheck))
+        checking = cursor.fetchall()
+        db.commit()
+    except mysql.error as e:
+        print(e)
     while checking == None and questionCount < 5 :
         seccheck = input("what was your answer to security question?")
         print(f"login attempts = {questionCount}")
         questionCount += 1
     randomCode = random.randint(10000,100000)
     code_check = True
-    cursor.execute('SELECT email FROM users WHERE userID = username')
-    reciever = str(cursor.fetchone())
-    db.commit()
-    cursor.execute("SELECT * from users WHERE userID = %s and useccheck = %s", (username, seccheck))
-    checking = cursor.fetchall()
-    db.commit()
+    try:
+        cursor.execute('SELECT email FROM users WHERE userID = username')
+        reciever = str(cursor.fetchone())
+        db.commit()
+        cursor.execute("SELECT * from users WHERE userID = %s and useccheck = %s", (username, seccheck))
+        checking = cursor.fetchall()
+        db.commit()
+    except mysql.error as e:
+        print(e)
     while code_check and checking == None and questionCount == 5 :
         sendMail(reciever, "login code", randomCode)
         entered_code = input("type the code we have sended to you here: ")
         if entered_code == randomCode:
             code_check = False
-    user = cursor.fetchone()
-    print(user)
-    db.commit()
-    current_time = datetime.now().strftime("%H:%M:%S")
-    Q2 = f"INSERT INTO log_login (userID, useccheck, loginAttempts, timing) VALUES({username}, {seccheck}, {questionCount}, {current_time})"
-    cursor.execute(Q2)
-    db.commit()
+    try:
+        user = cursor.fetchone()
+        print(user)
+        db.commit()
+        current_time = datetime.now().strftime("%H:%M:%S")
+        Q2 = f"INSERT INTO log_login (userID, useccheck, loginAttempts, timing) VALUES({username}, {seccheck}, {questionCount}, {current_time})"
+        cursor.execute(Q2)
+        db.commit()
+    except mysql.error as e:
+        print(e)
     changePassword(username)
-    cursor.execute('SELECT upassword FROM users WHERE userID = username')
-    new_password = str(cursor.fetchone())
-    db.commit()
-    update_query2 = f" UPDATE log_login SET newPass = {new_password} WHERE userID = {username}"
-    cursor.execute(update_query2)
-    db.commit()    
+    try:
+        cursor.execute('SELECT upassword FROM users WHERE userID = username')
+        new_password = str(cursor.fetchone())
+        db.commit()
+        update_query2 = f" UPDATE log_login SET newPass = {new_password} WHERE userID = {username}"
+        cursor.execute(update_query2)
+        db.commit()    
+    except mysql.error as e:
+        print(e)
 
 def wrongPassword(username):
-    print("invalid inputs for login attempt!")
-    cursor.execute('SELECT attempts FROM log_wrongPassword WHERE userID = username')
-    number = cursor.fetchone()
-    db.commit()
-    if int(number) + 1 < 3 :
-        temp = int(number) + 1
-        update_query = f" UPDATE log_wrongPassword SET attempts = {temp} WHERE userID = {username}"
-        cursor.execute(update_query)
+    try:
+        print("invalid inputs for login attempt!")
+        cursor.execute('SELECT attempts FROM log_wrongPassword WHERE userID = username')
+        number = cursor.fetchone()
         db.commit()
-    else: 
-        current_time = datetime.now().strftime("%H:%M:%S")
-        Q4 = f"INSERT INTO limited_users (userID, timing) VALUES({username}, {current_time})"
-        cursor.execute(Q4)
-        db.commit()
+        if int(number) + 1 < 3 :
+            temp = int(number) + 1
+            update_query = f" UPDATE log_wrongPassword SET attempts = {temp} WHERE userID = {username}"
+            cursor.execute(update_query)
+            db.commit()
+        else: 
+            current_time = datetime.now().strftime("%H:%M:%S")
+            Q4 = f"INSERT INTO limited_users (userID, timing) VALUES({username}, {current_time})"
+            cursor.execute(Q4)
+            db.commit()
+    except mysql.error as e:
+        print(e)
         
 def login():
-    username = input("type your username here: ")
-    limited_query = f"SELECT userID From limited_users WHERE userID = {username}"
-    limited_username = cursor.execute(limited_query)
-    db.commit()
-    login_query =f"SELECT userID FROM users WHERE log_in = '1' and userID = {username}"
-    loggedin_username = cursor.execute(login_query)
-    db.commit()
-    if (not (username == limited_username)) and (not(username == loggedin_username)):
-        password = input("type your password here or if you don't remember it just type 0:  ")
-        if password == 0:
-            passwordRecovery(username)
-        else:
-            cursor.execute('SELECT upassword FROM users WHERE userID = username')
-            oldpass = cursor.fetchone()
-            db.commit()
-            if str(oldpass) == password:
-                cursor.execute("SELECT * from users WHERE userID = %s and upassword = %s", (username, password))
-                user = cursor.fetchone()
-                print("Hello!\nWelcome Back!\n" + user)
-                db.commit()
-                print("Congratulations!\nYou successfully logged in!\n" + user)
-                update_query = f" UPDATE users SET log_in = '1' WHERE userID = {username}"
-                cursor.execute(update_query)
-                db.commit()
-                menu(username)
+    try:
+        username = input("type your username here: ")
+        limited_query = f"SELECT userID From limited_users WHERE userID = {username}"
+        limited_username = cursor.execute(limited_query)
+        db.commit()
+        login_query =f"SELECT userID FROM users WHERE log_in = '1' and userID = {username}"
+        loggedin_username = cursor.execute(login_query)
+        db.commit()
+        if (not (username == limited_username)) and (not(username == loggedin_username)):
+            password = input("type your password here or if you don't remember it just type 0:  ")
+            if password == 0:
+                passwordRecovery(username)
             else:
-                wrongPassword(username)
-    else:
-        print("Sorry!\nYou can't login.>-<\n")
+                cursor.execute('SELECT upassword FROM users WHERE userID = username')
+                oldpass = cursor.fetchone()
+                db.commit()
+                if str(oldpass) == password:
+                    cursor.execute("SELECT * from users WHERE userID = %s and upassword = %s", (username, password))
+                    user = cursor.fetchone()
+                    print("Hello!\nWelcome Back!\n" + user)
+                    db.commit()
+                    print("Congratulations!\nYou successfully logged in!\n" + user)
+                    update_query = f" UPDATE users SET log_in = '1' WHERE userID = {username}"
+                    cursor.execute(update_query)
+                    db.commit()
+                    menu(username)
+                else:
+                    wrongPassword(username)
+        else:
+            print("Sorry!\nYou can't login.>-<\n")
+    except mysql.error as e:
+        print(e)
 
 def changePassword(username):
-    questionCount = 0
-    seccheck = input("what was your answer to security question? ")
-    cursor.execute("SELECT * from users WHERE userID = %s and useccheck = %s", (username, seccheck))
-    checking = cursor.fetchone()
-    db.commit()
-    while checking == None and questionCount < 5 :
-        seccheck = input("what was your answer to security question?")
-        print(f"login attempts = {questionCount}")
-        questionCount += 1
-    randomCode = random.randint(10000,100000)
-    code_check = True
-    cursor.execute('SELECT email FROM users WHERE userID = username')
-    checking_email = cursor.fetchone()
-    reciever = str(checking_email)
-    db.commit()
-    cursor.execute("SELECT * from users WHERE userID = %s and useccheck = %s", (username, seccheck))
-    checking2 = cursor.fetchone()
-    db.commit()
-    while code_check and checking2 == None and questionCount == 5 :
-        sendMail(reciever, "login code", randomCode)
-        entered_code = input("type the code we have sended to you here: ")
-        if entered_code == randomCode:
-            code_check = False
-    new_password = input("Enter your new password here: ")
-    while not new_password.isalpha():
-        print("Password should have alphabets, too!\ntry again:\n")
-        new_password = input()
-    update_query = f" UPDATE users SET upassword = {new_password} WHERE userID = {username}"
-    cursor.execute(update_query)
-    db.commit()
+    try:
+        questionCount = 0
+        seccheck = input("what was your answer to security question? ")
+        cursor.execute("SELECT * from users WHERE userID = %s and useccheck = %s", (username, seccheck))
+        checking = cursor.fetchone()
+        db.commit()
+        while checking == None and questionCount < 5 :
+            seccheck = input("what was your answer to security question?")
+            print(f"login attempts = {questionCount}")
+            questionCount += 1
+        randomCode = random.randint(10000,100000)
+        code_check = True
+        cursor.execute('SELECT email FROM users WHERE userID = username')
+        checking_email = cursor.fetchone()
+        reciever = str(checking_email)
+        db.commit()
+        cursor.execute("SELECT * from users WHERE userID = %s and useccheck = %s", (username, seccheck))
+        checking2 = cursor.fetchone()
+        db.commit()
+        while code_check and checking2 == None and questionCount == 5 :
+            sendMail(reciever, "login code", randomCode)
+            entered_code = input("type the code we have sended to you here: ")
+            if entered_code == randomCode:
+                code_check = False
+        new_password = input("Enter your new password here: ")
+        while not new_password.isalpha():
+            print("Password should have alphabets, too!\ntry again:\n")
+            new_password = input()
+        update_query = f" UPDATE users SET upassword = {new_password} WHERE userID = {username}"
+        cursor.execute(update_query)
+        db.commit()
+    except mysql.error as e:
+        print(e)
 
 def firstMenu():
     print("Hello.Welcome here.Please enter the number of one of the choices below: ")
@@ -218,144 +245,153 @@ def firstMenu():
         login()
 
 def serachMenu(ids,username):
-    choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
-    if choice == "1":
-        no = 1
-        for id in ids:
-            print(no + ") " + id)
-            no += 1
-        i = int(input("Enter the number of one person")) - 1
-        cursor.execute(f'SELECT blockerID, blockedID, u1ID, u2ID FROM friends OUTER JOIN blocked WHERE (blockerID == {ids[i]} and blockedID == {username}) or (u1ID == {ids[i]}and u2ID == {username}) or (u2ID == {ids[i]}and u1ID == {username})')
-        checking = cursor.fetchall()
-        db.commit()
-        if checking == None:
-            Q6 = f"INSERT INTO friends (u1ID, u2ID) VALUES ({username}, {ids[i]})"
+    try:
+        choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
+        if choice == "1":
+            no = 1
+            for id in ids:
+                print(no + ") " + id)
+                no += 1
+            i = int(input("Enter the number of one person")) - 1
+            cursor.execute(f'SELECT blockerID, blockedID, u1ID, u2ID FROM friends OUTER JOIN blocked WHERE (blockerID == {ids[i]} and blockedID == {username}) or (u1ID == {ids[i]}and u2ID == {username}) or (u2ID == {ids[i]}and u1ID == {username})')
+            checking = cursor.fetchall()
+            db.commit()
+            if checking == None:
+                Q6 = f"INSERT INTO friends (u1ID, u2ID) VALUES ({username}, {ids[i]})"
+                cursor.execute(Q6)
+                db.commit()
+                Q7 = f"DELETE FROM blocked WHERE blockerID = {username} and blockedID = {ids[i]}"
+                cursor.execute(Q7)
+                db.commit()
+            choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
+        elif choice == "2":
+            no = 1
+            for id in ids:
+                print(no + ") " + id)
+                no += 1
+            i = int(input("Enter the number of one person")) - 1
+            Q6 = f"DELETE FROM friends WHERE (u1ID == {ids[i]}and u2ID == {username}) or (u2ID == {ids[i]}and u1ID == {username})"
             cursor.execute(Q6)
             db.commit()
-            Q7 = f"DELETE FROM blocked WHERE blockerID = {username} and blockedID = {ids[i]}"
-            cursor.execute(Q7)
+            choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
+        elif choice == "3":
+            no = 1
+            for id in ids:
+                print(no + ") " + id)
+                no += 1
+            i = int(input("Enter the number of one person")) - 1
+            current_time = datetime.now().strftime("%H:%M:%S")
+            cursor.execute(f'INSERT INTO blocked (blockerID, blockedID, timing) VALUES ({username}, {ids[i]}, {current_time})')
+            cursor.execute(f'SELECT fID FROM friends WHERE (u1ID == {ids[i]}and u2ID == {username}) or (u2ID == {ids[i]}and u1ID == {username})')
+            checking = list(cursor.fetchall())
             db.commit()
-        choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
-    elif choice == "2":
-        no = 1
-        for id in ids:
-            print(no + ") " + id)
-            no += 1
-        i = int(input("Enter the number of one person")) - 1
-        Q6 = f"DELETE FROM friends WHERE (u1ID == {ids[i]}and u2ID == {username}) or (u2ID == {ids[i]}and u1ID == {username})"
-        cursor.execute(Q6)
-        db.commit()
-        choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
-    elif choice == "3":
-        no = 1
-        for id in ids:
-            print(no + ") " + id)
-            no += 1
-        i = int(input("Enter the number of one person")) - 1
-        current_time = datetime.now().strftime("%H:%M:%S")
-        cursor.execute(f'INSERT INTO blocked (blockerID, blockedID, timing) VALUES ({username}, {ids[i]}, {current_time})')
-        cursor.execute(f'SELECT fID FROM friends WHERE (u1ID == {ids[i]}and u2ID == {username}) or (u2ID == {ids[i]}and u1ID == {username})')
-        checking = list(cursor.fetchall())
-        db.commit()
-        if not checking == None:
-            Q6 = f"DELETE FROM friends WHERE fID = {checking[0]}"
-            cursor.execute(Q6)
-            Q7 = f"DELETE FROM friends WHERE fID = {checking[1]}"
-            cursor.execute(Q7)
+            if not checking == None:
+                Q6 = f"DELETE FROM friends WHERE fID = {checking[0]}"
+                cursor.execute(Q6)
+                Q7 = f"DELETE FROM friends WHERE fID = {checking[1]}"
+                cursor.execute(Q7)
+                db.commit()
+            choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
+        elif choice == "4":
+            no = 1
+            for id in ids:
+                print(no + ") " + id)
+                no += 1
+            i = int(input("Enter the number of one person")) - 1
+            current_time = datetime.now().strftime("%H:%M:%S")
+            cursor.execute(f'DELETE FROM blocked WHERE blockerID = {username} and blockedID= {ids[i]} and timing = {current_time}')
             db.commit()
-        choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
-    elif choice == "4":
-        no = 1
-        for id in ids:
-            print(no + ") " + id)
-            no += 1
-        i = int(input("Enter the number of one person")) - 1
-        current_time = datetime.now().strftime("%H:%M:%S")
-        cursor.execute(f'DELETE FROM blocked WHERE blockerID = {username} and blockedID= {ids[i]} and timing = {current_time}')
-        db.commit()
-        choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
-    elif choice == "5":
-        no = 1
-        for id in ids:
-            print(no + ") " + id)
-            no += 1
-        i = int(input("Enter the number of one person")) - 1
-        sendmessage(username , id[i])
-    elif choice == "6":
-        menu(username)
+            choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
+        elif choice == "5":
+            no = 1
+            for id in ids:
+                print(no + ") " + id)
+                no += 1
+            i = int(input("Enter the number of one person")) - 1
+            sendmessage(username , id[i])
+        elif choice == "6":
+            menu(username)
+    except mysql.error as e:
+        print(e)
 
 def sendmessage(sender,reciever):
-    msg = input("Please type your message here: ")
-    current_time = datetime.now().strftime("%H:%M:%S")
-    cursor.execute(f'INSERT INTO messages (sID, rID, timing, text) VALUES ({sender}, {reciever}, {current_time}, {msg})')
-    db.commit()
+    try:
+        msg = input("Please type your message here: ")
+        current_time = datetime.now().strftime("%H:%M:%S")
+        cursor.execute(f'INSERT INTO messages (sID, rID, timing, text) VALUES ({sender}, {reciever}, {current_time}, {msg})')
+        db.commit()
+    except mysql.error as e:
+        print(e)
    
 def menu(username):
-    choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)log out\n3)delete account\n4)search\n5)messages\n6)friends\n7)shutdown")
-    if choice == "1":
-        changePassword(username)
-        menu(username)
-    elif choice == "2":
-        update_query = f" UPDATE users SET log_in = '0' WHERE userID = {username}"
-        cursor.execute(update_query)
-        db.commit()
-        firstMenu()
-    elif choice == "3":
-        update_query = f" UPDATE users SET upassword = None SET uname = None and SET ulname = None and SET phone = None and SET email = None and SET useccheck = None and SET timing = None and SET log_in = '0' WHERE userID = {username}"
-        cursor.execute(update_query)
-        db.commit()
-    elif choice == "4":
-        searched_username = input("Please enter the username you want to search for: ")
-        searching_number = int(len(searched_username)*0.5)
-        searching_name = searched_username[0:searching_number]
-        search_query = f"SELECT userID FROM users WHERE userID like {searching_name}%"
-        cursor.execute(search_query)
-        searched_IDs = []
-        for row in cursor:
-            searched_IDs.append(row)
-        db.commit()
-        no = 1
-        for id in searched_IDs:
-            print(no + ") " + id)
-            no += 1
-        serachMenu(searched_IDs,username)  
-    elif choice == "5":
-        search_query = f"SELECT * FROM messages WHERE rID = {username}"
-        cursor.execute(search_query)
-        messages = cursor.fetchall()
-        db.commit()
-        no = 1
-        for msg in messages:
-            print(no + ") " + msg)
-            no += 1
-        cursor.execute(f"UPDATE messages SET seen = '1' WHERE seen = '0'")
-        db.commit()
-        choice2 = input("If you want to like a message type its number or type 0")
-        if choice2 == "0": 
+    try:
+        choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)log out\n3)delete account\n4)search\n5)messages\n6)friends\n7)shutdown")
+        if choice == "1":
+            changePassword(username)
             menu(username)
-        else:
-            cursor.execut(f"UPDATE messages SET liked = '1' WHERE mID = {messages[int(choice2)-1][6]}")
+        elif choice == "2":
+            update_query = f" UPDATE users SET log_in = '0' WHERE userID = {username}"
+            cursor.execute(update_query)
             db.commit()
-            menu(username)
-    elif choice == "6":
-        search_query = f"SELECT * FROM friends WHERE u1ID = {username} or u2ID = {username}"
-        cursor.execute(search_query)
-        friends = cursor.fetchall()
-        db.commit()
-        no = 1
-        for fr in friends:
-            print(no + ") " + fr)
-            no += 1
-        choice2 = input("If you want to unfriend a friend type their number or type 0")
-        if choice2 == "0": 
-            menu(username)
-        else:
-            i = int(choice2) - 1
-            Q6 = f"DELETE FROM friends WHERE (u1ID == {friends[i]}and u2ID == {username}) or (u2ID == {friends[i]}and u1ID == {username})"
-            cursor.execute(Q6)
+            firstMenu()
+        elif choice == "3":
+            update_query = f" UPDATE users SET upassword = None SET uname = None and SET ulname = None and SET phone = None and SET email = None and SET useccheck = None and SET timing = None and SET log_in = '0' WHERE userID = {username}"
+            cursor.execute(update_query)
             db.commit()
-            menu(username)
-    elif choice == "7":
-        print(f"Goodbye {username}!\nHope to see you again soon.^-^\n")
+        elif choice == "4":
+            searched_username = input("Please enter the username you want to search for: ")
+            searching_number = int(len(searched_username)*0.5)
+            searching_name = searched_username[0:searching_number]
+            search_query = f"SELECT userID FROM users WHERE userID like {searching_name}%"
+            cursor.execute(search_query)
+            searched_IDs = []
+            for row in cursor:
+                searched_IDs.append(row)
+            db.commit()
+            no = 1
+            for id in searched_IDs:
+                print(no + ") " + id)
+                no += 1
+            serachMenu(searched_IDs,username)  
+        elif choice == "5":
+            search_query = f"SELECT * FROM messages WHERE rID = {username}"
+            cursor.execute(search_query)
+            messages = cursor.fetchall()
+            db.commit()
+            no = 1
+            for msg in messages:
+                print(no + ") " + msg)
+                no += 1
+            cursor.execute(f"UPDATE messages SET seen = '1' WHERE seen = '0'")
+            db.commit()
+            choice2 = input("If you want to like a message type its number or type 0")
+            if choice2 == "0": 
+                menu(username)
+            else:
+                cursor.execut(f"UPDATE messages SET liked = '1' WHERE mID = {messages[int(choice2)-1][6]}")
+                db.commit()
+                menu(username)
+        elif choice == "6":
+            search_query = f"SELECT * FROM friends WHERE u1ID = {username} or u2ID = {username}"
+            cursor.execute(search_query)
+            friends = cursor.fetchall()
+            db.commit()
+            no = 1
+            for fr in friends:
+                print(no + ") " + fr)
+                no += 1
+            choice2 = input("If you want to unfriend a friend type their number or type 0")
+            if choice2 == "0": 
+                menu(username)
+            else:
+                i = int(choice2) - 1
+                Q6 = f"DELETE FROM friends WHERE (u1ID == {friends[i]}and u2ID == {username}) or (u2ID == {friends[i]}and u1ID == {username})"
+                cursor.execute(Q6)
+                db.commit()
+                menu(username)
+        elif choice == "7":
+            print(f"Goodbye {username}!\nHope to see you again soon.^-^\n")
+    except mysql.error as e:
+        print(e)
 firstMenu()
 db.close()
