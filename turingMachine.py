@@ -30,66 +30,66 @@ class Comparator:
         self._tape = list(tape)
     
     def write_move(self):
-        for character in self._tape:
-            if self.head_position < 0 or character not in self.alphabet:
+        for i in range(0,len(self._tape)):
+            if self.head_position < 0 or self._tape[i] not in self.alphabet:
                 return self._tape[self.head_position]
-            if self.head_position == 0 and character == 'B':
+            if self.head_position == 0 and self._tape[i] == 'B':
                 self.head_position += 1
-            elif character == '1' and self.state == 'q0':
+            elif self._tape[i] == '1' and self.state == 'q0':
                 self._tape[self.head_position] = 'X'
                 self.head_position += 1
                 self.state = 'q1'
-            elif character == '0' and self.state == 'q0':
+            elif self._tape[i] == '0' and self.state == 'q0':
                 self._tape[self.head_position] = '0'
                 self.head_position += 1
                 self.state = 'q5'
-            elif character == '1' and self.state == 'q1':
+            elif self._tape[i] == '1' and self.state == 'q1':
                 self._tape[self.head_position] = '1'
                 self.head_position += 1
                 self.state = 'q1'
-            elif character == '0' and self.state == 'q1':
+            elif self._tape[i] == '0' and self.state == 'q1':
                 self._tape[self.head_position] = '0'
                 self.head_position += 1
                 self.state = 'q2'  
-            elif character == 'B' and self.state == 'q2':
+            elif self._tape[i] == 'B' and self.state == 'q2':
                 self._tape[self.head_position] = 'B'
                 self.head_position -= 1
                 self.state = 'a>b'  
                 return self.sub.write_move()               
-            elif character == 'X' and self.state == 'q2':
+            elif self._tape[i] == 'X' and self.state == 'q2':
                 self._tape[self.head_position] = 'X'
                 self.head_position += 1
                 self.state = 'q2'
-            elif character == '1' and self.state == 'q2':
+            elif self._tape[i] == '1' and self.state == 'q2':
                 self._tape[self.head_position] = 'X'
                 self.head_position -= 1
                 self.state = 'q3'    
-            elif character == 'X' and self.state == 'q3':
+            elif self._tape[i] == 'X' and self.state == 'q3':
                 self._tape[self.head_position] = 'X'
                 self.head_position -= 1
                 self.state = 'q3'
-            elif character == '0' and self.state == 'q3':
+            elif self._tape[i] == '0' and self.state == 'q3':
                 self._tape[self.head_position] = '0'
                 self.head_position -= 1
                 self.state = 'q4'   
-            elif character == '1' and self.state == 'q4':
+            elif self._tape[i] == '1' and self.state == 'q4':
                 self._tape[self.head_position] = '1'
                 self.head_position -= 1
                 self.state = 'q4'
-            elif character == 'X' and self.state == 'q4':
+            elif self._tape[i] == 'X' and self.state == 'q4':
                 self._tape[self.head_position] = 'X'
                 self.head_position += 1
                 self.state = 'q0'
-            elif character == 'X' and self.state == 'q5':
+            elif self._tape[i] == 'X' and self.state == 'q5':
                 self._tape[self.head_position] = 'X'
                 self.head_position += 1
                 self.state = 'q5'
-            elif character == '1' and self.state == 'q5':
+            elif self._tape[i] == '1' and self.state == 'q5':
                 self._tape[self.head_position] = '1'
                 self.head_position += 1
                 self.state = 'a<b'  
                 return self.add.write_move()    
-            elif character == 'B' and self.state == 'q5':
+            elif self._tape[i] == 'B' and self.state == 'q5':
                 self._tape[self.head_position] = 'B'
                 self.head_position -= 1
                 self.state = 'a=b'
@@ -116,84 +116,84 @@ class substraction:
         self._tape = list(tape)
     
     def write_move(self):
-        for character in self._tape:
-            if self.head_position < 0 or character not in self.alphabet:
+        for i in range(0,len(self._tape)):
+            if self.head_position < 0 or self._tape[i] not in self.alphabet:
                 return self._tape[self.head_position]
-            if self.head_position == 0 and character == 'B':
+            if self.head_position == 0 and self._tape[i] == 'B':
                 self.head_position += 1
-            elif character == 'B' and self.state == 'q0':
+            elif self._tape[i] == 'B' and self.state == 'q0':
                 self._tape[self.head_position] = 'B'
                 self.head_position += 1
                 self.state = 'q0'
-            elif character == '#' and self.state == 'q0':
+            elif self._tape[i] == '#' and self.state == 'q0':
                 self._tape[self.head_position] = '#'
                 self.state = 'q9'
                 return self._tape
-            elif character == '1' and self.state == 'q0':
+            elif self._tape[i] == '1' and self.state == 'q0':
                 self._tape[self.head_position] = '1'
                 self.head_position += 1
                 self.state = 'q1'
-            elif character == '1' and self.state == 'q1':
+            elif self._tape[i] == '1' and self.state == 'q1':
                 self._tape[self.head_position] = '1'
                 self.head_position += 1
                 self.state = 'q1'
-            elif character == '#' and self.state == 'q1':
+            elif self._tape[i] == '#' and self.state == 'q1':
                 self._tape[self.head_position] = '#'
                 self.head_position += 1
                 self.state = 'q2'
-            elif character == '#' and self.state == 'q2':
+            elif self._tape[i] == '#' and self.state == 'q2':
                 self._tape[self.head_position] = '#'
                 self.head_position += 1
                 self.state = 'q2'
-            elif character == '1' and self.state == 'q2':
+            elif self._tape[i] == '1' and self.state == 'q2':
                 self._tape[self.head_position] = '1'
                 self.head_position += 1
                 self.state = 'q3'
-            elif character == '1' and self.state == 'q3':
+            elif self._tape[i] == '1' and self.state == 'q3':
                 self._tape[self.head_position] = '1'
                 self.head_position -= 1
                 self.state = 'q4'
-            elif character == '#' and self.state == 'q3':
+            elif self._tape[i] == '#' and self.state == 'q3':
                 self._tape[self.head_position] = '#'
                 self.head_position -= 1
                 self.state = 'q6'
-            elif character == '1' and self.state == 'q4':
+            elif self._tape[i] == '1' and self.state == 'q4':
                 self._tape[self.head_position] = '#'
                 self.head_position -= 1
                 self.state = 'q5'
-            elif character == '#' and self.state == 'q5':
+            elif self._tape[i] == '#' and self.state == 'q5':
                 self._tape[self.head_position] = '#'
                 self.head_position -= 1
                 self.state = 'q5'
-            elif character == '1' and self.state == 'q5':
+            elif self._tape[i] == '1' and self.state == 'q5':
                 self._tape[self.head_position] = '#'
                 self.head_position += 1
                 self.state = 'q2' 
-            elif character == 'B' and self.state == 'q5':
+            elif self._tape[i] == 'B' and self.state == 'q5':
                 self._tape[self.head_position] = 'B'
                 self.head_position += 1
                 self.state = 'q2' 
-            elif character == '1' and self.state == 'q6':
+            elif self._tape[i] == '1' and self.state == 'q6':
                 self._tape[self.head_position] = '#'
                 self.head_position -= 1
                 self.state = 'q7'
-            elif character == '#' and self.state == 'q7':
+            elif self._tape[i] == '#' and self.state == 'q7':
                 self._tape[self.head_position] = '#'
                 self.head_position -= 1
                 self.state = 'q7' 
-            elif character == 'B' and self.state == 'q7':
+            elif self._tape[i] == 'B' and self.state == 'q7':
                 self._tape[self.head_position] = 'B'
                 self.state = 'q9'
                 return self._tape
-            elif character == '1' and self.state == 'q7':
+            elif self._tape[i] == '1' and self.state == 'q7':
                 self._tape[self.head_position] = '#'
                 self.head_position -= 1
                 self.state = 'q8'
-            elif character == '1' and self.state == 'q8':
+            elif self._tape[i] == '1' and self.state == 'q8':
                 self._tape[self.head_position] = '1'
                 self.head_position -= 1
                 self.state = 'q8'
-            elif character == 'B' and self.state == 'q8':
+            elif self._tape[i] == 'B' and self.state == 'q8':
                 self._tape[self.head_position] = 'B'
                 self.state = 'q9'
                 return self._tape
@@ -218,44 +218,44 @@ class addition:
         self._tape = list(tape)
         
     def write_move(self):
-        for character in self._tape:
-            if self.head_position < 0 or character not in self.alphabet:
+        for i in range(0,len(self._tape)):
+            if self.head_position < 0 or self._tape[i] not in self.alphabet:
                 return self._tape[self.head_position]
-            if self.head_position == 0 and character == 'B':
+            if self.head_position == 0 and self._tape[i] == 'B':
                 self.head_position += 1
-            elif character == 'B' and self.state == 'q0':
+            elif self._tape[i] == 'B' and self.state == 'q0':
                 self._tape[self.head_position] = 'B'
                 self.head_position += 1
                 self.state = 'q1'
-            elif character == '#' and self.state == 'q0':
+            elif self._tape[i] == '#' and self.state == 'q0':
                 self._tape[self.head_position] = '#'
                 self.state = 'q5'
                 return self._tape
-            elif character == '1' and self.state == 'q1':
+            elif self._tape[i] == '1' and self.state == 'q1':
                 self._tape[self.head_position] = '1'
                 self.head_position += 1
                 self.state = 'q1'
-            elif character == '0' and self.state == 'q1':
+            elif self._tape[i] == '0' and self.state == 'q1':
                 self._tape[self.head_position] = '1'
                 self.head_position += 1
                 self.state = 'q2'
-            elif character == '1' and self.state == 'q2':
+            elif self._tape[i] == '1' and self.state == 'q2':
                 self._tape[self.head_position] = '1'
                 self.head_position += 1
                 self.state = 'q2'
-            elif character == '#' and self.state == 'q2':
+            elif self._tape[i] == '#' and self.state == 'q2':
                 self._tape[self.head_position] = '#'
                 self.head_position -= 1
                 self.state = 'q3'
-            elif character == '1' and self.state == 'q3':
+            elif self._tape[i] == '1' and self.state == 'q3':
                 self._tape[self.head_position] = '#'
                 self.head_position -= 1
                 self.state = 'q4'
-            elif character == '1' and self.state == 'q4':
+            elif self._tape[i] == '1' and self.state == 'q4':
                 self._tape[self.head_position] = '1'
                 self.head_position -= 1
                 self.state = 'q4'
-            elif character == 'B' and self.state == 'q4':
+            elif self._tape[i] == 'B' and self.state == 'q4':
                 self._tape[self.head_position] = 'B'
                 self.state = 'q5'
                 return self._tape
