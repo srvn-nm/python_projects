@@ -13,28 +13,26 @@ class Comparator:
         for i in tempsecond:
             self.second += str(i)
         self.alphabet = "10B#" 
-        self.head_position = 0
+        self.head_position = 1
         self.__init_tape()
         self.state = 'q0'
         self.sub = substraction(self.first,self.second)
         self.add = addition(self.first,self.second)
     
     def __init_tape(self):
-        tape = "B"
+        tape = ""
         for a in (c for c in self.first if c in self.alphabet):
             tape += a
         tape += "0"
         for a in (c for c in self.second if c in self.alphabet):
             tape += a
-        tape += "#"
+        tape += "B"
         self._tape = list(tape)
     
     def write_move(self):
         while True:
             if self.head_position < 0 or self._tape[self.head_position] not in self.alphabet:
                 return self._tape[self.head_position]
-            if self.head_position == 0 and self._tape[self.head_position] == 'B':
-                self.head_position += 1
             elif self._tape[self.head_position] == '1' and self.state == 'q0':
                 self._tape[self.head_position] = 'X'
                 self.head_position += 1
@@ -101,7 +99,7 @@ class substraction:
         self.first = f
         self.second = s
         self.alphabet = "10B#" 
-        self.head_position = 0
+        self.head_position = 1
         self.__init_tape()
         self.state = 'q0'
     
@@ -119,8 +117,6 @@ class substraction:
         while True:
             if self.head_position < 0 or self._tape[self.head_position] not in self.alphabet:
                 return self._tape[self.head_position]
-            if self.head_position == 0 and self._tape[self.head_position] == 'B':
-                self.head_position += 1
             elif self._tape[self.head_position] == 'B' and self.state == 'q0':
                 self._tape[self.head_position] = 'B'
                 self.head_position += 1
@@ -203,7 +199,7 @@ class addition:
         self.first = f
         self.second = s
         self.alphabet = "10B#" 
-        self.head_position = 0
+        self.head_position = 1
         self.__init_tape()
         self.state = 'q0'
     
@@ -221,8 +217,6 @@ class addition:
         while True:
             if self.head_position < 0 or self._tape[self.head_position] not in self.alphabet:
                 return self._tape[self.head_position]
-            if self.head_position == 0 and self._tape[self.head_position] == 'B':
-                self.head_position += 1
             elif self._tape[self.head_position] == 'B' and self.state == 'q0':
                 self._tape[self.head_position] = 'B'
                 self.head_position += 1
