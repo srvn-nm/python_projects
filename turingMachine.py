@@ -148,13 +148,36 @@ class addition:
             self.state = 'q1'
         elif character == '#' and self.state == 'q0':
             self._tape[self.head_position] = '#'
-            self.head_position -= 1
             self.state = 'q5'
             return self._tape
         elif character == '1' and self.state == 'q1':
             self._tape[self.head_position] = '1'
             self.head_position += 1
             self.state = 'q1'
+        elif character == '0' and self.state == 'q1':
+            self._tape[self.head_position] = '1'
+            self.head_position += 1
+            self.state = 'q2'
+        elif character == '1' and self.state == 'q2':
+            self._tape[self.head_position] = '1'
+            self.head_position += 1
+            self.state = 'q2'
+        elif character == '#' and self.state == 'q2':
+            self._tape[self.0head_position] = '#'
+            self.head_position -= 1
+            self.state = 'q3'
+        elif character == '1' and self.state == 'q3':
+            self._tape[self.head_position] = '#'
+            self.head_position -= 1
+            self.state = 'q4'
+        elif character == '1' and self.state == 'q4':
+            self._tape[self.head_position] = '1'
+            self.head_position -= 1
+            self.state = 'q4'
+        elif character == 'B' and self.state == 'q4':
+            self._tape[self.head_position] = 'B'
+            self.state = 'q5'
+            return self._tape
         
         
 
