@@ -16,6 +16,8 @@ class Comparator:
         self.head_position = 0
         self.__init_tape()
         self.state = 'q0'
+        sub = substraction(self.first,self.second)
+        add = addition(self.first,self.second)
     
     def __init_tape(self):
         tape = "B"
@@ -50,7 +52,7 @@ class Comparator:
             self._tape[self.head_position] = 'B'
             self.head_position -= 1
             self.state = 'a>b'  
-            return 1               
+            return sub.write_move()               
         elif character == 'X' and self.state == 'q2':
             self._tape[self.head_position] = 'X'
             self.head_position += 1
@@ -257,8 +259,7 @@ class final_turing_machine:
         comp = Comparator(firstNumber,secondNumber)
         self.first = comp.first
         self.second = comp.second
-        sub = substraction(comp.compare(),self.first,self.second)
-        add = addition(comp.compare(),self.first,self.second)
+        
         res = 0
         if comp.compare() == 1:
             
