@@ -105,7 +105,7 @@ class substraction:
         tape = "B"
         for a in (c for c in self.first if c in self.alphabet):
             tape += a
-        tape += "0"
+        tape += "#"
         for a in (c for c in self.second if c in self.alphabet):
             tape += a
         tape += "#"
@@ -114,10 +114,27 @@ class substraction:
     def write_move(self,character):
         if self.head_position < 1 or character not in self.alphabet:
             return self._tape[self.head_position]
+        elif character == 'B' and self.state == 'q0':
+            self._tape[self.head_position] = 'B'
+            self.head_position += 1
+            self.state = 'q0'
+        elif character == '#' and self.state == 'q0':
+            self._tape[self.head_position] = '#'
+            self.state = 'q9'
+            return self._tape
         elif character == '1' and self.state == 'q0':
-            self._tape[self.head_position] = 'X'
+            self._tape[self.head_position] = '1'
             self.head_position += 1
             self.state = 'q1'
+        elif character == '1' and self.state == 'q1':
+            self._tape[self.head_position] = '1'
+            self.head_position += 1
+            self.state = 'q1'
+        elif character == '#' and self.state == 'q1':
+            self._tape[self.head_position] = '#'
+            self.head_position += 1
+            self.state = 'q2'
+        
     
 class addition:
     def __init__(self,si,f,s):
