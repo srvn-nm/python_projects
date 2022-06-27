@@ -13,7 +13,7 @@ class Comparator:
         for i in tempsecond:
             self.second += str(i)
         self.alphabet = "10B#" 
-        self.head_position = 1
+        self.head_position = 0
         self.__init_tape()
         self.state = 'q0'
         self.sub = substraction(self.first,self.second)

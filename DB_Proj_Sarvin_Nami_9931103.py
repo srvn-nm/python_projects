@@ -14,15 +14,14 @@ db = mysql.connect(
 cursor = db.cursor()
 # cursor.execute("CREATE DATABASE datacamp")
 cursor.execute("use datacamp")
-# cursor.execute("DROP DATABASE datacamp")
+cursor.execute("DROP TABLE IF EXISTS limited_users")
+cursor.execute("DROP TABLE IF EXISTS log_wrongPassword")
+cursor.execute("DROP TABLE IF EXISTS log_login")
 cursor.execute("DROP TABLE IF EXISTS messages")
 cursor.execute("DROP TABLE IF EXISTS request")
 cursor.execute("DROP TABLE IF EXISTS blocked")
 cursor.execute("DROP TABLE IF EXISTS friends")
 cursor.execute("DROP TABLE IF EXISTS users")
-cursor.execute("DROP TABLE IF EXISTS limited_users")
-cursor.execute("DROP TABLE IF EXISTS log_wrongPassword")
-cursor.execute("DROP TABLE IF EXISTS log_login")
 
 
 # try:
@@ -31,11 +30,11 @@ cursor.execute("CREATE TABLE friends (u1ID VARCHAR(255), u2ID VARCHAR(255), fID 
 cursor.execute("CREATE TABLE blocked (blockerID VARCHAR(255), blockedID VARCHAR(255), bID INT AUTO_INCREMENT PRIMARY KEY, timing VARCHAR(255), FOREIGN KEY(blockerID) REFERENCES users(userID), FOREIGN KEY(blockedID) REFERENCES users(userID))")
 cursor.execute("CREATE TABLE request (u1ID VARCHAR(255), u2ID VARCHAR(255), fID INT, bID INT, friendship SMALLINT, message SMALLINT, block SMALLINT, iID INT AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(u1ID) REFERENCES users(userID), FOREIGN KEY(fID) REFERENCES friends(fID), FOREIGN KEY(bID) REFERENCES blocked(bID), FOREIGN KEY(u2ID) REFERENCES users(userID))")
 cursor.execute("CREATE TABLE messages (sID VARCHAR(255), rID VARCHAR(255), timing VARCHAR(255), text VARCHAR(255), seen SMALLINT DEFAULT 0, liked SMALLINT DEFAULT 0, mID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(sID) REFERENCES users(userID), FOREIGN KEY(rID) REFERENCES users(userID))")
-cursor.execute("CREATE TABLE log_login (userID VARCHAR(255), useccheck VARCHAR(255), loginAttempts INT DEFAULT 0, timing VARCHAR(255), newPass VARCHAR(255), FOREIGN KEY(userID) REFERENCES users(userID)), FOREIGN KEY(useccheck) REFERENCES users(useccheck))")
+cursor.execute("CREATE TABLE log_login (userID VARCHAR(255), useccheck VARCHAR(255), loginAttempts INT DEFAULT 0, timing VARCHAR(255), newPass VARCHAR(255), FOREIGN KEY(userID) REFERENCES users(userID), FOREIGN KEY(useccheck) REFERENCES users(useccheck))")
 cursor.execute("CREATE TABLE log_wrongPassword (userID VARCHAR(255), useccheck VARCHAR(255), timing VARCHAR(255), attempts INT DEFAULT 0, FOREIGN KEY(userID) REFERENCES users(userID), FOREIGN KEY(useccheck) REFERENCES users(useccheck))")
 cursor.execute("CREATE TABLE limited_users (userID VARCHAR(255), timing VARCHAR(255), FOREIGN KEY(userID) REFERENCES users(userID))")
 
-# except mysql.ERROR as e:
+# except Exception as e:
 #     print(e)
 
 def register(name, lname, ID, phoneNo, gmail, password):
@@ -82,7 +81,7 @@ def register(name, lname, ID, phoneNo, gmail, password):
         values = (name, lname, ID, phoneNo, gmail, password, seccheck, current_time, temp)
         cursor.execute(Q1, values)
         db.commit()
-    except mysql.ERROR as e:
+    except Exception as e:
         print(e)
     sendMail(gmail,"succsessfully registered!^-^",f"Hi {name}.\nYou are a member of our family now!<3")
     menu(ID)
@@ -98,7 +97,7 @@ def sendMail(TO,SUBJECT,TEXT):
         server = smtplib.SMTP('localhost')
         server.sendmail("snnn99554@gmail.com", TO, message)
         server.quit()
-    except smtplib.ERROR as e:
+    except Exception as e:
         print(e)
 
 def passwordRecovery(username):
@@ -108,7 +107,7 @@ def passwordRecovery(username):
         cursor.execute("SELECT * from users WHERE userID = %s and useccheck = %s", (username, seccheck))
         checking = cursor.fetchall()
         db.commit()
-    except mysql.ERROR as e:
+    except Exception as e:
         print(e)
     while checking == None and questionCount < 5 :
         seccheck = input("what was your answer to security question?")
@@ -123,7 +122,7 @@ def passwordRecovery(username):
         cursor.execute("SELECT * from users WHERE userID = %s and useccheck = %s", (username, seccheck))
         checking = cursor.fetchall()
         db.commit()
-    except mysql.ERROR as e:
+    except Exception as e:
         print(e)
     while code_check and checking == None and questionCount == 5 :
         sendMail(reciever, "login code", randomCode)
@@ -138,7 +137,7 @@ def passwordRecovery(username):
         Q2 = f"INSERT INTO log_login (userID, useccheck, loginAttempts, timing) VALUES({username}, {seccheck}, {questionCount}, {current_time})"
         cursor.execute(Q2)
         db.commit()
-    except mysql.ERROR as e:
+    except Exception as e:
         print(e)
     changePassword(username)
     try:
@@ -148,7 +147,7 @@ def passwordRecovery(username):
         update_query2 = f" UPDATE log_login SET newPass = {new_password} WHERE userID = {username}"
         cursor.execute(update_query2)
         db.commit()    
-    except mysql.ERROR as e:
+    except Exception as e:
         print(e)
 
 def wrongPassword(username):
@@ -167,7 +166,7 @@ def wrongPassword(username):
             Q4 = f"INSERT INTO limited_users (userID, timing) VALUES({username}, {current_time})"
             cursor.execute(Q4)
             db.commit()
-    except mysql.ERROR as e:
+    except Exception as e:
         print(e)
         
 def login():
@@ -201,7 +200,7 @@ def login():
                     wrongPassword(username)
         else:
             print("Sorry!\nYou can't login.>-<\n")
-    except mysql.ERROR as e:
+    except Exception as e:
         print(e)
 
 def changePassword(username):
@@ -236,7 +235,7 @@ def changePassword(username):
         update_query = f" UPDATE users SET upassword = {new_password} WHERE userID = {username}"
         cursor.execute(update_query)
         db.commit()
-    except mysql.ERROR as e:
+    except Exception as e:
         print(e)
 
 def firstMenu():
@@ -320,7 +319,7 @@ def serachMenu(ids,username):
             sendmessage(username , id[i])
         elif choice == "6":
             menu(username)
-    except mysql.ERROR as e:
+    except Exception as e:
         print(e)
 
 def sendmessage(sender,reciever):
@@ -329,7 +328,7 @@ def sendmessage(sender,reciever):
         current_time = datetime.now().strftime("%H:%M:%S")
         cursor.execute(f'INSERT INTO messages (sID, rID, timing, text) VALUES ({sender}, {reciever}, {current_time}, {msg})')
         db.commit()
-    except mysql.ERROR as e:
+    except Exception as e:
         print(e)
    
 def menu(username):
@@ -400,7 +399,7 @@ def menu(username):
                 menu(username)
         elif choice == "7":
             print(f"Goodbye {username}!\nHope to see you again soon.^-^\n")
-    except mysql.ERROR as e:
+    except Exception as e:
         print(e)
 firstMenu()
 db.close()
