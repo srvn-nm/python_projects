@@ -89,12 +89,12 @@ def register(name, lname, ID, phoneNo, gmail, password):
 def sendMail(TO,SUBJECT,TEXT):
     try:
         message = textwrap.dedent("""\
-            From: %s
-            To: %s
-            Subject: %s
-            %s
+            From: %s\
+            To: %s\
+            Subject: %s\
+            %s\
             """ % ("snnn99554@gmail.com", ", ".join(TO), SUBJECT, TEXT))
-        server = smtplib.SMTP('localhost')
+        server = smtplib.SMTP("127.0.0.1")
         server.sendmail("snnn99554@gmail.com", TO, message)
         server.quit()
     except Exception as e:
@@ -116,7 +116,7 @@ def passwordRecovery(username):
     randomCode = random.randint(10000,100000)
     code_check = True
     try:
-        cursor.execute('SELECT email FROM users WHERE userID = username')
+        cursor.execute('SELECT email FROM users WHERE userID = %s',(username))
         reciever = str(cursor.fetchone())
         db.commit()
         cursor.execute("SELECT * from users WHERE userID = %s and useccheck = %s", (username, seccheck))
@@ -134,18 +134,18 @@ def passwordRecovery(username):
         print(user)
         db.commit()
         current_time = datetime.now().strftime("%H:%M:%S")
-        Q2 = f"INSERT INTO log_login (userID, useccheck, loginAttempts, timing) VALUES({username}, {seccheck}, {questionCount}, {current_time})"
-        cursor.execute(Q2)
+        Q2 = "INSERT INTO log_login (userID, useccheck, loginAttempts, timing) VALUES(%s, %s, %s, %s)"
+        cursor.execute(Q2,(username, seccheck, questionCount, current_time))
         db.commit()
     except Exception as e:
         print(e)
     changePassword(username)
     try:
-        cursor.execute('SELECT upassword FROM users WHERE userID = username')
+        cursor.execute('SELECT upassword FROM users WHERE userID = %s',(username))
         new_password = str(cursor.fetchone())
         db.commit()
-        update_query2 = f" UPDATE log_login SET newPass = {new_password} WHERE userID = {username}"
-        cursor.execute(update_query2)
+        update_query2 = " UPDATE log_login SET newPass = %s WHERE userID = %s"
+        cursor.execute(update_query2,(new_password, username))
         db.commit()    
     except Exception as e:
         print(e)
