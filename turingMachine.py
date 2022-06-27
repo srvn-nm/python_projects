@@ -31,7 +31,7 @@ class Comparator:
     
     def write_move(self):
         for character in self._tape:
-            if self.head_position < 1 or character not in self.alphabet:
+            if self.head_position < 0 or character not in self.alphabet:
                 return self._tape[self.head_position]
             elif character == '1' and self.state == 'q0':
                 self._tape[self.head_position] = 'X'
@@ -115,7 +115,7 @@ class substraction:
     
     def write_move(self):
         for character in self._tape:
-            if self.head_position < 1 or character not in self.alphabet:
+            if self.head_position < 0 or character not in self.alphabet:
                 return self._tape[self.head_position]
             elif character == 'B' and self.state == 'q0':
                 self._tape[self.head_position] = 'B'
@@ -215,7 +215,7 @@ class addition:
         
     def write_move(self):
         for character in self._tape:
-            if self.head_position < 1 or character not in self.alphabet:
+            if self.head_position < 0 or character not in self.alphabet:
                 return self._tape[self.head_position]
             elif character == 'B' and self.state == 'q0':
                 self._tape[self.head_position] = 'B'
