@@ -153,18 +153,18 @@ def passwordRecovery(username):
 def wrongPassword(username):
     try:
         print("invalid inputs for login attempt!")
-        cursor.execute('SELECT attempts FROM log_wrongPassword WHERE userID = username')
+        cursor.execute('SELECT attempts FROM log_wrongPassword WHERE userID = %s',(username))
         number = cursor.fetchone()
         db.commit()
         if int(number) + 1 < 3 :
             temp = int(number) + 1
-            update_query = f" UPDATE log_wrongPassword SET attempts = {temp} WHERE userID = {username}"
-            cursor.execute(update_query)
+            update_query = " UPDATE log_wrongPassword SET attempts = %s WHERE userID = %s"
+            cursor.execute(update_query,(temp, username))
             db.commit()
         else: 
             current_time = datetime.now().strftime("%H:%M:%S")
-            Q4 = f"INSERT INTO limited_users (userID, timing) VALUES({username}, {current_time})"
-            cursor.execute(Q4)
+            Q4 = "INSERT INTO limited_users (userID, timing) VALUES(%s, %s)"
+            cursor.execute(Q4,(username, current_time))
             db.commit()
     except Exception as e:
         print(e)
