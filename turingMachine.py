@@ -111,10 +111,13 @@ class substraction:
         tape += "#"
         self._tape = list(tape)
     
-    def substract(self):
-        if self.signal == 1:
-            res = len(self.first) - len(self.second)
-            return res
+    def write_move(self,character):
+        if self.head_position < 1 or character not in self.alphabet:
+            return self._tape[self.head_position]
+        elif character == '1' and self.state == 'q0':
+            self._tape[self.head_position] = 'X'
+            self.head_position += 1
+            self.state = 'q1'
     
 class addition:
     def __init__(self,si,f,s):
@@ -136,10 +139,22 @@ class addition:
         tape += "#"
         self._tape = list(tape)
         
-    def add(self):
-        if self.signal == 0:
-            res = len(self.first) + len(self.second)
-            return res
+    def write_move(self,character):
+        if self.head_position < 1 or character not in self.alphabet:
+            return self._tape[self.head_position]
+        elif character == 'B' and self.state == 'q0':
+            self._tape[self.head_position] = 'B'
+            self.head_position += 1
+            self.state = 'q1'
+        elif character == '#' and self.state == 'q0':
+            self._tape[self.head_position] = '#'
+            self.head_position -= 1
+            self.state = 'q5'
+            return self._tape
+        elif character == '1' and self.state == 'q1':
+            self._tape[self.head_position] = '1'
+            self.head_position += 1
+            self.state = 'q1'
         
         
 
