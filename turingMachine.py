@@ -96,6 +96,20 @@ class substraction:
         self.signal = si
         self.first = f
         self.second = s
+        self.alphabet = "10B#" 
+        self.head_position = 0
+        self.__init_tape()
+        self.state = 'q0'
+    
+    def __init_tape(self):
+        tape = "B"
+        for a in (c for c in self.first if c in self.alphabet):
+            tape += a
+        tape += "0"
+        for a in (c for c in self.second if c in self.alphabet):
+            tape += a
+        tape += "#"
+        self._tape = list(tape)
     
     def substract(self):
         if self.signal == 1:
@@ -107,6 +121,20 @@ class addition:
         self.signal = si 
         self.first = f
         self.second = s
+        self.alphabet = "10B#" 
+        self.head_position = 0
+        self.__init_tape()
+        self.state = 'q0'
+    
+    def __init_tape(self):
+        tape = "B"
+        for a in (c for c in self.first if c in self.alphabet):
+            tape += a
+        tape += "0"
+        for a in (c for c in self.second if c in self.alphabet):
+            tape += a
+        tape += "#"
+        self._tape = list(tape)
         
     def add(self):
         if self.signal == 0:
