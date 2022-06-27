@@ -13,15 +13,21 @@ db = mysql.connect(
 cursor = db.cursor()
 # cursor.execute("CREATE DATABASE datacamp")
 cursor.execute("use datacamp")
+# cursor.execute("DROP DATABASE datacamp")
+# cursor.execute("DROP TABLE users")
 
-# cursor.execute("CREATE TABLE users (uname VARCHAR(255) not null, ulname  VARCHAR(255) not null, userID Int NOT NULL unique PRIMARY KEY, phone VARCHAR(255) not null unique, email VARCHAR(255) not null unique, upassword VARCHAR(255) not null, useccheck VARCHAR(255) not null unique, timing VARCHAR(255) not null, log_in int default '0'")
-# cursor.execute("CREATE TABLE friends (u1ID Int, u2ID Int, fID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(u1ID, u2ID) REFERENCES Users(userID, userID)")
-# cursor.execute("CREATE TABLE blocked (blockerID Int, blockedID Int, bID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, timing VARCHAR(255), FOREIGN KEY(blockerID, blockedID) REFERENCES Users(userID, userID)")
-# cursor.execute("CREATE TABLE request (u1ID Int, u2ID Int, fID Int, bID Int, friendship smallint, message smallint, block smallint, iID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(u1ID, u2ID) REFERENCES Users(userID, userID), FOREIGN KEY(fID) REFERENCES friends(fID), FOREIGN KEY(bID) REFERENCES blocked(bID)")
-# cursor.execute("CREATE TABLE messages (sID Int, rID Int, timing VARCHAR(255), text VARCHAR(255), seen smallint default '0', liked smallint default '0', mID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(sID, rID) REFERENCES Users(userID, userID)")
-# cursor.execute("CREATE TABLE log_login (userID Int, useccheck VARCHAR(255), loginAttempts Int default '0', timing VARCHAR(255), newPass VARCHAR(255), FOREIGN KEY(userID, useccheck) REFERENCES Users(userID, useccheck)")
-# cursor.execute("CREATE TABLE log_wrongPassword (userID Int, useccheck VARCHAR(255), timing VARCHAR(255), attempts Int default '0', FOREIGN KEY(userID, useccheck) REFERENCES Users(userID, useccheck)")
-# cursor.execute("CREATE TABLE limited_users (userID Int, timing VARCHAR(255), FOREIGN KEY(userID) REFERENCES Users(userID)")
+try:
+    cursor.execute("CREATE TABLE users (uname VARCHAR(255) not null, ulname  VARCHAR(255) not null, userID VARCHAR(255) NOT NULL unique PRIMARY KEY, phone VARCHAR(255) not null unique, email VARCHAR(255) not null unique, upassword VARCHAR(255) not null, useccheck VARCHAR(255) not null unique, timing VARCHAR(255) not null, log_in Int DEFAULT 0")
+    cursor.execute("CREATE TABLE friends (u1ID Int, u2ID Int, fID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(u1ID, u2ID) REFERENCES Users(userID, userID)")
+    cursor.execute("CREATE TABLE blocked (blockerID Int, blockedID Int, bID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, timing VARCHAR(255), FOREIGN KEY(blockerID, blockedID) REFERENCES Users(userID, userID)")
+    cursor.execute("CREATE TABLE request (u1ID Int, u2ID Int, fID Int, bID Int, friendship smallint, message smallint, block smallint, iID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(u1ID, u2ID) REFERENCES Users(userID, userID), FOREIGN KEY(fID) REFERENCES friends(fID), FOREIGN KEY(bID) REFERENCES blocked(bID)")
+    cursor.execute("CREATE TABLE messages (sID Int, rID Int, timing VARCHAR(255), text VARCHAR(255), seen smallint DEFAULT 0, liked smallint DEFAULT 0, mID Int NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(sID, rID) REFERENCES Users(userID, userID)")
+    cursor.execute("CREATE TABLE log_login (userID Int, useccheck VARCHAR(255), loginAttempts Int DEFAULT 0, timing VARCHAR(255), newPass VARCHAR(255), FOREIGN KEY(userID, useccheck) REFERENCES Users(userID, useccheck)")
+    cursor.execute("CREATE TABLE log_wrongPassword (userID Int, useccheck VARCHAR(255), timing VARCHAR(255), attempts Int DEFAULT 0, FOREIGN KEY(userID, useccheck) REFERENCES Users(userID, useccheck)")
+    cursor.execute("CREATE TABLE limited_users (userID Int, timing VARCHAR(255), FOREIGN KEY(userID) REFERENCES Users(userID)")
+
+except mysql.Error as e:
+    print(e)
 
 def register(name, lname, ID, phoneNo, gmail, password):
     checking = False
@@ -62,8 +68,9 @@ def register(name, lname, ID, phoneNo, gmail, password):
     current_time = datetime.now().strftime("%H:%M:%S")
     temp = 1
     seccheck = input("what is your favorite color?")
-    Q1 =f"INSERT INTO users (uname, ulname, userID, phone, email, upassword, useccheck, timing , log_in) VALUES({name}, {lname}, {ID}, {phoneNo}, {gmail}, {password}, {seccheck}, {current_time}, {temp})"
-    cursor.execute(Q1)
+    Q1 ="INSERT INTO users (uname, ulname, userID, phone, email, upassword, useccheck, timing , log_in) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %d)"
+    values = (name, lname, ID, phoneNo, gmail, password, seccheck, current_time, temp)
+    cursor.execute(Q1, values)
     db.commit()
     sendMail(gmail,"succsessfully registered!^-^",f"Hi {name}.\nYou are a member of our family now!<3")
     menu(ID)
