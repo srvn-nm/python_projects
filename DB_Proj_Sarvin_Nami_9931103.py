@@ -172,18 +172,20 @@ def wrongPassword(username):
 def login():
     try:
         username = input("type your username here: ")
-        limited_query = f"SELECT userID From limited_users WHERE userID = {username}"
-        limited_username = cursor.execute(limited_query)
+        limited_query = "SELECT userID From limited_users WHERE userID = %s"
+        cursor.execute(limited_query,(username))
+        limited_username = cursor.fetchone()
         db.commit()
-        login_query =f"SELECT userID FROM users WHERE log_in = '1' and userID = {username}"
-        loggedin_username = cursor.execute(login_query)
+        login_query ="SELECT userID FROM users WHERE log_in = '1' and userID = %s"
+        cursor.execute(login_query,(username))
+        loggedin_username = cursor.fetchone()
         db.commit()
         if (not (username == limited_username)) and (not(username == loggedin_username)):
             password = input("type your password here or if you don't remember it just type 0:  ")
             if password == 0:
                 passwordRecovery(username)
             else:
-                cursor.execute('SELECT upassword FROM users WHERE userID = username')
+                cursor.execute('SELECT upassword FROM users WHERE userID = %s',(username))
                 oldpass = cursor.fetchone()
                 db.commit()
                 if str(oldpass) == password:
@@ -192,8 +194,8 @@ def login():
                     print("Hello!\nWelcome Back!\n" + user)
                     db.commit()
                     print("Congratulations!\nYou successfully logged in!\n" + user)
-                    update_query = f" UPDATE users SET log_in = '1' WHERE userID = {username}"
-                    cursor.execute(update_query)
+                    update_query = " UPDATE users SET log_in = '1' WHERE userID = %s"
+                    cursor.execute(update_query,(username))
                     db.commit()
                     menu(username)
                 else:
@@ -216,7 +218,7 @@ def changePassword(username):
             questionCount += 1
         randomCode = random.randint(10000,100000)
         code_check = True
-        cursor.execute('SELECT email FROM users WHERE userID = username')
+        cursor.execute('SELECT email FROM users WHERE userID = %s',(username))
         checking_email = cursor.fetchone()
         reciever = str(checking_email)
         db.commit()
@@ -232,8 +234,8 @@ def changePassword(username):
         while not new_password.isalpha():
             print("Password should have alphabets, too!\ntry again:\n")
             new_password = input()
-        update_query = f" UPDATE users SET upassword = {new_password} WHERE userID = {username}"
-        cursor.execute(update_query)
+        update_query = " UPDATE users SET upassword = %s WHERE userID = %s"
+        cursor.execute(update_query,(new_password, username))
         db.commit()
     except Exception as e:
         print(e)
