@@ -257,10 +257,11 @@ class final_turing_machine:
         comp = Comparator(firstNumber,secondNumber)
         self.first = comp.first
         self.second = comp.second
-        
-        sub = substraction(comp.compare(),comp.first,comp.second)
-        add = addition(comp.compare(),comp.first,comp.second)
+        sub = substraction(comp.compare(),self.first,self.second)
+        add = addition(comp.compare(),self.first,self.second)
+        res = 0
         if comp.compare() == 1:
-            print(sub.substract())
+            
         else:
-            print(add.add())
+        
+        print(res)
