@@ -169,7 +169,27 @@ class substraction:
         elif character == '1' and self.state == 'q6':
             self._tape[self.head_position] = '#'
             self.head_position -= 1
-            self.state = 'q7'  
+            self.state = 'q7'
+        elif character == '#' and self.state == 'q7':
+            self._tape[self.head_position] = '#'
+            self.head_position -= 1
+            self.state = 'q7' 
+        elif character == 'B' and self.state == 'q7':
+            self._tape[self.head_position] = 'B'
+            self.state = 'q9'
+            return self._tape
+        elif character == '1' and self.state == 'q7':
+            self._tape[self.head_position] = '#'
+            self.head_position -= 1
+            self.state = 'q8'
+        elif character == '1' and self.state == 'q8':
+            self._tape[self.head_position] = '1'
+            self.head_position -= 1
+            self.state = 'q8'
+        elif character == 'B' and self.state == 'q8':
+            self._tape[self.head_position] = 'B'
+            self.state = 'q9'
+            return self._tape
     
 class addition:
     def __init__(self,si,f,s):
