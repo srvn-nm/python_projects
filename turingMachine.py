@@ -98,19 +98,19 @@ class substraction:
     def __init__(self , f , s):
         self.first = f
         self.second = s
-        self.alphabet = "10B#" 
+        self.alphabet = "10BC" 
         self.head_position = 1
         self.__init_tape()
         self.state = 'q0'
     
     def __init_tape(self):
         tape = "B"
-        for a in (c for c in self.first if c in self.alphabet):
-            tape += a
-        tape += "#"
         for a in (c for c in self.second if c in self.alphabet):
             tape += a
-        tape += "#"
+        tape += "C"
+        for a in (c for c in self.first if c in self.alphabet):
+            tape += a
+        tape += "B"
         self._tape = list(tape)
     
     def write_move(self):
@@ -121,79 +121,56 @@ class substraction:
                 self._tape[self.head_position] = 'B'
                 self.head_position += 1
                 self.state = 'q0'
-            elif self._tape[self.head_position] == '#' and self.state == 'q0':
-                self._tape[self.head_position] = '#'
-                self.state = 'q9'
-                return self._tape
+            elif self._tape[self.head_position] == 'C' and self.state == 'q0':
+                self._tape[self.head_position] = 'C'
+                self.head_position += 1
+                self.state = 'q1'
             elif self._tape[self.head_position] == '1' and self.state == 'q0':
                 self._tape[self.head_position] = '1'
                 self.head_position += 1
-                self.state = 'q1'
+                self.state = 'q0'
             elif self._tape[self.head_position] == '1' and self.state == 'q1':
-                self._tape[self.head_position] = '1'
+                self._tape[self.head_position] = 'X'
+                self.head_position -= 1
+                self.state = 'q2'
+            elif self._tape[self.head_position] == 'X' and self.state == 'q1':
+                self._tape[self.head_position] = 'X'
                 self.head_position += 1
                 self.state = 'q1'
-            elif self._tape[self.head_position] == '#' and self.state == 'q1':
-                self._tape[self.head_position] = '#'
-                self.head_position += 1
+            elif self._tape[self.head_position] == 'B' and self.state == 'q1':
+                self._tape[self.head_position] = 'B'
+                self.head_position -= 1
+                self.state = 'q5'
+            elif self._tape[self.head_position] == 'X' and self.state == 'q2':
+                self._tape[self.head_position] = 'X'
+                self.head_position -= 1
                 self.state = 'q2'
-            elif self._tape[self.head_position] == '#' and self.state == 'q2':
-                self._tape[self.head_position] = '#'
-                self.head_position += 1
-                self.state = 'q2'
-            elif self._tape[self.head_position] == '1' and self.state == 'q2':
-                self._tape[self.head_position] = '1'
-                self.head_position += 1
+            elif self._tape[self.head_position] == 'C' and self.state == 'q2':
+                self._tape[self.head_position] = 'C'
+                self.head_position -= 1
                 self.state = 'q3'
+            elif self._tape[self.head_position] == 'B' and self.state == 'q3':
+                self._tape[self.head_position] = 'B'
+                self.head_position += 1
+                self.state = 'q4'
             elif self._tape[self.head_position] == '1' and self.state == 'q3':
                 self._tape[self.head_position] = '1'
                 self.head_position -= 1
-                self.state = 'q4'
-            elif self._tape[self.head_position] == '#' and self.state == 'q3':
-                self._tape[self.head_position] = '#'
-                self.head_position -= 1
-                self.state = 'q6'
+                self.state = 'q3'
             elif self._tape[self.head_position] == '1' and self.state == 'q4':
-                self._tape[self.head_position] = '#'
-                self.head_position -= 1
-                self.state = 'q5'
-            elif self._tape[self.head_position] == '#' and self.state == 'q5':
-                self._tape[self.head_position] = '#'
-                self.head_position -= 1
-                self.state = 'q5'
-            elif self._tape[self.head_position] == '1' and self.state == 'q5':
-                self._tape[self.head_position] = '#'
-                self.head_position += 1
-                self.state = 'q2' 
-            elif self._tape[self.head_position] == 'B' and self.state == 'q5':
                 self._tape[self.head_position] = 'B'
                 self.head_position += 1
-                self.state = 'q2' 
-            elif self._tape[self.head_position] == '1' and self.state == 'q6':
-                self._tape[self.head_position] = '#'
-                self.head_position -= 1
-                self.state = 'q7'
-            elif self._tape[self.head_position] == '#' and self.state == 'q7':
-                self._tape[self.head_position] = '#'
-                self.head_position -= 1
-                self.state = 'q7' 
-            elif self._tape[self.head_position] == 'B' and self.state == 'q7':
+                self.state = 'q0'
+            elif self._tape[self.head_position] == 'X' and self.state == 'q5':
                 self._tape[self.head_position] = 'B'
-                self.state = 'q9'
-                return self._tape
-            elif self._tape[self.head_position] == '1' and self.state == 'q7':
-                self._tape[self.head_position] = '#'
                 self.head_position -= 1
-                self.state = 'q8'
-            elif self._tape[self.head_position] == '1' and self.state == 'q8':
-                self._tape[self.head_position] = '1'
-                self.head_position -= 1
-                self.state = 'q8'
-            elif self._tape[self.head_position] == 'B' and self.state == 'q8':
+                self.state = 'q5' 
+            elif self._tape[self.head_position] == 'C' and self.state == 'q5':
                 self._tape[self.head_position] = 'B'
-                self.state = 'q9'
+                self.head_position -= 1
+                self.state = 'q6' 
                 return self._tape
-    
+            
 class addition:
     def __init__(self,f,s): 
         self.first = f
