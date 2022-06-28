@@ -404,7 +404,7 @@ def searchMenu(ids,username):
                 Q7 = "DELETE FROM blocked WHERE blockerID = %s and blockedID = %s"
                 cursor.execute(Q7,(username, ids[i][0]))
                 db.commit()
-            choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
+            searchMenu(ids,username)
         elif choice == "2":
             no = 1
             for id in ids:
@@ -414,7 +414,7 @@ def searchMenu(ids,username):
             Q6 = "DELETE FROM friends WHERE (u1ID = %s and u2ID = %s) or (u2ID = %s and u1ID = %s)"
             cursor.execute(Q6,(ids[i][0], username, ids[i][0], username))
             db.commit()
-            choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
+            searchMenu(ids,username)
         elif choice == "3":
             no = 1
             for id in ids:
@@ -432,7 +432,7 @@ def searchMenu(ids,username):
                 Q7 = "DELETE FROM friends WHERE fID = %s"
                 cursor.execute(Q7,(checking[1]))
                 db.commit()
-            choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
+            searchMenu(ids,username)
         elif choice == "4":
             no = 1
             for id in ids:
@@ -442,7 +442,7 @@ def searchMenu(ids,username):
             current_time = datetime.now().strftime("%H:%M:%S")
             cursor.execute('DELETE FROM blocked WHERE blockerID = %s and blockedID= %s and timing = %s',(username, ids[i][0], current_time))
             db.commit()
-            choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
+            searchMenu(ids,username)
         elif choice == "5":
             no = 1
             for id in ids:
