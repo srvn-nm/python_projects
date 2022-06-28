@@ -28,7 +28,7 @@ cursor = db.cursor()
 # cursor.execute("DROP TABLE IF EXISTS limited_users")
 # cursor.execute("DROP TABLE IF EXISTS log_wrongPassword")
 # cursor.execute("DROP TABLE IF EXISTS log_login")
-cursor.execute("DROP TABLE IF EXISTS messages")
+# cursor.execute("DROP TABLE IF EXISTS messages")
 # cursor.execute("DROP TABLE IF EXISTS request")
 # cursor.execute("DROP TABLE IF EXISTS blocked")
 # cursor.execute("DROP TABLE IF EXISTS friends")
@@ -40,7 +40,7 @@ cursor.execute("DROP TABLE IF EXISTS messages")
 # cursor.execute("CREATE TABLE friends (u1ID VARCHAR(255), u2ID VARCHAR(255), fID INT AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(u1ID) REFERENCES users(userID), FOREIGN KEY(u2ID) REFERENCES users(userID))")
 # cursor.execute("CREATE TABLE blocked (blockerID VARCHAR(255), blockedID VARCHAR(255), bID INT AUTO_INCREMENT PRIMARY KEY, timing VARCHAR(255), FOREIGN KEY(blockerID) REFERENCES users(userID), FOREIGN KEY(blockedID) REFERENCES users(userID))")
 # cursor.execute("CREATE TABLE request (u1ID VARCHAR(255), u2ID VARCHAR(255), fID INT, bID INT, friendship SMALLINT, message SMALLINT, block SMALLINT, iID INT AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(u1ID) REFERENCES users(userID), FOREIGN KEY(fID) REFERENCES friends(fID), FOREIGN KEY(bID) REFERENCES blocked(bID), FOREIGN KEY(u2ID) REFERENCES users(userID))")
-cursor.execute("CREATE TABLE messages (senderID VARCHAR(255), rID VARCHAR(255), timing VARCHAR(255), textmsg VARCHAR(255), seen SMALLINT DEFAULT 0, liked SMALLINT DEFAULT 0, mID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(senderID) REFERENCES users(userID), FOREIGN KEY(rID) REFERENCES users(userID))")
+# cursor.execute("CREATE TABLE messages (senderID VARCHAR(255), rID VARCHAR(255), timing VARCHAR(255), textmsg VARCHAR(255), seen SMALLINT DEFAULT 0, liked SMALLINT DEFAULT 0, mID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(senderID) REFERENCES users(userID), FOREIGN KEY(rID) REFERENCES users(userID))")
 # cursor.execute("CREATE TABLE log_login (userID VARCHAR(255), useccheck VARCHAR(255), loginAttempts INT DEFAULT 0, timing VARCHAR(255), newPass VARCHAR(255), FOREIGN KEY(userID) REFERENCES users(userID), FOREIGN KEY(useccheck) REFERENCES users(useccheck))")
 # cursor.execute("CREATE TABLE log_wrongPassword (userID VARCHAR(255), useccheck VARCHAR(255), timing VARCHAR(255), attempts INT DEFAULT 0, FOREIGN KEY(userID) REFERENCES users(userID), FOREIGN KEY(useccheck) REFERENCES users(useccheck))")
 # cursor.execute("CREATE TABLE limited_users (userID VARCHAR(255), timing VARCHAR(255), FOREIGN KEY(userID) REFERENCES users(userID))")
@@ -486,7 +486,7 @@ def menu(username):
             db.commit()
             firstMenu()
         elif choice == "3":
-            update_query = "UPDATE users SET upassword = None SET uname = None and SET ulname = None and SET phone = None and SET email = None and SET useccheck = None and SET timing = None and SET log_in = '0' WHERE userID = %s"
+            update_query = "UPDATE users SET upassword = None, SET uname = None, SET ulname = None, SET phone = None, SET email = None, SET useccheck = None, SET timing = None, SET log_in = '0' WHERE userID = %s"
             cursor.execute(update_query,(username,))
             db.commit()
             cursor.execute('DELETE FROM friends WHERE (u1ID = %sor u2ID = %s)',(username, username))
@@ -519,7 +519,7 @@ def menu(username):
             db.commit()
             no = 1
             for msg in messages:
-                print(str(no) + ") " + msg)
+                print(str(no) + ") " + str(msg))
                 no += 1
             cursor.execute("UPDATE messages SET seen = '1' WHERE seen = '0'")
             db.commit()
@@ -527,7 +527,7 @@ def menu(username):
             if choice2 == "0": 
                 menu(username)
             else:
-                cursor.execut("UPDATE messages SET liked = '1' WHERE mID = %s",(messages[int(choice2)-1][6]))
+                cursor.execute("UPDATE messages SET liked = '1' WHERE mID = %s",(messages[int(choice2)-1][6],))
                 db.commit()
                 menu(username)
         elif choice == "6":
