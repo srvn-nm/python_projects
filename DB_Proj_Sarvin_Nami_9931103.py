@@ -394,7 +394,7 @@ def searchMenu(ids,username):
                 print(str(no) + ") " + str(id))
                 no += 1
             i = int(input("Enter the number of one person")) - 1
-            cursor.execute('SELECT blockerID, blockedID, u1ID, u2ID FROM friends OUTER JOIN blocked WHERE (blockerID == %s and blockedID == %s) or (u1ID == %s and u2ID == %s) or (u2ID == %s and u1ID == %s)',(ids[i][0], username, ids[i][0], username, ids[i][0], username))
+            cursor.execute('SELECT blockerID, blockedID, u1ID, u2ID FROM friends OUTER JOIN blocked WHERE ((blockerID == %s and blockedID == %s) or (u1ID == %s and u2ID == %s) or (u2ID == %s and u1ID == %s))',(ids[i][0], username, ids[i][0], username, ids[i][0], username))
             checking = cursor.fetchall()
             db.commit()
             if checking == None:
@@ -489,6 +489,10 @@ def menu(username):
             for row in cursor:
                 searched_IDs.append(row)
             db.commit()
+            for id in searched_IDs:
+                if id[0] == username:
+                    searched_IDs.remove(id)
+                    break
             no = 1
             for id in searched_IDs:
                 print(str(no) + ") " + str(id))
