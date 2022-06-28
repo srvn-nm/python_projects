@@ -517,21 +517,21 @@ def menu(username):
                 db.commit()
                 menu(username)
         elif choice == "6":
-            search_query = "SELECT * FROM friends WHERE u1ID = %s or u2ID = %s"
+            search_query = "SELECT * FROM friends WHERE (u1ID = %s or u2ID = %s)"
             cursor.execute(search_query,(username, username))
             friends = cursor.fetchall()
             db.commit()
             no = 1
             for fr in friends:
-                print(str(no) + ") " + fr)
+                print(str(no) + ") " + str(fr))
                 no += 1
             choice2 = input("If you want to unfriend a friend type their number or type 0")
             if choice2 == "0": 
                 menu(username)
             else:
                 i = int(choice2) - 1
-                Q6 = "DELETE FROM friends WHERE (u1ID = %s and u2ID = %s) or (u2ID = %s and u1ID = %s)"
-                cursor.execute(Q6,(friends[i], username, friends[i], username))
+                Q6 = "DELETE FROM friends WHERE ((u1ID = %s and u2ID = %s) or (u2ID = %s and u1ID = %s))"
+                cursor.execute(Q6,(friends[i][0], username, friends[i][0], username))
                 db.commit()
                 menu(username)
         elif choice == "7":
