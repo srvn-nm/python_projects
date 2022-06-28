@@ -394,15 +394,15 @@ def searchMenu(ids,username):
                 print(str(no) + ") " + str(id))
                 no += 1
             i = int(input("Enter the number of one person")) - 1
-            cursor.execute('SELECT blockerID, blockedID, u1ID, u2ID FROM friends OUTER JOIN blocked WHERE (blockerID == %s and blockedID == %s) or (u1ID == %s and u2ID == %s) or (u2ID == %s and u1ID == %s)',(ids[i], username, ids[i], username, ids[i], username))
+            cursor.execute('SELECT blockerID, blockedID, u1ID, u2ID FROM friends OUTER JOIN blocked WHERE (blockerID == %s and blockedID == %s) or (u1ID == %s and u2ID == %s) or (u2ID == %s and u1ID == %s)',(ids[i][0], username, ids[i][0], username, ids[i][0], username))
             checking = cursor.fetchall()
             db.commit()
             if checking == None:
                 Q6 = "INSERT INTO friends (u1ID, u2ID) VALUES (%s, %s)"
-                cursor.execute(Q6,(username, ids[i]))
+                cursor.execute(Q6,(username, ids[i][0]))
                 db.commit()
                 Q7 = "DELETE FROM blocked WHERE blockerID = %s and blockedID = %s"
-                cursor.execute(Q7,(username, ids[i]))
+                cursor.execute(Q7,(username, ids[i][0]))
                 db.commit()
             choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
         elif choice == "2":
@@ -412,7 +412,7 @@ def searchMenu(ids,username):
                 no += 1
             i = int(input("Enter the number of one person")) - 1
             Q6 = "DELETE FROM friends WHERE (u1ID == %s and u2ID == %s) or (u2ID == %s and u1ID == %s)"
-            cursor.execute(Q6,(ids[i], username, ids[i], username))
+            cursor.execute(Q6,(ids[i][0], username, ids[i][0], username))
             db.commit()
             choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
         elif choice == "3":
@@ -422,8 +422,8 @@ def searchMenu(ids,username):
                 no += 1
             i = int(input("Enter the number of one person")) - 1
             current_time = datetime.now().strftime("%H:%M:%S")
-            cursor.execute('INSERT INTO blocked (blockerID, blockedID, timing) VALUES (%s, %s, %s)',(username, ids[i], current_time))
-            cursor.execute('SELECT fID FROM friends WHERE (u1ID == %s and u2ID == %s) or (u2ID == %sand u1ID == %s)',(ids[i], username, ids[i], username))
+            cursor.execute('INSERT INTO blocked (blockerID, blockedID, timing) VALUES (%s, %s, %s)',(username, ids[i][0], current_time))
+            cursor.execute('SELECT fID FROM friends WHERE (u1ID == %s and u2ID == %s) or (u2ID == %sand u1ID == %s)',(ids[i][0], username, ids[i][0], username))
             checking = list(cursor.fetchall())
             db.commit()
             if not checking == None:
@@ -440,7 +440,7 @@ def searchMenu(ids,username):
                 no += 1
             i = int(input("Enter the number of one person")) - 1
             current_time = datetime.now().strftime("%H:%M:%S")
-            cursor.execute('DELETE FROM blocked WHERE blockerID = %s and blockedID= %s and timing = %s',(username, ids[i], current_time))
+            cursor.execute('DELETE FROM blocked WHERE blockerID = %s and blockedID= %s and timing = %s',(username, ids[i][0], current_time))
             db.commit()
             choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
         elif choice == "5":
