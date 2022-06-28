@@ -542,12 +542,14 @@ def menu(username):
             for i in acc:
                 print(i + '\n')
             db.commit()
+            menu(username)
         elif choice == '9':
             cursor.execute("SELECT * FROM users")
             acc = cursor.fetchall()
             for i in acc:
                 print(i + '\n')
             db.commit()
+            menu(username)
         elif choice == '10':
             cursor.execute("SELECT * FROM users")
             for j in cursor:
@@ -574,6 +576,7 @@ def menu(username):
             for j in cursor:
                 print(j)
             db.commit()
+            menu(username)
     except Exception as e:
         print(e)
 firstMenu()
