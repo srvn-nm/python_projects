@@ -391,7 +391,7 @@ def searchMenu(ids,username):
         if choice == "1":
             no = 1
             for id in ids:
-                print(str(no) + ") " + id)
+                print(str(no) + ") " + str(id))
                 no += 1
             i = int(input("Enter the number of one person")) - 1
             cursor.execute('SELECT blockerID, blockedID, u1ID, u2ID FROM friends OUTER JOIN blocked WHERE (blockerID == %s and blockedID == %s) or (u1ID == %s and u2ID == %s) or (u2ID == %s and u1ID == %s)',(ids[i], username, ids[i], username, ids[i], username))
@@ -418,7 +418,7 @@ def searchMenu(ids,username):
         elif choice == "3":
             no = 1
             for id in ids:
-                print(no + ") " + id)
+                print(str(no) + ") " + str(id))
                 no += 1
             i = int(input("Enter the number of one person")) - 1
             current_time = datetime.now().strftime("%H:%M:%S")
@@ -436,7 +436,7 @@ def searchMenu(ids,username):
         elif choice == "4":
             no = 1
             for id in ids:
-                print(str(no) + ") " + id)
+                print(str(no) + ") " + str(id))
                 no += 1
             i = int(input("Enter the number of one person")) - 1
             current_time = datetime.now().strftime("%H:%M:%S")
@@ -483,7 +483,7 @@ def menu(username):
             searched_username = input("Please enter the username you want to search for: ")
             searching_number = int(len(searched_username)*0.5)
             searching_name = searched_username[0:searching_number]
-            search_query = "SELECT userID FROM users WHERE userID LIKE CONCAT('%', %s)"
+            search_query = "SELECT userID FROM users WHERE userID LIKE CONCAT(%s, '%')"
             cursor.execute(search_query,(searching_name,))
             searched_IDs = []
             for row in cursor:
