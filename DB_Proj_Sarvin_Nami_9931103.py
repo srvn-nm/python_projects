@@ -426,12 +426,17 @@ def searchMenu(ids,username):
             cursor.execute('SELECT fID FROM friends WHERE (u1ID = %s and u2ID = %s) or (u2ID = %sand u1ID = %s)',(ids[i][0], username, ids[i][0], username))
             checking = list(cursor.fetchall())
             db.commit()
-            if not checking == None:
+            if len(checking) == 2:
                 Q6 = "DELETE FROM friends WHERE fID = %s"
                 cursor.execute(Q6,(checking[0]))
                 Q7 = "DELETE FROM friends WHERE fID = %s"
                 cursor.execute(Q7,(checking[1]))
                 db.commit()
+            elif len(checking == 1):
+                Q6 = "DELETE FROM friends WHERE fID = %s"
+                cursor.execute(Q6,(checking[0]))
+                Q7 = "DELETE FROM friends WHERE fID = %s"
+                cursor.execute(Q7,(checking[0]))
             searchMenu(ids,username)
         elif choice == "4":
             no = 1
