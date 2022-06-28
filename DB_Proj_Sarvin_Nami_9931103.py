@@ -24,15 +24,15 @@ db = mysql.connect(
 )
 cursor = db.cursor()
 # cursor.execute("CREATE DATABASE datacamp")
-cursor.execute("use datacamp")
-cursor.execute("DROP TABLE IF EXISTS limited_users")
-cursor.execute("DROP TABLE IF EXISTS log_wrongPassword")
-cursor.execute("DROP TABLE IF EXISTS log_login")
-cursor.execute("DROP TABLE IF EXISTS messages")
-cursor.execute("DROP TABLE IF EXISTS request")
-cursor.execute("DROP TABLE IF EXISTS blocked")
-cursor.execute("DROP TABLE IF EXISTS friends")
-cursor.execute("DROP TABLE IF EXISTS users")
+# cursor.execute("use datacamp")
+# cursor.execute("DROP TABLE IF EXISTS limited_users")
+# cursor.execute("DROP TABLE IF EXISTS log_wrongPassword")
+# cursor.execute("DROP TABLE IF EXISTS log_login")
+# cursor.execute("DROP TABLE IF EXISTS messages")
+# cursor.execute("DROP TABLE IF EXISTS request")
+# cursor.execute("DROP TABLE IF EXISTS blocked")
+# cursor.execute("DROP TABLE IF EXISTS friends")
+# cursor.execute("DROP TABLE IF EXISTS users")
 
 
 # try:
@@ -394,7 +394,7 @@ def searchMenu(ids,username):
                 print(str(no) + ") " + str(id))
                 no += 1
             i = int(input("Enter the number of one person")) - 1
-            cursor.execute('SELECT blockerID, blockedID, u1ID, u2ID FROM friends OUTER JOIN blocked WHERE ((blockerID = %s and blockedID = %s) or (u1ID = %s and u2ID = %s) or (u2ID = %s and u1ID = %s))',(ids[i][0], username, ids[i][0], username, ids[i][0], username))
+            cursor.execute('SELECT blockerID, blockedID, u1ID, u2ID FROM friends JOIN blocked ON ((blockerID = %s and blockedID = %s) or (u1ID = %s and u2ID = %s) or (u2ID = %s and u1ID = %s))',(ids[i][0], username, ids[i][0], username, ids[i][0], username))
             checking = cursor.fetchall()
             db.commit()
             if checking == None:
@@ -466,7 +466,7 @@ def sendmessage(sender,reciever):
    
 def menu(username):
     try:
-        choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)log out\n3)delete account\n4)search\n5)messages\n6)friends\n7)shutdown")
+        choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)log out\n3)delete account\n4)search\n5)messages\n6)friends\n7)shutdown\n8)show profile\n9)show all accounts")
         if choice == "1":
             changePassword(username)
             menu(username)
@@ -536,6 +536,18 @@ def menu(username):
                 menu(username)
         elif choice == "7":
             print(f"Goodbye {username}!\nHope to see you again soon.^-^\n")
+        elif choice == '8':
+            cursor.execute("SELECT * FROM users WHERE username = %s",(username,))
+            acc = cursor.fetchone()
+            for i in acc:
+                print(i + '\n')
+            db.commit()
+        elif choice == '9':
+            cursor.execute("SELECT * FROM users")
+            acc = cursor.fetchall()
+            for i in acc:
+                print(i + '\n')
+            db.commit()
     except Exception as e:
         print(e)
 firstMenu()
