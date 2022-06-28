@@ -207,9 +207,10 @@ def createMessageWithAttachment(
 
     
 def sendMail(TO,SUBJECT,TEXT):
-    sender = "srvn0nm@gmail.com"
-    msgHtml = "Hi<br/>Html Email"
-    SendMessage(sender, TO, SUBJECT, msgHtml, TEXT)
+    try:
+        sender = "srvn0nm@gmail.com"
+        msgHtml = "Hi<br/>Html Email"
+        SendMessage(sender, TO, SUBJECT, msgHtml, TEXT)
     # Send message with attachment: 
     # SendMessage(sender, TO, SUBJECT, msgHtml, TEXT, '/path/to/file.pdf')
     # try:
@@ -222,8 +223,8 @@ def sendMail(TO,SUBJECT,TEXT):
     #     server = smtplib.SMTP("127.0.0.1")
     #     server.sendmail("snnn99554@gmail.com", TO, message)
     #     server.quit()
-    # except Exception as e:
-    #     print(e)
+    except Exception as e:
+        print(e)
 
 def passwordRecovery(username):
     questionCount = 0
