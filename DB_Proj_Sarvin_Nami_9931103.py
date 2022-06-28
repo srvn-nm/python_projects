@@ -458,7 +458,7 @@ def searchMenu(ids,username):
                 print(str(no) + ") " + str(id))
                 no += 1
             i = int(input("Enter the number of one person")) - 1
-            sendmessage(username , id[i])
+            sendmessage(username , id[i][0])
         elif choice == "6":
             menu(username)
     except Exception as e:
