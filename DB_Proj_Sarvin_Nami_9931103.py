@@ -483,7 +483,7 @@ def menu(username):
             searched_username = input("Please enter the username you want to search for: ")
             searching_number = int(len(searched_username)*0.5)
             searching_name = searched_username[0:searching_number]
-            search_query = "SELECT userID FROM users WHERE userID like (%s)%"
+            search_query = "SELECT userID FROM users WHERE userID LIKE '(%s)%'"
             cursor.execute(search_query,(searching_name,))
             searched_IDs = []
             for row in cursor:
