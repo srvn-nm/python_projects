@@ -116,7 +116,7 @@ def passwordRecovery(username):
     randomCode = random.randint(10000,100000)
     code_check = True
     try:
-        cursor.execute('SELECT email FROM users WHERE userID = %s',(username))
+        cursor.execute('SELECT email FROM users WHERE userID = %s',(username,))
         reciever = str(cursor.fetchone())
         db.commit()
         cursor.execute("SELECT * from users WHERE userID = %s and useccheck = %s", (username, seccheck))
@@ -141,10 +141,10 @@ def passwordRecovery(username):
         print(e)
     changePassword(username)
     try:
-        cursor.execute('SELECT upassword FROM users WHERE userID = %s',(username))
+        cursor.execute('SELECT upassword FROM users WHERE userID = %s',(username,))
         new_password = str(cursor.fetchone())
         db.commit()
-        update_query2 = " UPDATE log_login SET newPass = %s WHERE userID = %s"
+        update_query2 = "UPDATE log_login SET newPass = %s WHERE userID = %s"
         cursor.execute(update_query2,(new_password, username))
         db.commit()    
     except Exception as e:
@@ -153,7 +153,7 @@ def passwordRecovery(username):
 def wrongPassword(username):
     try:
         print("invalid inputs for login attempt!")
-        cursor.execute('SELECT attempts FROM log_wrongPassword WHERE userID = %s',(username))
+        cursor.execute('SELECT attempts FROM log_wrongPassword WHERE userID = %s',(username,))
         number = cursor.fetchone()
         db.commit()
         if int(number) + 1 < 3 :
@@ -173,11 +173,11 @@ def login():
     try:
         username = input("type your username here: ")
         limited_query = "SELECT userID From limited_users WHERE userID = %s"
-        cursor.execute(limited_query,(username))
+        cursor.execute(limited_query,(username,))
         limited_username = cursor.fetchone()
         db.commit()
         login_query ="SELECT userID FROM users WHERE log_in = '1' and userID = %s"
-        cursor.execute(login_query,(username))
+        cursor.execute(login_query,(username,))
         loggedin_username = cursor.fetchone()
         db.commit()
         if (not (username == limited_username)) and (not(username == loggedin_username)):
@@ -185,7 +185,7 @@ def login():
             if password == 0:
                 passwordRecovery(username)
             else:
-                cursor.execute('SELECT upassword FROM users WHERE userID = %s',(username))
+                cursor.execute('SELECT upassword FROM users WHERE userID = %s',(username,))
                 oldpass = cursor.fetchone()
                 db.commit()
                 if str(oldpass) == password:
@@ -195,7 +195,7 @@ def login():
                     db.commit()
                     print("Congratulations!\nYou successfully logged in!\n" + user)
                     update_query = " UPDATE users SET log_in = '1' WHERE userID = %s"
-                    cursor.execute(update_query,(username))
+                    cursor.execute(update_query,(username,))
                     db.commit()
                     menu(username)
                 else:
@@ -218,7 +218,7 @@ def changePassword(username):
             questionCount += 1
         randomCode = random.randint(10000,100000)
         code_check = True
-        cursor.execute('SELECT email FROM users WHERE userID = %s',(username))
+        cursor.execute('SELECT email FROM users WHERE userID = %s',(username,))
         checking_email = cursor.fetchone()
         reciever = str(checking_email)
         db.commit()
@@ -231,10 +231,15 @@ def changePassword(username):
             if entered_code == randomCode:
                 code_check = False
         new_password = input("Enter your new password here: ")
-        while not new_password.isalpha():
+        checking2 = False
+        for i in new_password:
+            if i.isalpha():
+                checking2 = True
+                break
+        while not checking2:
             print("Password should have alphabets, too!\ntry again:\n")
             new_password = input()
-        update_query = " UPDATE users SET upassword = %s WHERE userID = %s"
+        update_query = "UPDATE users SET upassword = %s WHERE userID = %s"
         cursor.execute(update_query,(new_password, username))
         db.commit()
     except Exception as e:
@@ -341,12 +346,12 @@ def menu(username):
             menu(username)
         elif choice == "2":
             update_query = "UPDATE users SET log_in = '0' WHERE userID = %s"
-            cursor.execute(update_query,(username))
+            cursor.execute(update_query,(username,))
             db.commit()
             firstMenu()
         elif choice == "3":
             update_query = "UPDATE users SET upassword = None SET uname = None and SET ulname = None and SET phone = None and SET email = None and SET useccheck = None and SET timing = None and SET log_in = '0' WHERE userID = %s"
-            cursor.execute(update_query,(username))
+            cursor.execute(update_query,(username,))
             db.commit()
         elif choice == "4":
             searched_username = input("Please enter the username you want to search for: ")
@@ -365,7 +370,7 @@ def menu(username):
             serachMenu(searched_IDs,username)  
         elif choice == "5":
             search_query = "SELECT * FROM messages WHERE rID = %s"
-            cursor.execute(search_query,(username))
+            cursor.execute(search_query,(username,))
             messages = cursor.fetchall()
             db.commit()
             no = 1
