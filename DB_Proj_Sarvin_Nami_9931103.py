@@ -449,8 +449,7 @@ def searchMenu(ids,username):
                 print(str(no) + ") " + str(id))
                 no += 1
             i = int(input("Enter the number of one person")) - 1
-            current_time = datetime.now().strftime("%H:%M:%S")
-            cursor.execute('DELETE FROM blocked WHERE blockerID = %s and blockedID= %s and timing = %s',(username, ids[i][0], current_time))
+            cursor.execute('DELETE FROM blocked WHERE blockerID = %s and blockedID= %s',(username, ids[i][0]))
             db.commit()
             searchMenu(ids,username)
         elif choice == "5":
