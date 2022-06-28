@@ -483,7 +483,7 @@ def menu(username):
             searched_username = input("Please enter the username you want to search for: ")
             searching_number = int(len(searched_username)*0.5)
             searching_name = searched_username[0:searching_number]
-            search_query = "SELECT userID FROM users WHERE userID LIKE '(%s)%'"
+            search_query = "SELECT userID FROM users WHERE userID LIKE CONCAT(%s, '%')"
             cursor.execute(search_query,(searching_name,))
             searched_IDs = []
             for row in cursor:
@@ -491,7 +491,7 @@ def menu(username):
             db.commit()
             no = 1
             for id in searched_IDs:
-                print(no + ") " + id)
+                print(str(no) + ") " + str(id))
                 no += 1
             searchMenu(searched_IDs,username)  
         elif choice == "5":
@@ -501,7 +501,7 @@ def menu(username):
             db.commit()
             no = 1
             for msg in messages:
-                print(no + ") " + msg)
+                print(str(no) + ") " + msg)
                 no += 1
             cursor.execute("UPDATE messages SET seen = '1' WHERE seen = '0'")
             db.commit()
