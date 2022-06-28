@@ -111,6 +111,7 @@ def register(name, lname, ID, phoneNo, gmail, password):
     except Exception as e:
         print(e)
     sendMail(gmail,"succsessfully registered!^-^",f"Hi {name}.\nYou are a member of our family now!<3")
+    print("succsessfully registered!^-^\n"+f"Hi {name}.\nYou are a member of our family now!<3")
     menu(ID)
     
 SCOPES = 'https://www.googleapis.com/auth/gmail.send'
@@ -267,6 +268,7 @@ def passwordRecovery(username):
     except Exception as e:
         print(e)
     while code_check and checking == None and questionCount == 5 :
+        print("login code: "+randomCode)
         sendMail(reciever, "login code", randomCode)
         entered_code = input("type the code we have sended to you here: ")
         if entered_code == randomCode:
@@ -298,9 +300,9 @@ def wrongPassword(username):
         cursor.execute('SELECT attempts FROM log_wrongPassword WHERE userID = %s',(username,))
         number = cursor.fetchone()
         db.commit()
-        if int(number) + 1 < 3 :
+        if (int(number) + 1) < 3 :
             temp = int(number) + 1
-            update_query = " UPDATE log_wrongPassword SET attempts = %s WHERE userID = %s"
+            update_query = "UPDATE log_wrongPassword SET attempts = %s WHERE userID = %s"
             cursor.execute(update_query,(temp, username))
             db.commit()
         else: 
@@ -369,6 +371,7 @@ def changePassword(username):
         db.commit()
         while code_check and checking2 == None and questionCount == 5 :
             sendMail(reciever, "login code", randomCode)
+            print("login code: "+randomCode)
             entered_code = input("type the code we have sended to you here: ")
             if entered_code == randomCode:
                 code_check = False
@@ -381,6 +384,10 @@ def changePassword(username):
         while not checking2:
             print("Password should have alphabets, too!\ntry again:\n")
             new_password = input()
+            for i in new_password:
+                if i.isalpha():
+                    checking2 = True
+                    break
         update_query = "UPDATE users SET upassword = %s WHERE userID = %s"
         cursor.execute(update_query,(new_password, username))
         db.commit()
