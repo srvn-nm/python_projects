@@ -397,7 +397,7 @@ def searchMenu(ids,username):
             cursor.execute('SELECT blockerID, blockedID, u1ID, u2ID FROM friends JOIN blocked ON ((blockerID = %s and blockedID = %s) or (u1ID = %s and u2ID = %s) or (u2ID = %s and u1ID = %s))',(ids[i][0], username, ids[i][0], username, ids[i][0], username))
             checking = cursor.fetchall()
             db.commit()
-            if checking == None:
+            if not len(checking):
                 Q6 = "INSERT INTO friends (u1ID, u2ID) VALUES (%s, %s)"
                 cursor.execute(Q6,(username, ids[i][0]))
                 db.commit()
