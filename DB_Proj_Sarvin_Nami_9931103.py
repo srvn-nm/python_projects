@@ -3,14 +3,14 @@ import textwrap
 import mysql.connector as mysql
 from datetime import datetime
 import smtplib
-import httplib2
+# import httplib2
 import os
-import oauth2client
-from oauth2client import client, tools, file
+# import oauth2client
+# from oauth2client import client, tools, file
 import base64
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from apiclient import errors, discovery
+# from apiclient import errors, discovery
 import mimetypes
 from email.mime.image import MIMEImage
 from email.mime.audio import MIMEAudio
@@ -385,7 +385,7 @@ def firstMenu():
     if choice == "2":
         login()
 
-def serachMenu(ids,username):
+def searchMenu(ids,username):
     try:
         choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
         if choice == "1":
@@ -483,8 +483,8 @@ def menu(username):
             searched_username = input("Please enter the username you want to search for: ")
             searching_number = int(len(searched_username)*0.5)
             searching_name = searched_username[0:searching_number]
-            search_query = "SELECT userID FROM users WHERE userID like '{}'%".format(searching_name)
-            cursor.execute(search_query)
+            search_query = "SELECT userID FROM users WHERE userID like (%s)%"
+            cursor.execute(search_query,(searching_name,))
             searched_IDs = []
             for row in cursor:
                 searched_IDs.append(row)
@@ -493,7 +493,7 @@ def menu(username):
             for id in searched_IDs:
                 print(no + ") " + id)
                 no += 1
-            serachMenu(searched_IDs,username)  
+            searchMenu(searched_IDs,username)  
         elif choice == "5":
             search_query = "SELECT * FROM messages WHERE rID = %s"
             cursor.execute(search_query,(username,))
