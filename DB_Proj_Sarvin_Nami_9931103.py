@@ -422,21 +422,26 @@ def searchMenu(ids,username):
                 no += 1
             i = int(input("Enter the number of one person")) - 1
             current_time = datetime.now().strftime("%H:%M:%S")
-            cursor.execute('INSERT INTO blocked (blockerID, blockedID, timing) VALUES (%s, %s, %s)',(username, ids[i][0], current_time))
-            cursor.execute('SELECT fID FROM friends WHERE (u1ID = %s and u2ID = %s) or (u2ID = %sand u1ID = %s)',(ids[i][0], username, ids[i][0], username))
-            checking = list(cursor.fetchall())
-            db.commit()
-            if len(checking) == 2:
-                Q6 = "DELETE FROM friends WHERE fID = %s"
-                cursor.execute(Q6,(checking[0]))
-                Q7 = "DELETE FROM friends WHERE fID = %s"
-                cursor.execute(Q7,(checking[1]))
+            cursor.execute("SELECT bID FROM blocked WHERE blockerID = %s and blockedID = %s",(username,ids[i][0]))
+            checking4 = cursor.fetchone()
+            if len(checking4) == 0:
+                cursor.execute('INSERT INTO blocked (blockerID, blockedID, timing) VALUES (%s, %s, %s)',(username, ids[i][0], current_time))
+                cursor.execute('SELECT fID FROM friends WHERE (u1ID = %s and u2ID = %s) or (u2ID = %sand u1ID = %s)',(ids[i][0], username, ids[i][0], username))
+                checking3 = cursor.fetchall()
                 db.commit()
-            elif len(checking == 1):
-                Q6 = "DELETE FROM friends WHERE fID = %s"
-                cursor.execute(Q6,(checking[0]))
-                Q7 = "DELETE FROM friends WHERE fID = %s"
-                cursor.execute(Q7,(checking[0]))
+                if len(checking3) == 2:
+                    Q6 = "DELETE FROM friends WHERE fID = %s"
+                    cursor.execute(Q6,(checking3[0]))
+                    Q7 = "DELETE FROM friends WHERE fID = %s"
+                    cursor.execute(Q7,(checking3[1]))
+                    db.commit()
+                elif len(checking3) == 1:
+                    Q6 = "DELETE FROM friends WHERE fID = %s"
+                    cursor.execute(Q6,(checking3[0]))
+                    Q7 = "DELETE FROM friends WHERE fID = %s"
+                    cursor.execute(Q7,(checking3[0]))
+                else:
+                    print("you have already blocked this user!")
             searchMenu(ids,username)
         elif choice == "4":
             no = 1
