@@ -479,6 +479,10 @@ def menu(username):
             update_query = "UPDATE users SET upassword = None SET uname = None and SET ulname = None and SET phone = None and SET email = None and SET useccheck = None and SET timing = None and SET log_in = '0' WHERE userID = %s"
             cursor.execute(update_query,(username,))
             db.commit()
+            cursor.execute('DELETE FROM friends WHERE (u1ID = %sor u2ID = %s)',(username, username))
+            db.commit()
+            cursor.execute('DELETE FROM blocked WHERE (blockerID = %sor blockedID = %s)',(username, username))
+            db.commit()
         elif choice == "4":
             searched_username = input("Please enter the username you want to search for: ")
             searching_number = int(len(searched_username)*0.5)
