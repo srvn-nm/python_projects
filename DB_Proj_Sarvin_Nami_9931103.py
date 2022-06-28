@@ -552,27 +552,35 @@ def menu(username):
             menu(username)
         elif choice == '10':
             cursor.execute("SELECT * FROM users")
+            print("users: ")
             for j in cursor:
                 print(j)
             cursor.execute("SELECT * FROM friends")
+            print("friends: ")
             for j in cursor:
                 print(j)
             cursor.execute("SELECT * FROM blocked")
+            print("blocked: ")
             for j in cursor:
                 print(j)
             cursor.execute("SELECT * FROM request")
+            print("request: ")
             for j in cursor:
                 print(j)
             cursor.execute("SELECT * FROM messages")
+            print("messages: ")
             for j in cursor:
                 print(j)
             cursor.execute("SELECT * FROM log_login")
+            print("log_login: ")
             for j in cursor:
                 print(j)
             cursor.execute("SELECT * FROM log_wrongPassword")
+            print("log_wrongPassword: ")
             for j in cursor:
                 print(j)
             cursor.execute("SELECT * FROM limited_users")
+            print("limited_users: ")
             for j in cursor:
                 print(j)
             db.commit()
