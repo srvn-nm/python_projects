@@ -57,6 +57,10 @@ def register(name, lname, ID, phoneNo, gmail, password):
     while not checking:
         print("Password should have alphabets, too!\ntry again:\n")
         password = input()
+        for i in password:
+            if i.isalpha():
+                checking = True
+                break
     checking2 = False
     for i in phoneNo:
         if i.isalpha():
@@ -65,6 +69,10 @@ def register(name, lname, ID, phoneNo, gmail, password):
     while checking2:
         print("phone should not have alphabets!\ntry again:\n")
         phoneNo = input()
+        for i in phoneNo:
+            if i.isalpha():
+                checking2 = True
+                break
     checking3 = False
     for i in name:
         if i.isnumeric():
@@ -73,6 +81,10 @@ def register(name, lname, ID, phoneNo, gmail, password):
     while checking3:
         print("Name should have alphabets!\ntry again:\n")
         name = input()
+        for i in name:
+            if i.isnumeric():
+                checking3 = True
+                break
     checking4 = False
     for i in lname:
         if i.isnumeric():
@@ -81,6 +93,10 @@ def register(name, lname, ID, phoneNo, gmail, password):
     while checking4:
         print("Last name should have alphabets!\ntry again:\n")
         lname = input()
+        for i in lname:
+            if i.isnumeric():
+                checking4 = True
+                break
     while gmail.isnumeric() or not gmail.endswith("@gmail.com"):
         print("Email should be a valid gmail address!\ntry again:\n")
         gmail = input()
