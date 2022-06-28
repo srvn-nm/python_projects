@@ -40,7 +40,7 @@ cursor = db.cursor()
 # cursor.execute("CREATE TABLE friends (u1ID VARCHAR(255), u2ID VARCHAR(255), fID INT AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(u1ID) REFERENCES users(userID), FOREIGN KEY(u2ID) REFERENCES users(userID))")
 # cursor.execute("CREATE TABLE blocked (blockerID VARCHAR(255), blockedID VARCHAR(255), bID INT AUTO_INCREMENT PRIMARY KEY, timing VARCHAR(255), FOREIGN KEY(blockerID) REFERENCES users(userID), FOREIGN KEY(blockedID) REFERENCES users(userID))")
 # cursor.execute("CREATE TABLE request (u1ID VARCHAR(255), u2ID VARCHAR(255), fID INT, bID INT, friendship SMALLINT, message SMALLINT, block SMALLINT, iID INT AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(u1ID) REFERENCES users(userID), FOREIGN KEY(fID) REFERENCES friends(fID), FOREIGN KEY(bID) REFERENCES blocked(bID), FOREIGN KEY(u2ID) REFERENCES users(userID))")
-# cursor.execute("CREATE TABLE messages (sID VARCHAR(255), rID VARCHAR(255), timing VARCHAR(255), text VARCHAR(255), seen SMALLINT DEFAULT 0, liked SMALLINT DEFAULT 0, mID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(sID) REFERENCES users(userID), FOREIGN KEY(rID) REFERENCES users(userID))")
+# cursor.execute("CREATE TABLE messages (senderID VARCHAR(255), rID VARCHAR(255), timing VARCHAR(255), textmsg VARCHAR(255), seen SMALLINT DEFAULT 0, liked SMALLINT DEFAULT 0, mID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(senderID) REFERENCES users(userID), FOREIGN KEY(rID) REFERENCES users(userID))")
 # cursor.execute("CREATE TABLE log_login (userID VARCHAR(255), useccheck VARCHAR(255), loginAttempts INT DEFAULT 0, timing VARCHAR(255), newPass VARCHAR(255), FOREIGN KEY(userID) REFERENCES users(userID), FOREIGN KEY(useccheck) REFERENCES users(useccheck))")
 # cursor.execute("CREATE TABLE log_wrongPassword (userID VARCHAR(255), useccheck VARCHAR(255), timing VARCHAR(255), attempts INT DEFAULT 0, FOREIGN KEY(userID) REFERENCES users(userID), FOREIGN KEY(useccheck) REFERENCES users(useccheck))")
 # cursor.execute("CREATE TABLE limited_users (userID VARCHAR(255), timing VARCHAR(255), FOREIGN KEY(userID) REFERENCES users(userID))")
@@ -468,7 +468,7 @@ def sendmessage(sender,reciever):
     try:
         msg = input("Please type your message here: ")
         current_time = datetime.now().strftime("%H:%M:%S")
-        cursor.execute('INSERT INTO messages (sID, rID, timing, text) VALUES (%s, %s, %s, %s)',(sender, reciever, current_time, msg))
+        cursor.execute('INSERT INTO messages (senderID, rID, timing, textmsg) VALUES (%s, %s, %s, %s)',(sender, reciever, current_time, msg))
         db.commit()
     except Exception as e:
         print(e)
