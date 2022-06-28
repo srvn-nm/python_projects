@@ -314,10 +314,10 @@ def login():
                 cursor.execute('SELECT upassword FROM users WHERE userID = %s',(username,))
                 oldpass = cursor.fetchone()
                 db.commit()
-                if str(oldpass[0]) == password:
+                if oldpass[0] == password:
                     cursor.execute("SELECT * from users WHERE userID = %s and upassword = %s", (username, password))
                     user = cursor.fetchone()
-                    print("Hello!\nWelcome Back!\n" + user)
+                    print("Hello!\nWelcome Back!\n" + str(user))
                     db.commit()
                     print("Congratulations!\nYou successfully logged in!\n")
                     update_query = "UPDATE users SET log_in = '1' WHERE userID = %s"
@@ -466,7 +466,7 @@ def sendmessage(sender,reciever):
    
 def menu(username):
     try:
-        choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)log out\n3)delete account\n4)search\n5)messages\n6)friends\n7)shutdown\n8)show profile\n9)show all accounts")
+        choice = input("Hi.Type the number of the action you want to perform here:\n1)change password\n2)log out\n3)delete account\n4)search\n5)messages\n6)friends\n7)shutdown\n8)show profile\n9)show all accounts\n10)show all tables")
         if choice == "1":
             changePassword(username)
             menu(username)
@@ -547,6 +547,32 @@ def menu(username):
             acc = cursor.fetchall()
             for i in acc:
                 print(i + '\n')
+            db.commit()
+        elif choice == '10':
+            cursor.execute("SELECT * FROM users")
+            for j in cursor:
+                print(j)
+            cursor.execute("SELECT * FROM friends")
+            for j in cursor:
+                print(j)
+            cursor.execute("SELECT * FROM blocked")
+            for j in cursor:
+                print(j)
+            cursor.execute("SELECT * FROM request")
+            for j in cursor:
+                print(j)
+            cursor.execute("SELECT * FROM messages")
+            for j in cursor:
+                print(j)
+            cursor.execute("SELECT * FROM log_login")
+            for j in cursor:
+                print(j)
+            cursor.execute("SELECT * FROM log_wrongPassword")
+            for j in cursor:
+                print(j)
+            cursor.execute("SELECT * FROM limited_users")
+            for j in cursor:
+                print(j)
             db.commit()
     except Exception as e:
         print(e)
