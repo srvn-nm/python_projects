@@ -489,12 +489,12 @@ def searchMenu(ids,username):
                 print(str(no) + ") " + str(id))
                 no += 1
             i = int(input("Enter the number of one person")) - 1
-            limited_query = "SELECT uname From users WHERE userID = %s"
-            cursor.execute(limited_query,(ids[i][0],))
-            limited_name = cursor.fetchone()
-            db.commit()
-            if (not limited_name[0] == None):
-                sendmessage(username , id[i])
+            # limited_query = "SELECT uname From users WHERE userID = %s"
+            # cursor.execute(limited_query,(ids[i],))
+            # limited_name = cursor.fetchone()
+            # db.commit()
+            # if (not limited_name[0] == None):
+            sendmessage(username , id[i])
             searchMenu(ids,username)
         elif choice == "6":
             menu(username)
