@@ -33,7 +33,8 @@ class Comparator:
     def write_move(self):
         while True:
             if self.head_position < 0 or self._tape[self.head_position] not in self.alphabet:
-                return self._tape[self.head_position]
+                print(self._tape[self.head_position])
+                break
             elif self._tape[self.head_position] == 'B' and self.state == 'q0':
                 self.head_position += 1
                 self.state = 'q0'
@@ -60,8 +61,8 @@ class Comparator:
                 self._tape[self.head_position] = 'B'
                 self.head_position -= 1
                 self.state = 'a>b'  
-                 
-                self.sub.write_move()               
+                self.sub.write_move()     
+                break          
             elif self._tape[self.head_position] == 'X' and self.state == 'q2':
                 self._tape[self.head_position] = 'X'
                 self.head_position += 1
@@ -101,14 +102,14 @@ class Comparator:
                 self._tape[self.head_position] = '1'
                 self.head_position += 1
                 self.state = 'a<b'  
-                 
-                self.add.write_move()    
+                self.add.write_move()   
+                break 
             elif self._tape[self.head_position] == 'B' and self.state == 'q5':
                 self._tape[self.head_position] = 'B'
                 self.head_position -= 1
-                self.state = 'a=b'
-                 
+                self.state = 'a=b' 
                 self.sub.write_move()   
+                break
     
         
 class substraction:
@@ -134,8 +135,7 @@ class substraction:
     def write_move(self):
         while True:
             if self.head_position < 0 or self._tape[self.head_position] not in self.alphabet:
-                 
-                return self._tape[self.head_position]
+                print(self._tape[self.head_position])
             elif self._tape[self.head_position] == 'B' and self.state == 'q0':
                 self._tape[self.head_position] = 'B'
                 self.head_position += 1
@@ -200,8 +200,12 @@ class substraction:
                 self._tape[self.head_position] = 'B'
                 self.head_position -= 1
                 self.state = 'q6' 
-                 
-                return self._tape
+                res = 0
+                for i in self._tape:
+                    if i == '1':
+                        res += 1
+                print(res)
+                break
             
 class addition:
     def __init__(self,f,s): 
@@ -226,7 +230,7 @@ class addition:
     def write_move(self):
         while True:
             if self.head_position < 0 or self._tape[self.head_position] not in self.alphabet:
-                return self._tape[self.head_position]
+                print(self._tape[self.head_position])
             elif self._tape[self.head_position] == 'B' and self.state == 'q0':
                 self._tape[self.head_position] = 'B'
                 self.head_position += 1
@@ -234,7 +238,6 @@ class addition:
             elif self._tape[self.head_position] == '#' and self.state == 'q0':
                 self._tape[self.head_position] = '#'
                 self.state = 'q5'
-                return self._tape
             elif self._tape[self.head_position] == '1' and self.state == 'q1':
                 self._tape[self.head_position] = '1'
                 self.head_position += 1
@@ -262,10 +265,15 @@ class addition:
             elif self._tape[self.head_position] == 'B' and self.state == 'q4':
                 self._tape[self.head_position] = 'B'
                 self.state = 'q5'
-                return self._tape
+                res = 0
+                for i in self._tape:
+                    if i == '1':
+                        res += 1
+                print(res)
+                break
         
         
 firstNumber = int(input("enter firstNumber: "))
 secondNumber = int(input("enter secondNumber: "))
 comp = Comparator(firstNumber,secondNumber)
-print(comp.write_move())
+comp.write_move()
