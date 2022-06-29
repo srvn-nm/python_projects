@@ -420,7 +420,11 @@ def searchMenu(ids,username):
             cursor.execute('SELECT blockerID, blockedID, u1ID, u2ID FROM friends JOIN blocked ON ((blockerID = %s and blockedID = %s) or (u1ID = %s and u2ID = %s) or (u2ID = %s and u1ID = %s))',(ids[i][0], username, ids[i][0], username, ids[i][0], username))
             checking = cursor.fetchall()
             db.commit()
-            if not len(checking):
+            limited_query = "SELECT uname From users WHERE userID = %s"
+            cursor.execute(limited_query,(ids[i][0],))
+            limited_name = cursor.fetchone()
+            db.commit()
+            if (not len(checking)) and (not limited_name[0] == None):
                 Q6 = "INSERT INTO friends (u1ID, u2ID) VALUES (%s, %s)"
                 cursor.execute(Q6,(username, ids[i][0]))
                 db.commit()
@@ -447,7 +451,11 @@ def searchMenu(ids,username):
             current_time = datetime.now().strftime("%H:%M:%S")
             cursor.execute("SELECT bID FROM blocked WHERE blockerID = %s and blockedID = %s",(username,ids[i][0]))
             checking4 = cursor.fetchone()
-            if len(checking4) == 0:
+            limited_query = "SELECT uname From users WHERE userID = %s"
+            cursor.execute(limited_query,(ids[i][0],))
+            limited_name = cursor.fetchone()
+            db.commit()
+            if len(checking4) == 0 and (not limited_name[0] == None):
                 cursor.execute('INSERT INTO blocked (blockerID, blockedID, timing) VALUES (%s, %s, %s)',(username, ids[i][0], current_time))
                 cursor.execute('SELECT fID FROM friends WHERE (u1ID = %s and u2ID = %s) or (u2ID = %sand u1ID = %s)',(ids[i][0], username, ids[i][0], username))
                 checking3 = cursor.fetchall()
@@ -481,7 +489,12 @@ def searchMenu(ids,username):
                 print(str(no) + ") " + str(id))
                 no += 1
             i = int(input("Enter the number of one person")) - 1
-            sendmessage(username , id[i])
+            limited_query = "SELECT uname From users WHERE userID = %s"
+            cursor.execute(limited_query,(ids[i][0],))
+            limited_name = cursor.fetchone()
+            db.commit()
+            if (not limited_name[0] == None):
+                sendmessage(username , id[i])
             searchMenu(ids,username)
         elif choice == "6":
             menu(username)
