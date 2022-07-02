@@ -3,7 +3,7 @@ import instaloader
 import urllib
 from urllib import urlopen
 from PIL import Image, ImageTk
-import IO
+import io
 
 
 # instagram
@@ -27,8 +27,10 @@ def buttonFunc():
     profile = instaloader.Profile.from_username(insta.context,input.get())
     # print(profile.followers)
     # label.config(text=input.get())
-    username = profile.get_profile_pic_url()
+    username_link = profile.get_profile_pic_url()
     # print(username)
+    username_url = urlopen(username_link)
+    date = 
 
 button = Button(window,text="Click here to download",fg="white",bg="black",command=buttonFunc)
 button.pack()
