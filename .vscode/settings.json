@@ -20,5 +20,7 @@
   "kite.enableOptionalCompletionsTriggers": true,
   "cmake.ignoreKitEnv": true,
   "kite.codefinder.enableLineDecoration": true,
-  "DockerRun.DisableDockerrc": true
+  "DockerRun.DisableDockerrc": true,
+  "python.linting.pylintEnabled": true,
+  "python.linting.enabled": false
 }
