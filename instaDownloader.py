@@ -12,6 +12,7 @@ label.pack()
 def buttonFunc():
     print("You pressed the button! >-<")
     button.config(text="Downloaded Already!")
+    label.config(text=input.get())
 
 button = Button(window,text="Click here to download",fg="white",bg="black",command=buttonFunc)
 button.pack()
