@@ -3,14 +3,14 @@ import textwrap
 import mysql.connector as mysql
 from datetime import datetime
 import smtplib
-# import httplib2
+import httplib2
 import os
-# import oauth2client
-# from oauth2client import client, tools, file
+import oauth2client
+from oauth2client import client, tools, file
 import base64
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-# from apiclient import errors, discovery
+from apiclient import errors, discovery
 import mimetypes
 from email.mime.image import MIMEImage
 from email.mime.audio import MIMEAudio
