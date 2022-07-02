@@ -2,7 +2,9 @@ from tkinter import *
 import instaloader
 import urllib
 from urllib import urlopen
-import Pillow
+from PIL import Image, ImageTk
+import IO
+
 
 # instagram
 insta = instaloader.Instaloader()
