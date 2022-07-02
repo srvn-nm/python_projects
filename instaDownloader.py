@@ -1,4 +1,7 @@
 from tkinter import *
+import instaloader
+
+insta = instaloader.Instaloader()
 
 window = Tk()
 window.geometry("600x600")
