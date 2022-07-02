@@ -1,7 +1,7 @@
 from tkinter import *
 import instaloader
 import urllib
-from urllib import urlopen
+from urllib.request import urlopen
 from PIL import Image, ImageTk
 import io
 
