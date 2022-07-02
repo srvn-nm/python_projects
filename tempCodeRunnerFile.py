@@ -1,0 +1,10 @@
+execute("CREATE DATABASE datacamp")
+cursor.execute("use datacamp")
+cursor.execute("DROP TABLE IF EXISTS limited_users")
+cursor.execute("DROP TABLE IF EXISTS log_wrongPassword")
+cursor.execute("DROP TABLE IF EXISTS log_login")
+cursor.execute("DROP TABLE IF EXISTS messages")
+cursor.execute("DROP TABLE IF EXISTS request")
+cursor.execute("DROP TABLE IF EXISTS blocked")
+cursor.execute("DROP TABLE IF EXISTS friends")
+cursor.exec
