@@ -19,11 +19,11 @@ from email.mime.base import MIMEBase
 db = mysql.connect(
     host = "localhost",
     user = "root",
-    passwd = "rootSarvin1372",
+    
     db = "datacamp"
 )
 cursor = db.cursor()
-cursor.execute("CREATE DATABASE datacamp")
+# cursor.execute("CREATE DATABASE datacamp")
 cursor.execute("use datacamp")
 cursor.execute("DROP TABLE IF EXISTS limited_users")
 cursor.execute("DROP TABLE IF EXISTS log_wrongPassword")
