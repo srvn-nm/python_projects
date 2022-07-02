@@ -9,7 +9,11 @@ window.title("Instagram Profile Downloader")
 label = Label(window,text="Hello Instagram!")
 label.pack()
 
-button = Button(window,text="Click here to download",fg="white",bg="black")
+def buttonFunc():
+    print("You pressed the button! >-<")
+
+button = Button(window,text="Click here to download",fg="white",bg="black",command=buttonFunc)
 button.pack()
+# button.place(300,300)
 
 window.mainloop()
