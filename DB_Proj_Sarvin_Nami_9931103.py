@@ -19,7 +19,7 @@ from email.mime.base import MIMEBase
 db = mysql.connect(
     host = "localhost",
     user = "root",
-    
+    passwd = "rootSarvin1372",
     db = "datacamp"
 )
 cursor = db.cursor()
