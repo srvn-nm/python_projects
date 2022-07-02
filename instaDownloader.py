@@ -17,4 +17,7 @@ button = Button(window,text="Click here to download",fg="white",bg="black",comma
 button.pack()
 # button.place(300,300)
 
+input = Entry(window)
+input.pack()
+
 window.mainloop()
