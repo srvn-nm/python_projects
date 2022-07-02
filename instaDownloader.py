@@ -30,7 +30,14 @@ def buttonFunc():
     username_link = profile.get_profile_pic_url()
     # print(username)
     username_url = urlopen(username_link)
-    date = 
+    data = username_url.read()
+    username_url.close()
+    img = Image.open(io.BytesIO(data))
+    profile_pic = ImageTk.PhotoImage(img)
+    label_pic.config(image=profile_pic)
+    label_pic.image = profile_pic
+    label_pic.pack()
+    
 
 button = Button(window,text="Click here to download",fg="white",bg="black",command=buttonFunc)
 button.pack()
