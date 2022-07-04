@@ -1,6 +1,8 @@
 import telebot
+import requests
 
 TOKEN = '5528897472:AAEVbf7Ic7wGOE3sYXd0v0j7cAtSUGByhHU'
+URL = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT'
 
 bot = telebot.TeleBot(TOKEN)
 
