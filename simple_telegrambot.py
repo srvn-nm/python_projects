@@ -8,4 +8,8 @@ bot = telebot.TeleBot(TOKEN)
 def send_welcome(message):
 	bot.reply_to(message, "Hello, I'm Sarvin. What can I do for you?")
  
+@bot.message_handler(func=lambda m: True)
+def echo_all(message):
+	bot.reply_to(message, message.text)
+ 
 bot.infinity_polling()
