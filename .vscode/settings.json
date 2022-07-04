@@ -22,5 +22,8 @@
   "kite.codefinder.enableLineDecoration": true,
   "DockerRun.DisableDockerrc": true,
   "python.linting.pylintEnabled": true,
-  "python.linting.enabled": false
+  "python.linting.enabled": false,
+  "cSpell.words": [
+    "telebot"
+  ]
 }
