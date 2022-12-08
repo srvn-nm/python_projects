@@ -6,16 +6,13 @@ class Node:
  
  
 # Function to perform Postorder traversal on the tree
-def printPostorder(root):
-    if root:
-    # First recur on left child
-        printPostorder(root.left)
- 
-        # the recur on right child
-        printPostorder(root.right)
- 
-        # now print the data of node
-        print(root.data),
+def preOrder(node):
+	if not node:
+		return
+	
+	print (node.data),
+	preOrder(node.left)
+	preOrder(node.right)
  
  
 # Function to construct balanced BST from the given sorted list
@@ -53,10 +50,10 @@ def constructBST(keys):
 if __name__ == '__main__':
  
     # input keys
-    keys = [15, 10, 20, 8, 12, 16, 25]
+    keys = [-5,-10,0,15,20,100,-100]
  
     # construct a balanced binary search tree
     root = constructBST(keys)
  
     # print the keys in an inorder fashion
-    printPostorder(root)
+    preOrder(root)
