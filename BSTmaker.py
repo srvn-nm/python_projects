@@ -5,14 +5,17 @@ class Node:
         self.right = right
  
  
-# Function to perform inorder traversal on the tree
-def inorder(root):
-    if root is None:
-        return
+# Function to perform Postorder traversal on the tree
+def printPostorder(root):
+    if root:
+    # First recur on left child
+        printPostorder(root.left)
  
-    inorder(root.left)
-    print(root.data, end=' ')
-    inorder(root.right)
+        # the recur on right child
+        printPostorder(root.right)
+ 
+        # now print the data of node
+        print(root.data),
  
  
 # Function to construct balanced BST from the given sorted list
@@ -56,4 +59,4 @@ if __name__ == '__main__':
     root = constructBST(keys)
  
     # print the keys in an inorder fashion
-    inorder(root)
+    printPostorder(root)
