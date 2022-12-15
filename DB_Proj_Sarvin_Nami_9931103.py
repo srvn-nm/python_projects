@@ -110,8 +110,8 @@ def register(name, lname, ID, phoneNo, gmail, password):
         db.commit()
     except Exception as e:
         print(e)
-    sendMail(gmail,"succsessfully registered!^-^",f"Hi {name}.\nYou are a member of our family now!<3")
-    print("succsessfully registered!^-^\n"+f"Hi {name}.\nYou are a member of our family now!<3")
+    sendMail(gmail,"successfully registered!^-^",f"Hi {name}.\nYou are a member of our family now!<3")
+    print("successfully registered!^-^\n"+f"Hi {name}.\nYou are a member of our family now!<3")
     menu(ID)
     
 SCOPES = 'https://www.googleapis.com/auth/gmail.send'
@@ -410,7 +410,7 @@ def firstMenu():
 
 def searchMenu(ids,username):
     try:
-        choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messsages\n6)exit\n")
+        choice = input("Please select one of the options below:\n1)friendship\n2)unfriend\n3)block\n4)unblock\n5)send messages\n6)exit\n")
         if choice == "1":
             no = 1
             for id in ids:

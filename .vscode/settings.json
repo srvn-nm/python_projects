@@ -24,8 +24,20 @@
   "python.linting.pylintEnabled": true,
   "python.linting.enabled": false,
   "cSpell.words": [
+    "apiclient",
+    "clientsecrets",
+    "datacamp",
     "inorder",
+    "loggedin",
+    "oldpass",
     "Postorder",
-    "telebot"
+    "reciever",
+    "seccheck",
+    "sendmessage",
+    "telebot",
+    "textmsg",
+    "ulname",
+    "upassword",
+    "useccheck"
   ]
 }
