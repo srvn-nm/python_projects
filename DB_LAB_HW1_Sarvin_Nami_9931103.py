@@ -8,7 +8,8 @@ db = mysql.connect(
     db = "school"
 )
 cursor = db.cursor()
-cursor.execute("CREATE DATABASE school")
+# cursor.execute("CREATE DATABASE school")
+cursor.execute("use school")
 
 cursor.execute("DROP TABLE IF EXISTS Student")
 cursor.execute("DROP TABLE IF EXISTS Teacher")
