@@ -36,7 +36,7 @@ cursor.execute("DROP TABLE IF EXISTS users")
 
 
 # try:
-cursor.execute("CREATE TABLE users (uname VARCHAR(255) not null, ulname  VARCHAR(255) not null, userID VARCHAR(255) NOT NULL UNIQUE, phone VARCHAR(255) not null unique, email VARCHAR(255) not null unique, upassword VARCHAR(255) not null, useccheck VARCHAR(255) UNIQUE NOT NULL, timing VARCHAR(255) not null, log_in INT DEFAULT 0, PRIMARY KEY(userID, useccheck))")
+cursor.execute("CREATE TABLE users (uname VARCHAR(255) not NULL, ulname  VARCHAR(255) not NULL, userID VARCHAR(255) NOT NULL UNIQUE, phone VARCHAR(255) not NULL unique, email VARCHAR(255) not NULL unique, upassword VARCHAR(255) not NULL, useccheck VARCHAR(255) UNIQUE NOT NULL, timing VARCHAR(255) not NULL, log_in INT DEFAULT 0, PRIMARY KEY(userID, useccheck))")
 cursor.execute("CREATE TABLE friends (u1ID VARCHAR(255), u2ID VARCHAR(255), fID INT AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(u1ID) REFERENCES users(userID), FOREIGN KEY(u2ID) REFERENCES users(userID))")
 cursor.execute("CREATE TABLE blocked (blockerID VARCHAR(255), blockedID VARCHAR(255), bID INT AUTO_INCREMENT PRIMARY KEY, timing VARCHAR(255), FOREIGN KEY(blockerID) REFERENCES users(userID), FOREIGN KEY(blockedID) REFERENCES users(userID))")
 cursor.execute("CREATE TABLE request (u1ID VARCHAR(255), u2ID VARCHAR(255), fID INT, bID INT, friendship SMALLINT, message SMALLINT, block SMALLINT, iID INT AUTO_INCREMENT PRIMARY KEY, FOREIGN KEY(u1ID) REFERENCES users(userID), FOREIGN KEY(fID) REFERENCES friends(fID), FOREIGN KEY(bID) REFERENCES blocked(bID), FOREIGN KEY(u2ID) REFERENCES users(userID))")
