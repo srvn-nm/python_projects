@@ -32,3 +32,17 @@ def student_add(s_name, s_family, s_id, age, city, s_field, gender, tavg):
         
         
 student_add("danial", "jahed", 1, 23, "mashhad", "software", "m", 18.26)
+student_add("ahmad", "ghadirzadeh", 2, 23, "mashhad", "software", "m", 17.36)
+student_add("mahsa", "ghanad", 3, 20, "shiraz", "hardware", "f", 15.13)
+student_add("hasan", "attari", 4, 22, "esfahan", "electricity", "m", 12.43)
+student_add("elham", "sadeghi", 5, 18, "rasht", "industry", "f", 16.25)
+student_add("fatemeh", "khosravi", 6, 19, "zanjan", "it", "f", 18.46)
+student_add("saeed", "yazdanian", 7, 26, "tahran", "software", "m", 19.16)
+student_add("sajjad", "aemmi", 8, 23, "mashhad", "software", "m", 16.89)
+student_add("alireza", "shahidi", 9, 21, "tehran", "it", "m", 9.75)
+student_add("negar", "kamali", 10, 20, "mashhad", "software", "f", 15.25)
+student_add("ali", "gandomi", 11, 23, "tehran", "hardware", "m", 17.16)
+student_add("nafiseh", "hoseini", 12, 19, "esfahan", "construction", "f", 15.65)
+student_add("mahdi", "alizadeh", 13, 24, "bushehr", "industry", "m", 11.16)
+student_add("mahmood", "mohammadiyan", 14, 23, "tabas", "software", "m", 16.36)
+student_add("mehrnaz", "mohammadzadeh", 15, 24, "tehran", "construction", "f", 11.36)
