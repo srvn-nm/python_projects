@@ -15,4 +15,5 @@ cursor.execute("DROP TABLE IF EXISTS Teacher")
 cursor.execute("DROP TABLE IF EXISTS Course")
 cursor.execute("DROP TABLE IF EXISTS Term")
 
-cursor.execute("CREATE TABLE Student (s_name VARCHAR(255) not null, s_family  VARCHAR(255) not null, s_id INT NOT NULL UNIQUE, age INT not null , city VARCHAR(255) not null , s_field VARCHAR(255) not null, gender VARCHAR(255) NOT NULL, tavg INT DEFAULT 0, PRIMARY KEY(userID))")
+cursor.execute("CREATE TABLE Student (s_name VARCHAR(255) not null, s_family  VARCHAR(255) not null, s_id INT NOT NULL UNIQUE, age INT not null , city VARCHAR(255) not null , s_field VARCHAR(255) not null, gender VARCHAR(255) NOT NULL, tavg INT DEFAULT 0, PRIMARY KEY(s_id))")
+cursor.execute("CREATE TABLE Teacher (t_name VARCHAR(255) not null, t_family  VARCHAR(255) not null, t_id INT NOT NULL UNIQUE, age INT not null , t_field VARCHAR(255) not null, salary INT DEFAULT 0, PRIMARY KEY(t_id))")
