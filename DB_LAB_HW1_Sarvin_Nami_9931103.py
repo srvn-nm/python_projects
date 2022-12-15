@@ -21,11 +21,14 @@ cursor.execute("CREATE TABLE Teacher (t_name VARCHAR(255) not NULL, t_family  VA
 cursor.execute("CREATE TABLE Course (c_name VARCHAR(255) not NULL, dep  VARCHAR(255) not NULL, c_id INT NOT NULL UNIQUE, unit INT not NULL, c_field VARCHAR(255) not NULL, PRIMARY KEY(c_id))")
 cursor.execute("CREATE TABLE Term (id INT UNIQUE not NULL, s_id INT NOT NULL, t_id INT NOT NULL, c_id INT NOT NULL, grade INT NOT NULL, term_no INT, PRIMARY KEY(id), FOREIGN KEY(s_id) REFERENCES Student(s_id), FOREIGN KEY(t_id) REFERENCES Teacher(t_id), FOREIGN KEY(c_id) REFERENCES Course(c_id))")
 
-
-try:
+def student_add(s_name, s_family, s_id, age, city, s_field, gender, tavg):
+    try:
         Q1 ="INSERT INTO Student (s_name, s_family, s_id, age, city, s_field, gender, tavg) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)"
-        values = ("danial", "jahed", 1, 23, "mashhad", "software", "m", 18.26)
+        values = (s_name, s_family, s_id, age, city, s_field, gender, tavg)
         cursor.execute(Q1, values)
         db.commit()
-except Exception as e:
+    except Exception as e:
         print(e)
+        
+        
+student_add("danial", "jahed", 1, 23, "mashhad", "software", "m", 18.26)
