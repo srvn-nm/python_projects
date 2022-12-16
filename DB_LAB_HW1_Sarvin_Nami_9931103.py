@@ -79,3 +79,12 @@ student_add("mehrnaz", "mohammadzadeh", 15, 24, "tehran", "construction", "f", 1
 
 
 teacher_add("javad", "hamidzadeh", 1, "computer", 3300000)
+teacher_add("khalil", "mafi", 2, "electricity", 5000000)
+teacher_add("javad", "yazdanjo", 3, "computer", 1000000)
+teacher_add("aminfarid", "aminian", 4, "computer", 2500000)
+teacher_add("hashem", "etemadzadeh", 5, "math", 2300000)
+teacher_add("saeed", "yazdanian", 6, "computer", 1500000)
+teacher_add("amir", "bavafa", 7, "computer", 2500000)
+teacher_add("ali", "haerian", 8, "industry", 6000000)
+teacher_add("amirmasoud", "aminian", 9, "electricity", 2500000)
+teacher_add("abas", "golmakani", 10, "electricity", 2300000)
