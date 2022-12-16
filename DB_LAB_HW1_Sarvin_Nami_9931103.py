@@ -17,7 +17,7 @@ cursor.execute("DROP TABLE IF EXISTS Teacher")
 cursor.execute("DROP TABLE IF EXISTS Course")
 
 cursor.execute("CREATE TABLE Student (s_name VARCHAR(255) not NULL, s_family  VARCHAR(255) not NULL, s_id INT NOT NULL UNIQUE, age INT not NULL, city VARCHAR(255) not NULL , s_field VARCHAR(255) not NULL, gender VARCHAR(255) NOT NULL, tavg INT DEFAULT 0, PRIMARY KEY(s_id))")
-cursor.execute("CREATE TABLE Teacher (t_name VARCHAR(255) not NULL, t_family  VARCHAR(255) not NULL, t_id INT NOT NULL UNIQUE, age INT not NULL, t_field VARCHAR(255) not NULL, salary INT DEFAULT 0, PRIMARY KEY(t_id))")
+cursor.execute("CREATE TABLE Teacher (t_name VARCHAR(255) not NULL, t_family  VARCHAR(255) not NULL, t_id INT NOT NULL UNIQUE, t_field VARCHAR(255) not NULL, salary INT DEFAULT 0, PRIMARY KEY(t_id))")
 cursor.execute("CREATE TABLE Course (c_name VARCHAR(255) not NULL, dep  VARCHAR(255) not NULL, c_id INT NOT NULL UNIQUE, unit INT not NULL, c_field VARCHAR(255) not NULL, PRIMARY KEY(c_id))")
 cursor.execute("CREATE TABLE Term (id INT UNIQUE not NULL, s_id INT NOT NULL, t_id INT NOT NULL, c_id INT NOT NULL, grade INT NOT NULL, term_no INT, PRIMARY KEY(id), FOREIGN KEY(s_id) REFERENCES Student(s_id), FOREIGN KEY(t_id) REFERENCES Teacher(t_id), FOREIGN KEY(c_id) REFERENCES Course(c_id))")
 
@@ -31,10 +31,10 @@ def student_add(s_name, s_family, s_id, age, city, s_field, gender, tavg):
         print(e)
         
         
-def teacher_add(t_name, t_family, t_id, age, t_field, salary):
+def teacher_add(t_name, t_family, t_id, t_field, salary):
     try:
-        Q1 ="INSERT INTO Teacher (t_name, t_family, t_id, age, t_field, salary) VALUES(%s, %s, %s, %s, %s, %s)"
-        values = (t_name, t_family, t_id, age, t_field, salary)
+        Q1 ="INSERT INTO Teacher (t_name, t_family, t_id, t_field, salary) VALUES(%s, %s, %s, %s, %s, %s)"
+        values = (t_name, t_family, t_id, t_field, salary)
         cursor.execute(Q1, values)
         db.commit()
     except Exception as e:
@@ -76,3 +76,6 @@ student_add("nafiseh", "hoseini", 12, 19, "esfahan", "construction", "f", 15.65)
 student_add("mahdi", "alizadeh", 13, 24, "bushehr", "industry", "m", 11.16)
 student_add("mahmood", "mohammadiyan", 14, 23, "tabas", "software", "m", 16.36)
 student_add("mehrnaz", "mohammadzadeh", 15, 24, "tehran", "construction", "f", 11.36)
+
+
+teacher_add("javad", "hamidzadeh", 1, "computer", 3300000)
