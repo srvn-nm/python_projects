@@ -143,13 +143,28 @@ for row in records:
     
     
 print("-----------------------------------------------------------------------")
-
 Q3 = "UPDATE Student SET tavg = tavg + 1 WHERE ((city LIKE 'z%') and (city LIKE '%n'))"
 cursor.execute(Q3)
 db.commit()
 cursor.execute("SELECT s_id, s_name, city, tavg FROM Student WHERE ((city LIKE 'z%') and (city LIKE '%n'))")
 records = cursor.fetchall()
 print("Total number of rows in table of query 3: ", cursor.rowcount)
+print("\nPrinting each row")
+for row in records:
+    print("Id = ", row[0], )
+    print("Name = ", row[1])
+    print("City = ", row[2])
+    print("Average = ", row[3], "\n\n****\n")
+    
+    
+print("-----------------------------------------------------------------------")
+cursor.execute("SELECT COUNT(*) FROM Student WHERE (age > 20) ORDER BY age")
+count = cursor.fetchone()
+Q4 = "SELECT * FROM Student WHERE (age > 20) ORDER BY age LIMIT %s"
+cursor.execute(Q4,(int(count[0]/5),))
+records = cursor.fetchall()
+print("Total number of rows in table of query 4: ", cursor.rowcount)
+db.commit()
 print("\nPrinting each row")
 for row in records:
     print("Id = ", row[0], )
