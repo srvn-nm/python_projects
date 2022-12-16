@@ -174,7 +174,7 @@ for row in records:
     
     
 print("-----------------------------------------------------------------------")
-Q5 = "UPDATE Teacher SET salary = 0 WHERE (t_name = 'javad' and t_family = 'hamidzadeh')"
+Q5 = "UPDATE Teacher SET t_field = 'electricity' WHERE (t_name = 'javad' and t_family = 'hamidzadeh')"
 cursor.execute(Q5)
 cursor.execute("SELECT * FROM Teacher WHERE t_name = 'javad' and t_family = 'hamidzadeh'")
 records = cursor.fetchall()
