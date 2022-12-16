@@ -209,3 +209,14 @@ db.commit()
 print("\nPrinting each row")
 for row in records:
     print("Name = ", row[0], "\n\n****\n")
+    
+    
+print("-----------------------------------------------------------------------")
+Q8 = "SELECT * FROM Teacher WHERE (salary >= 5000000 or t_field != 'computer')ORDER BY t_id DESC"
+cursor.execute(Q8)
+records = cursor.fetchall()
+print("Total number of rows in table of query 8: ", cursor.rowcount)
+db.commit()
+print("\nPrinting each row")
+for row in records:
+    print(row, "\n\n****\n")
