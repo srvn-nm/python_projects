@@ -190,11 +190,21 @@ for row in records:
     
     
 print("-----------------------------------------------------------------------")
-
 Q6 = "SELECT Student.s_name AS name, Student.s_family AS family FROM Student INNER JOIN term ON (Term.term_no = 3 and Student.age > 20 and Term.s_id = Student.s_id)"
 cursor.execute(Q6)
 records = cursor.fetchall()
 print("Total number of rows in table of query 6: ", cursor.rowcount)
+db.commit()
+print("\nPrinting each row")
+for row in records:
+    print("Name = ", row[0], )
+    print("Family = ", row[1], "\n\n****\n")
+    
+print("-----------------------------------------------------------------------")
+Q7 = "SELECT Student.s_name AS name FROM Student INNER JOIN term ON (Term.term_no <= 3 and Term.term_no >= 1 and Student.gender = 'm' and Term.s_id = Student.s_id)"
+cursor.execute(Q7)
+records = cursor.fetchall()
+print("Total number of rows in table of query 7: ", cursor.rowcount)
 db.commit()
 print("\nPrinting each row")
 for row in records:
