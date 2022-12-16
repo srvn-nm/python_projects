@@ -128,7 +128,7 @@ print("Total number of rows in table of query 1: ", cursor.rowcount)
 print("\nPrinting each row")
 for row in records:
     print("Id = ", row[0], )
-    print("Name = ", row[1], "****\n")
+    print("Name = ", row[1], "\n\n****\n")
     
     
 print("-----------------------------------------------------------------------")
@@ -139,7 +139,7 @@ print("Total number of rows in table of query 2: ", cursor.rowcount)
 print("\nPrinting each row")
 for row in records:
     print("Id = ", row[0], )
-    print("Name = ", row[1], "****\n")
+    print("Name = ", row[1], "\n\n****\n")
     
     
 print("-----------------------------------------------------------------------")
@@ -155,4 +155,4 @@ for row in records:
     print("Id = ", row[0], )
     print("Name = ", row[1])
     print("City = ", row[2])
-    print("Average = ", row[3], "****\n")
+    print("Average = ", row[3], "\n\n****\n")
