@@ -33,7 +33,7 @@ def student_add(s_name, s_family, s_id, age, city, s_field, gender, tavg):
         
 def teacher_add(t_name, t_family, t_id, t_field, salary):
     try:
-        Q1 ="INSERT INTO Teacher (t_name, t_family, t_id, t_field, salary) VALUES(%s, %s, %s, %s, %s, %s)"
+        Q1 ="INSERT INTO Teacher (t_name, t_family, t_id, t_field, salary) VALUES(%s, %s, %s, %s, %s)"
         values = (t_name, t_family, t_id, t_field, salary)
         cursor.execute(Q1, values)
         db.commit()
@@ -118,3 +118,5 @@ term_add(12, 5, 8, 4, 9.25, 6)
 term_add(13, 8, 5, 6, 8.75, 6)
 term_add(14, 15, 2, 2, 16, 4)
 term_add(15, 14, 3, 7, 15, 7)
+
+
