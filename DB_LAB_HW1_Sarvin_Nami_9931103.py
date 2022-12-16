@@ -33,14 +33,24 @@ def student_add(s_name, s_family, s_id, age, city, s_field, gender, tavg):
         
 def teacher_add(t_name, t_family, t_id, age, t_field, salary):
     try:
-        Q1 ="INSERT INTO Teacher (t_name, t_family, t_id, age, t_field, salary) VALUES(%s, %s, %s, %s, %s, %s)"
+        Q1 ="INSERT INTO Course (t_name, t_family, t_id, age, t_field, salary) VALUES(%s, %s, %s, %s, %s, %s)"
         values = (t_name, t_family, t_id, age, t_field, salary)
         cursor.execute(Q1, values)
         db.commit()
     except Exception as e:
         print(e)        
         
-        
+
+def course_add(c_name, dep, c_id, unit, c_field):
+    try:
+        Q1 ="INSERT INTO Teacher (c_name, dep, c_id, unit, c_field) VALUES(%s, %s, %s, %s, %s)"
+        values = (c_name, dep, c_id, unit, c_field)
+        cursor.execute(Q1, values)
+        db.commit()
+    except Exception as e:
+        print(e)
+   
+   
 student_add("danial", "jahed", 1, 23, "mashhad", "software", "m", 18.26)
 student_add("ahmad", "ghadirzadeh", 2, 23, "mashhad", "software", "m", 17.36)
 student_add("mahsa", "ghanad", 3, 20, "shiraz", "hardware", "f", 15.13)
