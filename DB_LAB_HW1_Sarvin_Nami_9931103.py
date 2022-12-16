@@ -201,12 +201,11 @@ for row in records:
     print("Family = ", row[1], "\n\n****\n")
     
 print("-----------------------------------------------------------------------")
-Q7 = "SELECT Student.s_name AS name FROM Student INNER JOIN term ON (Term.term_no <= 3 and Term.term_no >= 1 and Student.gender = 'm' and Term.s_id = Student.s_id)"
+Q7 = "SELECT Student.s_name AS name FROM Student INNER JOIN term ON (Term.term_no <= 3 and Term.term_no >= 1 and Student.gender = 'm' and Term.s_id = Student.s_id and Student.tavg >= 18)"
 cursor.execute(Q7)
 records = cursor.fetchall()
 print("Total number of rows in table of query 7: ", cursor.rowcount)
 db.commit()
 print("\nPrinting each row")
 for row in records:
-    print("Name = ", row[0], )
-    print("Family = ", row[1], "\n\n****\n")
+    print("Name = ", row[0], "\n\n****\n")
