@@ -91,3 +91,13 @@ teacher_add("abas", "golmakani", 10, "electricity", 2300000)
 
 
 course_add("mathematical", "computer", 1, 3, "electricity")
+course_add("electrical circuits", "computer", 2, 3, "electricity")
+course_add("logic circuits", "computer", 3, 3, "computer")
+course_add("data structure", "computer", 4, 3, "computer")
+course_add("android programming", "computer", 5, 3, "computer")
+course_add("computer architecture", "computer", 6, 3, "computer")
+course_add("electronic", "electricity", 7, 3, "electricity")
+course_add("soil", "construction", 8, 3, "construction")
+course_add("lab database", "computer", 9, 1, "computer")
+course_add("enghelab", "elahiat", 10, 2, "elahiat")
+course_add("mathematical", "computer", 11, 3, "electricity")
