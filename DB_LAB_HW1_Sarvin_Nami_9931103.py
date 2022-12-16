@@ -88,3 +88,6 @@ teacher_add("amir", "bavafa", 7, "computer", 2500000)
 teacher_add("ali", "haerian", 8, "industry", 6000000)
 teacher_add("amirmasoud", "aminian", 9, "electricity", 2500000)
 teacher_add("abas", "golmakani", 10, "electricity", 2300000)
+
+
+course_add("mathematical", "computer", 1, 3, "electricity")
