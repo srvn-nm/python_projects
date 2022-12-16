@@ -128,7 +128,7 @@ print("Total number of rows in table of query 1: ", cursor.rowcount)
 print("\nPrinting each row")
 for row in records:
     print("Id = ", row[0], )
-    print("Name = ", row[1], "\n")
+    print("Name = ", row[1], "****\n")
     
     
 print("-----------------------------------------------------------------------")
@@ -139,19 +139,20 @@ print("Total number of rows in table of query 2: ", cursor.rowcount)
 print("\nPrinting each row")
 for row in records:
     print("Id = ", row[0], )
-    print("Name = ", row[1], "\n")
+    print("Name = ", row[1], "****\n")
     
     
 print("-----------------------------------------------------------------------")
 
-Q3 = "UPDATE Student SET tavg = tavg+1 WHERE ((city LIKE 'z%') and (city LIKE '%n'))"
+Q3 = "UPDATE Student SET tavg = tavg + 1 WHERE ((city LIKE 'z%') and (city LIKE '%n'))"
 cursor.execute(Q3)
 db.commit()
+cursor.execute("SELECT s_id, s_name, city, tavg FROM Student WHERE ((city LIKE 'z%') and (city LIKE '%n'))")
 records = cursor.fetchall()
 print("Total number of rows in table of query 3: ", cursor.rowcount)
 print("\nPrinting each row")
 for row in records:
-    print("Id = ", row[2], )
-    print("Name = ", row[0])
-    print("City = ", row[4])
-    print("Average = ", row[7], "\n")
+    print("Id = ", row[0], )
+    print("Name = ", row[1])
+    print("City = ", row[2])
+    print("Average = ", row[3], "****\n")
