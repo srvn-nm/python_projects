@@ -120,3 +120,13 @@ term_add(14, 15, 2, 2, 16, 4)
 term_add(15, 14, 3, 7, 15, 7)
 
 
+Q1 = "SELECT s_id, s_name FROM Students WHERE (s_name LIKE 'a%' or s_name LIKE '%a')"
+cursor.execute(Q1)
+records = cursor.fetchall()
+print("Total number of rows in table: ", cursor.rowcount)
+
+print("\nPrinting each row")
+for row in records:
+    print("Id = ", row[0], )
+    print("Name = ", row[1], "\n")
+    
