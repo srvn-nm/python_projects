@@ -171,3 +171,35 @@ for row in records:
     print("Name = ", row[1])
     print("City = ", row[2])
     print("Average = ", row[3], "\n\n****\n")
+    
+    
+# print("-----------------------------------------------------------------------")
+# cursor.execute("SELECT COUNT(*) FROM Student WHERE (age > 20) ORDER BY age")
+# count = cursor.fetchone()
+# Q5 = "SELECT * FROM Student WHERE (age > 20) ORDER BY age LIMIT %s"
+# cursor.execute(Q5,(int(count[0]/5),))
+# records = cursor.fetchall()
+# print("Total number of rows in table of query 5: ", cursor.rowcount)
+# db.commit()
+# print("\nPrinting each row")
+# for row in records:
+#     print("Id = ", row[0], )
+#     print("Name = ", row[1])
+#     print("City = ", row[2])
+#     print("Average = ", row[3], "\n\n****\n")
+    
+    
+print("-----------------------------------------------------------------------")
+cursor.execute("SELECT COUNT(*) FROM Student WHERE (age > 20) ORDER BY age")
+count = cursor.fetchone()
+Q6 = "SELECT * FROM Student WHERE (age > 20) ORDER BY age LIMIT %s"
+cursor.execute(Q6,(int(count[0]/5),))
+records = cursor.fetchall()
+print("Total number of rows in table of query 6: ", cursor.rowcount)
+db.commit()
+print("\nPrinting each row")
+for row in records:
+    print("Id = ", row[0], )
+    print("Name = ", row[1])
+    print("City = ", row[2])
+    print("Average = ", row[3], "\n\n****\n")
