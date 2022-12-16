@@ -51,7 +51,7 @@ def course_add(c_name, dep, c_id, unit, c_field):
         print(e)
 
 
-def Term_add(id, s_id, t_id, c_id, grade, term_no):
+def term_add(id, s_id, t_id, c_id, grade, term_no):
     try:
         Q1 ="INSERT INTO Term (id, s_id, t_id, c_id, grade, term_no) VALUES(%s, %s, %s, %s, %s, %s)"
         values = (id, s_id, t_id, c_id, grade, term_no)
@@ -101,3 +101,7 @@ course_add("soil", "construction", 8, 3, "construction")
 course_add("lab database", "computer", 9, 1, "computer")
 course_add("enghelab", "elahiat", 10, 2, "elahiat")
 course_add("mathematical", "computer", 11, 3, "electricity")
+
+
+term_add(1, 2, 1, 1, 20, 8)
+term_add(2, 8, 7, 7, 18, 4)
