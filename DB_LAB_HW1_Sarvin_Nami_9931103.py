@@ -140,3 +140,18 @@ print("\nPrinting each row")
 for row in records:
     print("Id = ", row[0], )
     print("Name = ", row[1], "\n")
+    
+    
+print("-----------------------------------------------------------------------")
+
+Q3 = "UPDATE Student SET tavg = tavg+1 WHERE ((city LIKE 'z%') and (city LIKE '%n'))"
+cursor.execute(Q3)
+db.commit()
+records = cursor.fetchall()
+print("Total number of rows in table of query 3: ", cursor.rowcount)
+print("\nPrinting each row")
+for row in records:
+    print("Id = ", row[2], )
+    print("Name = ", row[0])
+    print("City = ", row[4])
+    print("Average = ", row[7], "\n")
