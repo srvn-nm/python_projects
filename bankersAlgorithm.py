@@ -4,7 +4,8 @@ P = 3
 
 # Number of resources
 R = 3
-  
+
+safes = 0
 
     # Function to find the need of each process
 def calculateNeed(need, maxm, allot):
@@ -87,6 +88,7 @@ def isSafe(processes, avail, maxm, allot):
 		
 	# If system is in safe state then
 	# safe sequence will be as below
+    
 	print("System is in safe state.",
 			"\nSafe sequence is: ", end = " ")
 	print(*safeSeq)
@@ -100,7 +102,7 @@ def isSafe(processes, avail, maxm, allot):
 
 
 
-processes = [ 1, 2, 3]
+processes = [0, 1, 2]
 # Maximum R that can be allocated
 # to processes
 maxm = [[2, 2, 2], [2, 0, 5],[3, 4, 4]]
