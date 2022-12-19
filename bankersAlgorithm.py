@@ -8,7 +8,6 @@ R = 3
 
     # Function to find the need of each process
 def calculateNeed(need, maxm, allot):
-
     # Calculating Need of each P
     for i in range(P):
         for j in range(R):
@@ -101,20 +100,15 @@ def isSafe(processes, avail, maxm, allot):
 
 
 
-# Driver code       
-if __name__=="__main__":
-     
-	processes = [ 1, 2, 3]
-	# Maximum R that can be allocated
-	# to processes
-	maxm = [[2, 2, 2], [2, 0, 5],[3, 4, 4]]
-	# Resources allocated to processes
-	allot = [[1, 1, 0], [2, 0, 4],[1, 2, 3]]
- 
-    for i in range(5):
-        for j in range(5):
-            for k in range(5):
-                # Check system is in safe state or not
-	            isSafe(processes, [i,j,k], maxm, allot)
-                print([i,j,k])
-                print("---------------------------------------------")
+processes = [ 1, 2, 3]
+# Maximum R that can be allocated
+# to processes
+maxm = [[2, 2, 2], [2, 0, 5],[3, 4, 4]]
+# Resources allocated to processes
+allot = [[1, 1, 0], [2, 0, 4],[1, 2, 3]]
+for i in range(5):
+    for j in range(5):
+        for k in range(5):
+            isSafe(processes, [i,j,k], maxm, allot)
+            print("resources: "+str([i,j,k]))
+            print("---------------------------------------------")
