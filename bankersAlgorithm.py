@@ -74,16 +74,14 @@ def safe_sequence(marked, allocated,
 if __name__=="__main__":
      
     # Allocated matrix of size P*R
-    allocated = [ [ 0, 1, 0 ],
-                  [ 2, 0, 0 ],
-                  [ 3, 0, 2 ],
-                  [ 2, 1, 1 ]]
+    allocated = [ [ 1, 0, 1 ],
+                  [ 2, 0, 4 ],
+                  [ 1, 2, 3 ]]
   
     # max matrix of size P*R
-    max = [ [ 7, 5, 3 ],
-            [ 3, 2, 2 ],
-            [ 9, 0, 2 ],
-            [ 2, 2, 2 ] ]
+    max = [ [ 2, 2, 2 ],
+            [ 2, 0, 5 ],
+            [ 3, 4, 4 ]]
   
     # Initial total resources
     resources = [ 10, 5, 7 ]
@@ -124,3 +122,5 @@ if __name__=="__main__":
      
     print("\nThere are total " + str(total) +
           " safe-sequences")
+    
+    print("---------------------------------------------")
