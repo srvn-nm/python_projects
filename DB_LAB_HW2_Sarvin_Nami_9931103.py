@@ -192,3 +192,8 @@ for city in cities:
     for row in records:
         print("Name = ", row[0], )
         print("Family = ", row[1], "\n\n****\n")
+        
+        
+Q7= "SELECT P.p_id, SP.Quantity FROM P INNER JOIN SP INNER JOIN S ON SP.p_id = P.p_id and SP.s_id = S.s_id and S.city = 'london'"
+Q8 = "SELECT P.pname, P.color FROM P INNER JOIN SP INNER JOIN S ON SP.p_id = P.p_id and SP.s_id = S.s_id and S.s_id = 's1'"
+Q9 = "SELECT "
