@@ -1,135 +1,120 @@
-# Total number of process
+
+# Number of processes
 P = 3
- 
-# Total number of resources
+
+# Number of resources
 R = 3
   
-# Total safe-sequences
-total = 0
-  
-# Function to check if process
-# can be allocated or not
-def is_available(process_id, allocated,
-                 max, need, available):
-                      
-    flag = True
-  
-    # Check if all the available resources
-    # are less greater than need of process
-    for i in range(R):
-        if (need[process_id][i] > available[i]):
-            flag = False
-  
-    return flag
- 
-# Print all the safe-sequences
-def safe_sequence(marked, allocated,
-                  max, need, available, safe):
-     
-    global total, P, R
-     
-    for i in range(P):
-         
-        # Check if it is not marked
-        # already and can be allocated
-        if (not marked[i] and
-            is_available(i, allocated, max,
-                         need, available)):
-                              
-            # mark the process
-            marked[i] = True
-  
-            # Increase the available
-            # by deallocating from process i
-            for j in range(R):
-                available[j] += allocated[i][j]
-  
-            safe.append(i)
-             
-            # Find safe sequence by taking process i
-            safe_sequence(marked, allocated, max,
-                          need, available, safe)
-            safe.pop()
-  
-            # unmark the process
-            marked[i] = False
-  
-            # Decrease the available
-            for j in range(R):
-                available[j] -= allocated[i][j]
-         
-    # If a safe-sequence is found, display it
-    if (len(safe) == P):
-        total += 1
-         
-        for i in range(P):
-            print("P" + str(safe[i] + 1), end = '')
-            
-            if (i != (P - 1)):
-                print("--> ", end = '')
-             
-        print()
-        
-        
 
-def bankers(resources):
-  
-    # Available vector of size R
-    available = [0 for i in range(R)]
-     
-    for i in range(R):
-        sum = 0
-         
-        for j in range(P):
-            sum += allocated[j][i]
-  
-        available[i] = resources[i] - sum
-     
-  
-    # Safe vector for displaying a
-    # safe-sequence
-    safe = []
-  
-    # Marked of size P for marking
-    # allocated process
-    marked = [False for i in range(P)]
-  
-    # Need matrix of size P*R
-    need = [[0 for j in range(R)]
-               for i in range(P)]
-     
+    # Function to find the need of each process
+def calculateNeed(need, maxm, allot):
+
+    # Calculating Need of each P
     for i in range(P):
         for j in range(R):
-            need[i][j] = (max[i][j] -
-                    allocated[i][j])
-     
-    if total > 0:
-        print("Safe sequences are:")
-     
-    safe_sequence(marked, allocated, max,
-                  need, available, safe)
-     
-    print("\nThere are total " + str(total) +
-          " safe-sequences")
+            # Need of instance = maxm instance -
+            # allocated instance
+            need[i][j] = maxm[i][j] - allot[i][j]
+
+# Function to find the system is in
+# safe state or not
+def isSafe(processes, avail, maxm, allot):
+	need = []
+	for i in range(P):
+		l = []
+		for j in range(R):
+			l.append(0)
+		need.append(l)
+		
+	# Function to calculate need matrix
+	calculateNeed(need, maxm, allot)
+
+	# Mark all processes as infinish
+	finish = [0] * P
+	
+	# To store safe sequence
+	safeSeq = [0] * P
+
+	# Make a copy of available resources
+	work = [0] * R
+	for i in range(R):
+		work[i] = avail[i]
+
+	# While all processes are not finished
+	# or system is not in safe state.
+	count = 0
+	while (count < P):
+		
+		# Find a process which is not finish
+		# and whose needs can be satisfied
+		# with current work[] resources.
+		found = False
+		for p in range(P):
+		
+			# First check if a process is finished,
+			# if no, go for next condition
+			if (finish[p] == 0):
+			
+				# Check if for all resources
+				# of current P need is less
+				# than work
+				for j in range(R):
+					if (need[p][j] > work[j]):
+						break
+					
+				# If all needs of p were satisfied.
+				if (j == R - 1):
+				
+					# Add the allocated resources of
+					# current P to the available/work
+					# resources i.e.free the resources
+					for k in range(R):
+						work[k] += allot[p][k]
+
+					# Add this process to safe sequence.
+					safeSeq[count] = p
+					count += 1
+
+					# Mark this p as finished
+					finish[p] = 1
+
+					found = True
+				
+		# If we could not find a next process
+		# in safe sequence.
+		if (found == False):
+			print("System is not in safe state")
+			return False
+		
+	# If system is in safe state then
+	# safe sequence will be as below
+	print("System is in safe state.",
+			"\nSafe sequence is: ", end = " ")
+	print(*safeSeq)
+
+	return True
+
+
+        
     
-    print(resources)
-    
-    print("---------------------------------------------")
-  
+
+
+
+
 # Driver code       
 if __name__=="__main__":
      
-    # Allocated matrix of size P*R
-    allocated = [ [ 1, 0, 1 ],
-                  [ 2, 0, 4 ],
-                  [ 1, 2, 3 ]]
-  
-    # max matrix of size P*R
-    max = [ [ 2, 2, 2 ],
-            [ 2, 0, 5 ],
-            [ 3, 4, 4 ]]
-  
+	processes = [ 1, 2, 3]
+	# Maximum R that can be allocated
+	# to processes
+	maxm = [[2, 2, 2], [2, 0, 5],[3, 4, 4]]
+	# Resources allocated to processes
+	allot = [[1, 1, 0], [2, 0, 4],[1, 2, 3]]
+ 
     for i in range(5):
         for j in range(5):
             for k in range(5):
-                bankers([i,j,k])
+                # Check system is in safe state or not
+	            isSafe(processes, [i,j,k], maxm, allot)
+                print([i,j,k])
+                print("---------------------------------------------")
