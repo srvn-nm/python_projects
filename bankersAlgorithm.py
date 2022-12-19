@@ -69,22 +69,10 @@ def safe_sequence(marked, allocated,
                 print("--> ", end = '')
              
         print()
-  
-# Driver code       
-if __name__=="__main__":
-     
-    # Allocated matrix of size P*R
-    allocated = [ [ 1, 0, 1 ],
-                  [ 2, 0, 4 ],
-                  [ 1, 2, 3 ]]
-  
-    # max matrix of size P*R
-    max = [ [ 2, 2, 2 ],
-            [ 2, 0, 5 ],
-            [ 3, 4, 4 ]]
-  
-    # Initial total resources
-    resources = [ 10, 5, 7 ]
+        
+        
+
+def bankers(resources):
   
     # Available vector of size R
     available = [0 for i in range(R)]
@@ -124,3 +112,21 @@ if __name__=="__main__":
           " safe-sequences")
     
     print("---------------------------------------------")
+  
+# Driver code       
+if __name__=="__main__":
+     
+    # Allocated matrix of size P*R
+    allocated = [ [ 1, 0, 1 ],
+                  [ 2, 0, 4 ],
+                  [ 1, 2, 3 ]]
+  
+    # max matrix of size P*R
+    max = [ [ 2, 2, 2 ],
+            [ 2, 0, 5 ],
+            [ 3, 4, 4 ]]
+  
+    for i in range(5):
+        for j in range(5):
+            for k in range(5):
+                bankers([i,j,k])
