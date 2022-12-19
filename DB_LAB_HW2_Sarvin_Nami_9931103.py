@@ -167,3 +167,14 @@ db.commit()
 print("\nPrinting each row")
 for row in records:
     print("Name = ", row[0], "\n\n****\n")
+
+
+print("-----------------------------------------------------------------------")
+Q5 = "SELECT Course.c_name FROM Course INNER JOIN Term ON ((Term.c_id = Course.c_id) and (Term.term_no = 3) and (Course.dep = 'computer'))"
+cursor.execute(Q5)
+records = cursor.fetchall()
+print("Total number of rows in table of query 5: ", cursor.rowcount)
+db.commit()
+print("\nPrinting each row")
+for row in records:
+    print("Course = ", row[0], "\n\n****\n" )
