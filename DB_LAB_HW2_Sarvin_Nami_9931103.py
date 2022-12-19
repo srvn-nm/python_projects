@@ -159,7 +159,7 @@ for row in records:
     
     
 print("-----------------------------------------------------------------------")
-Q4 = "SELECT Student.s_name FROM Student INNER JOIN Term ON ((Student.gender = 'm') and (Term.s_id = Student.s_id) and (Term.term_no <= 3) and (Student.tavg >= 18))"
+Q4 = "SELECT Student.s_name FROM Student INNER JOIN Term ON ((Student.gender = 'm') and (Term.s_id = Student.s_id) and (Term.term_no <= 3) and (Student.tavg >= 18) and (Term.term_no >= 1))"
 cursor.execute(Q4)
 records = cursor.fetchall()
 print("Total number of rows in table of query 4: ", cursor.rowcount)
