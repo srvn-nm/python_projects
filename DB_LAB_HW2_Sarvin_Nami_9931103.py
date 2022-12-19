@@ -121,11 +121,23 @@ term_add(15, 14, 3, 7, 15, 7)
 
 
 print("-----------------------------------------------------------------------")
-Q1 = "SELECT Student.s_name, Student.s_family FROM Student INNER JOIN term ON ((age >= 20) and (Term.s_id = Student.s_id) and (Term.id = 3))"
+Q1 = "SELECT Student.s_name, Student.s_family FROM Student INNER JOIN Term ON ((age >= 20) and (Term.s_id = Student.s_id) and (Term.id = 3))"
 cursor.execute(Q1)
 records = cursor.fetchall()
 print("Total number of rows in table of query 1: ", cursor.rowcount)
+db.commit()
 print("\nPrinting each row")
 for row in records:
     print("Name = ", row[0], )
     print("Family = ", row[1], "\n\n****\n")
+    
+    
+print("-----------------------------------------------------------------------")
+Q2 = "SELECT Course.c_name FROM Course INNER JOIN Term ON ((Term.c_id = Course.c_id) and (Term.id = 3))"
+cursor.execute(Q1)
+records = cursor.fetchall()
+print("Total number of rows in table of query 1: ", cursor.rowcount)
+db.commit()
+print("\nPrinting each row")
+for row in records:
+    print("Course = ", row[0], "\n\n****\n" )
