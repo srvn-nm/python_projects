@@ -181,13 +181,14 @@ for row in records:
 
 
 print("-----------------------------------------------------------------------")
-
-Q6 = "SELECT Student.s_name, Student.s_family FROM Student INNER JOIN Course ON ()"
-cursor.execute(Q6)
-records = cursor.fetchall()
-print("Total number of rows in table of query 6: ", cursor.rowcount)
-db.commit()
-print("\nPrinting each row")
-for row in records:
-    print("Name = ", row[0], )
-    print("Family = ", row[1], "\n\n****\n")
+cursor.execute("SELECT city FROM Student WHERE s_field = 'software' or s_field = 'hardware' or s_field = 'it'")
+cities = cursor.fetchall()
+print("query 6:")
+for city in cities:
+    Q6 = "SELECT s_name, s_family FROM Student  WHERE (city = %s and s_field != 'software' and s_field != 'hardware' and s_field != 'it')"
+    cursor.execute(Q6,(city[0],))
+    records = cursor.fetchall()
+    db.commit()
+    for row in records:
+        print("Name = ", row[0], )
+        print("Family = ", row[1], "\n\n****\n")
