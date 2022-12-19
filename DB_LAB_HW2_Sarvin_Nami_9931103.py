@@ -141,3 +141,17 @@ db.commit()
 print("\nPrinting each row")
 for row in records:
     print("Course = ", row[0], "\n\n****\n" )
+
+
+print("-----------------------------------------------------------------------")
+cursor.execute("SELECT Min(tavg) FROM Student INNER JOIN Term ON (Term.s_id = Student.s_id)")
+minVal = cursor.fetchone()
+Q3 = "SELECT Student.s_name, Student.s_family FROM Student INNER JOIN Term ON ((Term.s_id = Student.s_id) and (Student.tavg = %s))"
+cursor.execute(Q3,(minVal[0],))
+records = cursor.fetchall()
+print("Total number of rows in table of query 1: ", cursor.rowcount)
+db.commit()
+print("\nPrinting each row")
+for row in records:
+    print("Name = ", row[0], )
+    print("Family = ", row[1], "\n\n****\n")
