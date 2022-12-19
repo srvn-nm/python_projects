@@ -133,7 +133,7 @@ for row in records:
     
     
 print("-----------------------------------------------------------------------")
-Q2 = "SELECT Course.c_name FROM Course INNER JOIN Term ON ((Term.c_id = Course.c_id) and (Term.id = 3))"
+Q2 = "SELECT Course.c_name FROM Course INNER JOIN Term ON ((Term.c_id = Course.c_id) and (Term.term_no = 3))"
 cursor.execute(Q2)
 records = cursor.fetchall()
 print("Total number of rows in table of query 2: ", cursor.rowcount)
