@@ -144,10 +144,10 @@ for row in records:
 
 
 print("-----------------------------------------------------------------------")
-cursor.execute("SELECT Min(tavg) FROM Student INNER JOIN Term ON (Term.s_id = Student.s_id)")
+cursor.execute("SELECT Min(tavg) FROM Student")
 minVal = cursor.fetchone()
 db.commit()
-Q3 = "SELECT Student.s_name, Student.s_family FROM Student INNER JOIN Term ON ((Term.s_id = Student.s_id) and (Student.tavg = %s))"
+Q3 = "SELECT s_name, s_family FROM Student WHERE (Student.tavg = %s)"
 cursor.execute(Q3,(minVal[0],))
 records = cursor.fetchall()
 print("Total number of rows in table of query 3: ", cursor.rowcount)
