@@ -103,7 +103,8 @@ def bankers(resources):
             need[i][j] = (max[i][j] -
                     allocated[i][j])
      
-    print("Safe sequences are:")
+    if total > 0:
+        print("Safe sequences are:")
      
     safe_sequence(marked, allocated, max,
                   need, available, safe)
