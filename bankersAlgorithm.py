@@ -111,6 +111,8 @@ def bankers(resources):
     print("\nThere are total " + str(total) +
           " safe-sequences")
     
+    print(resources)
+    
     print("---------------------------------------------")
   
 # Driver code       
