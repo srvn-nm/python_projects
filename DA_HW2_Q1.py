@@ -4,12 +4,10 @@ fullPrimeNumbers = []
 notFullPrimeNumbers = []
 def fullPrime(n):
     if fullPrimeNumbers.count(n) == 0 and notFullPrimeNumbers.count(n) != 0:
-        notFullPrimeNumbers.append(n)
         return 0
     elif fullPrimeNumbers.count(n) != 0 and notFullPrimeNumbers.count(n) == 0:
-        fullPrimeNumbers.append(n)
         return 1
-    elif fullPrimeNumbers.count(n) != 0 and notFullPrimeNumbers.count(n) != 0:
+    elif fullPrimeNumbers.count(n) == 0 and notFullPrimeNumbers.count(n) == 0:
         while n > 0:
             if (n == 1):
                 notFullPrimeNumbers.append(n)
