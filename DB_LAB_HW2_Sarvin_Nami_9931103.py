@@ -202,3 +202,4 @@ Q11 = "SELECT S.sname, S.city FROM S WHERE exists(SELECT 'x' FROM P INNER JOIN S
 Q12 = "SELECT P.pname, P.color FROM P WHERE exists(SELECT 'x' FROM S INNER JOIN SP ON SP.p_id = P.p_id and SP.s_id = S.s_id and S.city = 'london') and not exists(SELECT 'x' FROM S INNER JOIN SP ON SP.p_id = P.p_id and SP.s_id = S.s_id and S.city != 'london')"
 Q13 = "SELECT P.pname, P.color FROM P WHERE exists(SELECT 'x' FROM S INNER JOIN SP ON SP.p_id = P.p_id and SP.s_id = S.s_id and S.city != 'london') and not exists(SELECT 'x' FROM S INNER JOIN SP ON SP.p_id = P.p_id and SP.s_id = S.s_id and S.city = 'london')"
 Q14 = "SELECT S.sname, S.city FROM S WHERE exists(SELECT 'x' FROM P INNER JOIN SP ON SP.p_id = P.p_id and SP.s_id = S.s_id and P.p_id = 'p2') and exists(SELECT 'x' FROM P INNER JOIN SP ON SP.p_id = P.p_id and SP.s_id = S.s_id and P.p_id = 'p2')"
+Q15 = "SELECt P.p_id, SP.Quantity FROM P INNER JOIN SP ON SP.p_id = P.p_id GROUP BY P.p_id ORDER BY P.p_id"
