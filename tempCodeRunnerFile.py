@@ -121,98 +121,86 @@ term_add(15, 14, 3, 7, 15, 7)
 
 
 print("-----------------------------------------------------------------------")
-Q1 = "SELECT s_id, s_name FROM Student WHERE ((s_name LIKE 'a%' or s_name LIKE '%a') and (tavg >= 17))"
+Q1 = "SELECT DISTINCT Student.s_name, Student.s_family FROM Student INNER JOIN Term ON ((age >= 20) and (Term.s_id = Student.s_id) and (Term.term_no = 3))"
 cursor.execute(Q1)
 records = cursor.fetchall()
 print("Total number of rows in table of query 1: ", cursor.rowcount)
-print("\nPrinting each row")
-for row in records:
-    print("Id = ", row[0], )
-    print("Name = ", row[1], "\n\n****\n")
-    
-    
-print("-----------------------------------------------------------------------")
-Q2 = "SELECT t_id, t_name FROM Teacher WHERE (t_name LIKE 'j%')ORDER BY t_id DESC" 
-cursor.execute(Q2)
-records = cursor.fetchall()
-print("Total number of rows in table of query 2: ", cursor.rowcount)
-print("\nPrinting each row")
-for row in records:
-    print("Id = ", row[0], )
-    print("Name = ", row[1], "\n\n****\n")
-    
-    
-print("-----------------------------------------------------------------------")
-Q3 = "UPDATE Student SET tavg = tavg + 1 WHERE ((city LIKE 'z%') and (city LIKE '%n'))"
-cursor.execute(Q3)
-db.commit()
-cursor.execute("SELECT s_id, s_name, city, tavg FROM Student WHERE ((city LIKE 'z%') and (city LIKE '%n'))")
-records = cursor.fetchall()
-print("Total number of rows in table of query 3: ", cursor.rowcount)
-print("\nPrinting each row")
-for row in records:
-    print("Id = ", row[0], )
-    print("Name = ", row[1])
-    print("City = ", row[2])
-    print("Average = ", row[3], "\n\n****\n")
-    
-    
-print("-----------------------------------------------------------------------")
-cursor.execute("SELECT COUNT(*) FROM Student WHERE (age > 20) ORDER BY age")
-count = cursor.fetchone()
-Q4 = "SELECT * FROM Student WHERE (age > 20) ORDER BY age LIMIT %s"
-cursor.execute(Q4,(int(count[0]/5),))
-records = cursor.fetchall()
-print("Total number of rows in table of query 4: ", cursor.rowcount)
-db.commit()
-print("\nPrinting each row")
-for row in records:
-    print("Id = ", row[0], )
-    print("Name = ", row[1])
-    print("City = ", row[2])
-    print("Average = ", row[3], "\n\n****\n")
-    
-    
-print("-----------------------------------------------------------------------")
-Q5 = "UPDATE Teacher SET t_field = 'electricity' WHERE (t_name = 'javad' and t_family = 'hamidzadeh')"
-cursor.execute(Q5)
-cursor.execute("SELECT * FROM Teacher WHERE t_name = 'javad' and t_family = 'hamidzadeh'")
-records = cursor.fetchall()
-print("Total number of rows in table of query 5: ", cursor.rowcount)
-db.commit()
-print("\nPrinting each row")
-for row in records:
-    print(row, "\n\n****\n")
-    
-    
-print("-----------------------------------------------------------------------")
-Q6 = "SELECT Student.s_name AS name, Student.s_family AS family FROM Student INNER JOIN term ON (Term.term_no = 3 and Student.age > 20 and Term.s_id = Student.s_id)"
-cursor.execute(Q6)
-records = cursor.fetchall()
-print("Total number of rows in table of query 6: ", cursor.rowcount)
 db.commit()
 print("\nPrinting each row")
 for row in records:
     print("Name = ", row[0], )
     print("Family = ", row[1], "\n\n****\n")
     
+    
 print("-----------------------------------------------------------------------")
-Q7 = "SELECT Student.s_name AS name FROM Student INNER JOIN term ON (Term.term_no <= 3 and Term.term_no >= 1 and Student.gender = 'm' and Term.s_id = Student.s_id and Student.tavg >= 18)"
-cursor.execute(Q7)
+Q2 = "SELECT DISTINCT Course.c_name FROM Course INNER JOIN Term ON ((Term.c_id = Course.c_id) and (Term.term_no = 3))"
+cursor.execute(Q2)
 records = cursor.fetchall()
-print("Total number of rows in table of query 7: ", cursor.rowcount)
+print("Total number of rows in table of query 2: ", cursor.rowcount)
+db.commit()
+print("\nPrinting each row")
+for row in records:
+    print("Course = ", row[0], "\n\n****\n" )
+
+
+print("-----------------------------------------------------------------------")
+cursor.execute("SELECT Min(tavg) FROM Student")
+minVal = cursor.fetchone()
+db.commit()
+Q3 = "SELECT DISTINCT s_name, s_family FROM Student WHERE (Student.tavg = %s)"
+cursor.execute(Q3,(minVal[0],))
+records = cursor.fetchall()
+print("Total number of rows in table of query 3: ", cursor.rowcount)
+db.commit()
+print("\nPrinting each row")
+for row in records:
+    print("Name = ", row[0], )
+    print("Family = ", row[1], "\n\n****\n")
+    
+    
+print("-----------------------------------------------------------------------")
+Q4 = "SELECT DISTINCT Student.s_name FROM Student INNER JOIN Term ON ((Student.gender = 'm') and (Term.s_id = Student.s_id) and (Term.term_no <= 3) and (Student.tavg >= 18) and (Term.term_no >= 1))"
+cursor.execute(Q4)
+records = cursor.fetchall()
+print("Total number of rows in table of query 4: ", cursor.rowcount)
 db.commit()
 print("\nPrinting each row")
 for row in records:
     print("Name = ", row[0], "\n\n****\n")
-    
-    
+
+
 print("-----------------------------------------------------------------------")
-Q8 = "SELECT * FROM Teacher WHERE (salary >= 5000000 or t_field != 'computer')ORDER BY t_id DESC"
-cursor.execute(Q8)
+Q5 = "SELECT DISTINCT Course.c_name FROM Course INNER JOIN Term ON ((Term.c_id = Course.c_id) and (Term.term_no = 3) and (Course.dep = 'computer'))"
+cursor.execute(Q5)
 records = cursor.fetchall()
-print("Total number of rows in table of query 8: ", cursor.rowcount)
+print("Total number of rows in table of query 5: ", cursor.rowcount)
 db.commit()
 print("\nPrinting each row")
 for row in records:
-    print(row, "\n\n****\n")
+    print("Course = ", row[0], "\n\n****\n" )
+
+
+print("-----------------------------------------------------------------------")
+cursor.execute("SELECT DISTINCT city FROM Student WHERE s_field = 'software' or s_field = 'hardware' or s_field = 'it'")
+cities = cursor.fetchall()
+print("query 6:")
+for city in cities:
+    Q6 = "SELECT DISTINCT s_name, s_family FROM Student  WHERE (city = %s and s_field != 'software' and s_field != 'hardware' and s_field != 'it')"
+    cursor.execute(Q6,(city[0],))
+    records = cursor.fetchall()
+    db.commit()
+    for row in records:
+        print("Name = ", row[0], )
+        print("Family = ", row[1], "\n\n****\n")
+        
+        
+Q7= "SELECT P.p_id, SP.Quantity FROM P INNER JOIN SP INNER JOIN S ON SP.p_id = P.p_id and SP.s_id = S.s_id and S.city = 'london'"
+Q8 = "SELECT P.pname, P.color FROM P INNER JOIN SP INNER JOIN S ON SP.p_id = P.p_id and SP.s_id = S.s_id and S.s_id = 's1'"
+Q9 = "SELECT S.sname, S.city FROM P INNER JOIN SP INNER JOIN S ON SP.p_id = P.p_id and SP.s_id = S.s_id and P.color != 'red'"
+Q10 = "SELECT S.s_id, P.pname, P.color FROM P INNER JOIN SP INNER JOIN S ON SP.p_id = P.p_id and SP.s_id = S.s_id and P.weight >= 500 and SP.Quantity >= 1000 and S.status >= 20"
+Q11 = "SELECT S.sname, S.city FROM S WHERE exists(SELECT 'x' FROM P INNER JOIN SP ON SP.p_id = P.p_id and SP.s_id = S.s_id and P.color = 'red') and not exists(SELECT 'x' FROM P INNER JOIN SP ON SP.p_id = P.p_id and SP.s_id = S.s_id and P.color != 'red')"
+Q12 = "SELECT P.pname, P.color FROM P WHERE exists(SELECT 'x' FROM S INNER JOIN SP ON SP.p_id = P.p_id and SP.s_id = S.s_id and S.city = 'london') and not exists(SELECT 'x' FROM S INNER JOIN SP ON SP.p_id = P.p_id and SP.s_id = S.s_id and S.city != 'london')"
+Q13 = "SELECT P.pname, P.color FROM P WHERE exists(SELECT 'x' FROM S INNER JOIN SP ON SP.p_id = P.p_id and SP.s_id = S.s_id and S.city != 'london') and not exists(SELECT 'x' FROM S INNER JOIN SP ON SP.p_id = P.p_id and SP.s_id = S.s_id and S.city = 'london')"
+Q14 = "SELECT S.sname, S.city FROM S WHERE exists(SELECT 'x' FROM P INNER JOIN SP ON SP.p_id = P.p_id and SP.s_id = S.s_id and P.p_id = 'p2') and exists(SELECT 'x' FROM P INNER JOIN SP ON SP.p_id = P.p_id and SP.s_id = S.s_id and P.p_id = 'p2')"
+Q15 = "SELECt P.p_id, SP.Quantity FROM P INNER JOIN SP ON SP.p_id = P.p_id GROUP BY P.p_id ORDER BY P.p_id"
+Q16 = "SELECT S.sname, SUM(P.p_id) FROM P INNER JOIN SP INNER JOIN S ON SP.p_id = P.p_id and SP.s_id = S.s_id GROUP BY S.sname"
