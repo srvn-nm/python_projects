@@ -1,5 +1,5 @@
-# import time
-# start_time = time.time()
+import time
+start_time = time.time()
 fullPrimeNumbers = []
 notFullPrimeNumbers = []
 def fullPrime(n):
@@ -7,7 +7,7 @@ def fullPrime(n):
         return 0
     elif fullPrimeNumbers.count(n) != 0 and notFullPrimeNumbers.count(n) == 0:
         return 1
-    elif fullPrimeNumbers.count(n) == 0 and notFullPrimeNumbers.count(n) == 0:
+    else:
         while n > 0:
             if (n == 1):
                 notFullPrimeNumbers.append(n)
@@ -37,4 +37,4 @@ def printFullPrime(n):
     
 number = int(input())
 printFullPrime(number)
-# print("--- %s seconds ---" % (time.time() - start_time))
+print("--- %s seconds ---" % (time.time() - start_time))
