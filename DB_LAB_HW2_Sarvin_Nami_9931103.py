@@ -181,7 +181,7 @@ for row in records:
 
 
 print("-----------------------------------------------------------------------")
-cursor.execute("SELECT city FROM Student WHERE s_field = 'software' or s_field = 'hardware' or s_field = 'it'")
+cursor.execute("SELECT DISTINCT city FROM Student WHERE s_field = 'software' or s_field = 'hardware' or s_field = 'it'")
 cities = cursor.fetchall()
 print("query 6:")
 for city in cities:
