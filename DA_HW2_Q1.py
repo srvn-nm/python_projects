@@ -1,3 +1,6 @@
+# import time
+# start_time = time.time()
+
 def fullPrime(n):
     while n > 0:
         if (n == 1):
@@ -23,5 +26,6 @@ def printFullPrime(n):
     
     
     
-number = input()
+number = int(input())
 printFullPrime(number)
+# print("--- %s seconds ---" % (time.time() - start_time))
