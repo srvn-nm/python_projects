@@ -199,5 +199,4 @@ Q8 = "SELECT P.pname, P.color FROM P INNER JOIN SP INNER JOIN S ON SP.p_id = P.p
 Q9 = "SELECT S.sname, S.city FROM P INNER JOIN SP INNER JOIN S ON SP.p_id = P.p_id and SP.s_id = S.s_id and P.color != 'red'"
 Q10 = "SELECT S.s_id, P.pname, P.color FROM P INNER JOIN SP INNER JOIN S ON SP.p_id = P.p_id and SP.s_id = S.s_id and P.weight >= 500 and SP.Quantity >= 1000 and S.status >= 20"
 Q11 = "SELECT S.sname, S.city FROM S WHERE exists(SELECT 'x' FROM P INNER JOIN SP ON SP.p_id = P.p_id and SP.s_id = S.s_id and P.color = 'red') and not exists(SELECT 'x' FROM P INNER JOIN SP ON SP.p_id = P.p_id and SP.s_id = S.s_id and P.color != 'red')"
-
-
+Q12 = "SELECT P.pname, P.color FROM P WHERE exists(SELECT 'x' FROM S INNER JOIN SP ON SP.p_id = P.p_id and SP.s_id = S.s_id and S.city = 'london') and not exists(SELECT 'x' FROM S INNER JOIN SP ON SP.p_id = P.p_id and SP.s_id = S.s_id and S.city != 'london')"
