@@ -1,27 +1,27 @@
 import time
 start_time = time.time()
-fullPrimeNumbers = []
-notFullPrimeNumbers = []
+fullPrimeNumbers = set()
+notFullPrimeNumbers = set()
 def fullPrime(n):
-    if fullPrimeNumbers.count(n) == 0 and notFullPrimeNumbers.count(n) != 0:
+    if n in fullPrimeNumbers and not n in notFullPrimeNumbers:
         return 0
-    elif fullPrimeNumbers.count(n) != 0 and notFullPrimeNumbers.count(n) == 0:
+    elif not n in fullPrimeNumbers and n in notFullPrimeNumbers:
         return 1
     else:
         while n > 0:
             if (n == 1):
-                notFullPrimeNumbers.append(n)
+                notFullPrimeNumbers.add(n)
                 return 0
             
             i = 2
             while i * i <= n :
                 if (n % i == 0):
-                    notFullPrimeNumbers.append(n)
+                    notFullPrimeNumbers.add(n)
                     return 0
                 i += 1
             n = int(n/10)
         
-    fullPrimeNumbers.append(n)
+    fullPrimeNumbers.add(n)
     return 1
 
 
