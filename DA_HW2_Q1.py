@@ -1,5 +1,5 @@
-import time
-start_time = time.time()
+# import time
+# start_time = time.time()
 fullPrimeNumbers, notFullPrimeNumbers = set(), set()
 def fullPrime(n):
     if (n in fullPrimeNumbers and not n in notFullPrimeNumbers) or (n == 1 or n % 2 == 0 or n % 3 == 0):
@@ -20,17 +20,11 @@ def fullPrime(n):
         
     fullPrimeNumbers.add(n)
     return 1
-
-
-def printFullPrime(n):
-    num = pow(10,(n - 1))
-    while num <= (pow(10,n)-1):
+    
+    
+    
+n = int(input())
+for num in range(pow(10,(n - 1)),(pow(10,n))):
         if fullPrime(num) == 1:
              print(num)
-        num += 1
-    
-    
-    
-    
-printFullPrime(int(input()))
-print("--- %s seconds ---" % (time.time() - start_time))
+# print("--- %s seconds ---" % (time.time() - start_time))

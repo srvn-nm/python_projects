@@ -1,1 +1,2 @@
-notFullPrimeNumbers.append(n)
+ time
+start_time = time.time()
