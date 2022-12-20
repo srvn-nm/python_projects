@@ -1,6 +1,6 @@
 # import time
 # start_time = time.time()
-
+numbers = []
 def fullPrime(n):
     while n > 0:
         if (n == 1):
@@ -19,7 +19,11 @@ def fullPrime(n):
 def printFullPrime(n):
     num = pow(10,(n - 1))
     while num <= (pow(10,n)-1):
-        if fullPrime(num) == 1:
+        if numbers.count(fullPrime(num)) == 0:
+            if fullPrime(num) == 1:
+                numbers.append(fullPrime(num))
+                print(num)
+        else:
             print(num)
         num += 1
     
