@@ -197,3 +197,5 @@ for city in cities:
 Q7= "SELECT P.p_id, SP.Quantity FROM P INNER JOIN SP INNER JOIN S ON SP.p_id = P.p_id and SP.s_id = S.s_id and S.city = 'london'"
 Q8 = "SELECT P.pname, P.color FROM P INNER JOIN SP INNER JOIN S ON SP.p_id = P.p_id and SP.s_id = S.s_id and S.s_id = 's1'"
 Q9 = "SELECT S.sname, S.city FROM P INNER JOIN SP INNER JOIN S ON SP.p_id = P.p_id and SP.s_id = S.s_id and P.color != 'red'"
+Q10 = "SELECT S.s_id FROM P INNER JOIN SP INNER JOIN S ON SP.p_id = P.p_id and SP.s_id = S.s_id and S.city = 'london'"
+
