@@ -121,7 +121,7 @@ term_add(15, 14, 3, 7, 15, 7)
 
 
 print("-----------------------------------------------------------------------")
-Q1 = "SELECT Student.s_name, Student.s_family FROM Student INNER JOIN Term ON ((age >= 20) and (Term.s_id = Student.s_id) and (Term.term_no = 3))"
+Q1 = "SELECT DISTINCT Student.s_name, Student.s_family FROM Student INNER JOIN Term ON ((age >= 20) and (Term.s_id = Student.s_id) and (Term.term_no = 3))"
 cursor.execute(Q1)
 records = cursor.fetchall()
 print("Total number of rows in table of query 1: ", cursor.rowcount)
@@ -133,7 +133,7 @@ for row in records:
     
     
 print("-----------------------------------------------------------------------")
-Q2 = "SELECT Course.c_name FROM Course INNER JOIN Term ON ((Term.c_id = Course.c_id) and (Term.term_no = 3))"
+Q2 = "SELECT DISTINCT Course.c_name FROM Course INNER JOIN Term ON ((Term.c_id = Course.c_id) and (Term.term_no = 3))"
 cursor.execute(Q2)
 records = cursor.fetchall()
 print("Total number of rows in table of query 2: ", cursor.rowcount)
@@ -147,7 +147,7 @@ print("-----------------------------------------------------------------------")
 cursor.execute("SELECT Min(tavg) FROM Student")
 minVal = cursor.fetchone()
 db.commit()
-Q3 = "SELECT s_name, s_family FROM Student WHERE (Student.tavg = %s)"
+Q3 = "SELECT DISTINCT s_name, s_family FROM Student WHERE (Student.tavg = %s)"
 cursor.execute(Q3,(minVal[0],))
 records = cursor.fetchall()
 print("Total number of rows in table of query 3: ", cursor.rowcount)
@@ -159,7 +159,7 @@ for row in records:
     
     
 print("-----------------------------------------------------------------------")
-Q4 = "SELECT Student.s_name FROM Student INNER JOIN Term ON ((Student.gender = 'm') and (Term.s_id = Student.s_id) and (Term.term_no <= 3) and (Student.tavg >= 18) and (Term.term_no >= 1))"
+Q4 = "SELECT DISTINCT Student.s_name FROM Student INNER JOIN Term ON ((Student.gender = 'm') and (Term.s_id = Student.s_id) and (Term.term_no <= 3) and (Student.tavg >= 18) and (Term.term_no >= 1))"
 cursor.execute(Q4)
 records = cursor.fetchall()
 print("Total number of rows in table of query 4: ", cursor.rowcount)
@@ -170,7 +170,7 @@ for row in records:
 
 
 print("-----------------------------------------------------------------------")
-Q5 = "SELECT Course.c_name FROM Course INNER JOIN Term ON ((Term.c_id = Course.c_id) and (Term.term_no = 3) and (Course.dep = 'computer'))"
+Q5 = "SELECT DISTINCT Course.c_name FROM Course INNER JOIN Term ON ((Term.c_id = Course.c_id) and (Term.term_no = 3) and (Course.dep = 'computer'))"
 cursor.execute(Q5)
 records = cursor.fetchall()
 print("Total number of rows in table of query 5: ", cursor.rowcount)
@@ -185,7 +185,7 @@ cursor.execute("SELECT city FROM Student WHERE s_field = 'software' or s_field =
 cities = cursor.fetchall()
 print("query 6:")
 for city in cities:
-    Q6 = "SELECT s_name, s_family FROM Student  WHERE (city = %s and s_field != 'software' and s_field != 'hardware' and s_field != 'it')"
+    Q6 = "SELECT DISTINCT s_name, s_family FROM Student  WHERE (city = %s and s_field != 'software' and s_field != 'hardware' and s_field != 'it')"
     cursor.execute(Q6,(city[0],))
     records = cursor.fetchall()
     db.commit()
