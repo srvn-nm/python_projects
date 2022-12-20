@@ -1,5 +1,5 @@
 def fullPrime(n):
-    while n > 1:
+    while n > 0:
         if (n == 1):
             return 0
          
@@ -9,7 +9,7 @@ def fullPrime(n):
                 return 0
             i += 1
         
-        n /= 10
+        n = int(n/10)
     return 1
 
 
@@ -23,5 +23,5 @@ def printFullPrime(n):
     
     
     
-    
-printFullPrime(3)
+number = input()
+printFullPrime(number)
