@@ -23,7 +23,7 @@ def merge(arr, temp, l, m, r) :
                 break
             j += 1
   
-        # While a[i] > K*a[j] satisfies
+        # While a[i] > a[j] satisfies
         # increase j
   
         # All elements in the right
@@ -89,11 +89,8 @@ def mergeSortUtil(arr, temp, l, r) :
 # required pairs using Merge Sort
 def mergeSort(arr, N) :
     temp = [0]*N
-    print(mergeSortUtil(arr, temp, 0, N - 1))
+    print(mergeSortUtil(arr, temp, 0, N - 1)%100000)
  
   # Driver code
-arr = [ 5, 6, 2, 5 ]
-N = len(arr)
- 
-# Function Call
-mergeSort(arr, N, K)
+arr = [ 3, 2, 3, 1 ]
+mergeSort(arr, len(arr))
