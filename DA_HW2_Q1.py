@@ -27,9 +27,8 @@ def fullPrime(n):
     
     
 n = int(input())
-num = pow(10,(n - 1))
-while num <= (pow(10,n)-1):
+num = (pow(10,(n - 1))*2) + 1
+for num in range(0,(pow(10,n)-1),2):
     if fullPrime(num) == 1:
             print(num)
-    num += 1
 # print("--- %s seconds ---" % (time.time() - start_time))
