@@ -1,23 +1,22 @@
 # import time
 # start_time = time.time()
-fullPrimeNumbers = set()
-notFullPrimeNumbers = set()
+fullPrimeNumbers, notFullPrimeNumbers = set(), set()
 def fullPrime(n):
     while n > 0:
-        if (n == 1):
+        if (not n in fullPrimeNumbers and n in notFullPrimeNumbers) or (n == 1 or (n % 2 == 0 and n != 2) or (n % 3 == 0 and n != 3)):
             notFullPrimeNumbers.add(n)
             return 0
-        elif n in fullPrimeNumbers and not n in notFullPrimeNumbers:
+        elif n in fullPrimeNumbers and not n in notFullPrimeNumbers or (n == 2 or n == 3):
             return 1
-        elif not n in fullPrimeNumbers and n in notFullPrimeNumbers:
-            return 0
             
-        i = 2
+        i = 5
+        w = 2
         while i * i <= n :
             if (n % i == 0):
                 notFullPrimeNumbers.add(n)
                 return 0
-            i += 1
+            i += w
+            w = 6 - w
         n = int(n/10)
         
     fullPrimeNumbers.add(n)
