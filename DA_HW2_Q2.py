@@ -29,10 +29,10 @@ def bucketSort(arr, noOfBuckets):
                 for i in range(1, len(temp)):
                     up = temp[i]
                     j = i - 1
-                while j >= 0 and temp[j] > up: 
-                    temp[j + 1] = temp[j]
-                    j -= 1
-                temp[j + 1] = up     
+                    while j >= 0 and temp[j] > up: 
+                        temp[j + 1] = temp[j]
+                        j -= 1
+                    temp[j + 1] = up     
   
     # Gather sorted elements 
     # to the original array
