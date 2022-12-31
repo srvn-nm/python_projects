@@ -1,4 +1,6 @@
 def bucketSort(arr, noOfBuckets):
+    num = 0
+    
     max_ele = max(arr)
     min_ele = min(arr)
   
@@ -32,6 +34,7 @@ def bucketSort(arr, noOfBuckets):
                     while j >= 0 and temp[j] > up: 
                         temp[j + 1] = temp[j]
                         j -= 1
+                        num += 1
                     temp[j + 1] = up     
   
     # Gather sorted elements 
