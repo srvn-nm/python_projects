@@ -26,17 +26,17 @@ def merge_sort(arr, temp_arr, l, r):
         # It will calculate inversion  
         # counts in the left subarray  
   
-        ic = ic +  merge_sort(arr, temp_arr, l, m)  
+        ic = ic +  merge_sort(arr, temp_arr, l, mid)  
   
         # It will calculate inversion  
         # counts in the right subarray  
   
-        ic = ic + merge_sort(arr, temp_arr, m + 1, r)  
+        ic = ic + merge_sort(arr, temp_arr, mid + 1, r)  
   
         # It will merge two subarrays in  
         # a sorted subarray  
   
-        ic = ic + merge(arr, temp_arr, l, m, r)  
+        ic = ic + merge(arr, temp_arr, l, mid, r)  
     return ic  
   
 # This function will merge two subarrays  
