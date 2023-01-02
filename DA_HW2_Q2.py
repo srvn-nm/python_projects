@@ -21,7 +21,7 @@ def merge_sort(arr, temp_arr, l, r):
   
           
   
-        mid = (l + r)/2  
+        mid = (l + r)//2  
   
         # It will calculate inversion  
         # counts in the left subarray  
@@ -90,8 +90,9 @@ def merge(arr, temp, l, m, r):
   
   
 # Given array is  
-arr = [ 3, 2, 3, 1 ]
-n = len(arr)  
+arr = []
+n = int(input())  
+for index in range(n): arr[index] = int(input())
 result = MS(arr, n)%100000
 print("The total number of inversions possible from the above array are :  ", result)
  
