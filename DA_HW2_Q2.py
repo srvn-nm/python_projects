@@ -1,3 +1,5 @@
+# import time
+# start_time = time.time()
 def MS(arr, n):  
     temp_arr = [0]*n  
     return merge_sort(arr, temp_arr, 0, n-1)  
@@ -56,3 +58,4 @@ arr = []
 n = int(input())  
 for index in range(n): arr[index] = int(input())
 print(MS(arr, n)%100000)
+# print("--- %s seconds ---" % (time.time() - start_time))
