@@ -56,6 +56,7 @@ def merge(arr, temp, l, m, r):
 # Given array is  
 arr = []
 n = int(input())  
-for i in range(n): arr[i] = int(input())
+for i in range(n): 
+    arr[i] = int(input())
 print(MS(arr, n)%100000)
 # print("--- %s seconds ---" % (time.time() - start_time))
