@@ -1,12 +1,11 @@
 def minSteps(str): 
     n = len(str) 
-    res = [[0 for x in range(n + 1)] 
-             for y in range(n + 1)] 
-    for l in range(1, n + 1): 
+    res = [[0 for x in range(n + 1)] for y in range(n + 1)] 
+    for l in range(n): 
         i = 0
-        j = l - 1
+        j = l
         while j < n: 
-            if (l == 1): 
+            if (l == 0): 
                 res[i][j] = 1
             else: 
                 res[i][j] = 1 + res[i + 1][j] 
