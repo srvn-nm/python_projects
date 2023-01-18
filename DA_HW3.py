@@ -12,11 +12,8 @@ def minSteps(str):
                     res[i][j] = min(1 + res[i + 2][j], res[i][j]) 
                 for k in range(i + 2, j + 1): 
                     if (str[i] == str[k]): 
-                        res[i][j] = min(res[i + 1][k - 1] + 
-                                       res[k + 1][j], res[i][j]) 
-                          
+                        res[i][j] = min(res[i + 1][k - 1] + res[k + 1][j], res[i][j]) 
             i += 1
-
     print(res[0][n - 1]) 
 
 minSteps(input())
