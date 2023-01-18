@@ -17,3 +17,4 @@ def minSteps(str):
     print(res[0][n-1])
 
 
+minSteps(input())
