@@ -3,8 +3,7 @@ def minSteps(str):
     res = [[0 for x in range(n + 1)] for y in range(n + 1)] 
     for l in range(n): 
         i = 0
-        j = l
-        while j < n: 
+        for j in range(l,n): 
             if (l == 0): 
                 res[i][j] = 1
             else: 
@@ -17,7 +16,6 @@ def minSteps(str):
                                        res[k + 1][j], res[i][j]) 
                           
             i += 1
-            j += 1
 
     print(res[0][n - 1]) 
 
