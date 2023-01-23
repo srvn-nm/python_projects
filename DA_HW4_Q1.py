@@ -6,7 +6,6 @@ def add_edge(adj, src, dest, d):
     adj[src][dest] = d
     adj[dest][src] = d
 
-paths=[]
 def find_path(adj,start,end,minPath):
     
     for i in adj:
@@ -21,8 +20,7 @@ def find_path(adj,start,end,minPath):
                         return find_path(adj,j,end,minPath)
     
 nm = input().split(" ")
-m, n = int(nm[1]),int(nm[0])
-adj = defaultdict(dict)
+m, n, paths, adj = int(nm[1]),int(nm[0]), [], defaultdict(dict)
 for i in range(m):
     uvd = input().split(" ")
     u, v, d = int(uvd[0]), int(uvd[1]), int(uvd[1])
