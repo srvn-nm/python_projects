@@ -17,11 +17,12 @@ def find_path(adj,start,end,minPath):
                     else:
                         return find_path(adj,j,end,minPath)
     
-nm = input()
-m, n, adj = int(nm[2]),int(nm[0]), [{} for i in range(n)]
+nm = input().split(" ")
+m, n = int(nm[1]),int(nm[0])
+adj = [{} for i in range(n)]
 for i in range(m):
-    uvd = input()
-    u, v, d = int(uvd[0]), int(uvd[2]), int(uvd[4])
+    uvd = input().split(" ")
+    u, v, d = int(uvd[0]), int(uvd[1]), int(uvd[1])
     add_edge(adj,u,v,d)
 find_path(adj, 0, n-1, 0)
 minPath, res = min(paths), 0
