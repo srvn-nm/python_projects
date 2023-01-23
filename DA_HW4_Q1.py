@@ -1,3 +1,6 @@
+from collections import defaultdict
+
+
 def add_edge(adj, src, dest, d):
  
     adj[src][dest] = d
@@ -7,7 +10,7 @@ paths=[]
 def find_path(adj,start,end,minPath):
     
     for i in adj:
-        if i == start:
+        if i.getKey() == start:
             for j in adj:
                 if j == adj[i].keys():
                     minPath += adj[i][j]
@@ -19,7 +22,7 @@ def find_path(adj,start,end,minPath):
     
 nm = input().split(" ")
 m, n = int(nm[1]),int(nm[0])
-adj = [{} for i in range(n)]
+adj = defaultdict(dict)
 for i in range(m):
     uvd = input().split(" ")
     u, v, d = int(uvd[0]), int(uvd[1]), int(uvd[1])
