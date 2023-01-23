@@ -10,7 +10,7 @@ paths=[]
 def find_path(adj,start,end,minPath):
     
     for i in adj:
-        if i.getKey() == start:
+        if i == start:
             for j in adj:
                 if j == adj[i].keys():
                     minPath += adj[i][j]
