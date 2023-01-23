@@ -17,19 +17,14 @@ def find_path(adj,start,end,minPath):
                     else:
                         return find_path(adj,j,end,minPath)
     
-mn = input()
-m = int(mn[2])
-n = int(mn[0])
-adj = [{} for i in range(n)]
+nm = input()
+m, n, adj = int(nm[2]),int(nm[0]), [{} for i in range(n)]
 for i in range(m):
     uvd = input()
-    u = int(uvd[0])
-    v = int(uvd[2])
-    d = int(uvd[4])
+    u, v, d = int(uvd[0]), int(uvd[2]), int(uvd[4])
     add_edge(adj,u,v,d)
 find_path(adj, 0, n-1, 0)
-minPath = min(paths)
-res = 0
+minPath, res = min(paths), 0
 for i in paths:
     if paths[i] == minPath:
         res += 1
