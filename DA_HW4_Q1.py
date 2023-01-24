@@ -8,16 +8,16 @@ def add_edge(adj, src, dest, d):
 
 def find_path(adj,start,end,minPath):
     
-    for i in adj:
-        if i == start:
-            for j in adj:
-                if j == adj[i].keys():
-                    minPath += adj[i][j]
-                    if j == end:
-                        paths.append(minPath)
-                        return 
-                    else:
-                        return find_path(adj,j,end,minPath)
+    # for i in adj:
+    #     if i == start:
+    #         for j in adj:
+    #             if j == adj[i].keys():
+    #                 minPath += adj[i][j]
+    #                 if j == end:
+    #                     paths.append(minPath)
+    #                     return 
+    #                 else:
+    #                     return find_path(adj,j,end,minPath)
     
 nm = input().split(" ")
 m, n, paths, adj = int(nm[1]),int(nm[0]), [], defaultdict(dict)
