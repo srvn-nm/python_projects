@@ -96,11 +96,11 @@ class Graph:
             
     
 nm = input().split(" ")
-m, n, adj = int(nm[1]),int(nm[0]), defaultdict(dict)
+m, n= int(nm[1]),int(nm[0])
 g = Graph(n)
 for i in range(m):
     uvd = input().split(" ")
     u, v, d = int(uvd[0]), int(uvd[1]), int(uvd[2])
-    g.addEdge(adj,u,v,d)
-g.findShortestPath(adj, 0, n-1)
+    g.addEdge(u,v,d)
+g.findShortestPath(0, n-1)
 print(len(g.shortestPaths))
