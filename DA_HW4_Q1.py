@@ -25,6 +25,7 @@ class Graph:
     def __init__(self,vertices):
         self.V = vertices 
         self.V_org = vertices
+        self.shortestPaths = []
         self.graph = defaultdict(list) # default dictionary to store graph
   
     # function to add an edge to graph
@@ -38,27 +39,26 @@ class Graph:
             that is V.'''
             self.graph[u].append(self.V)
             self.graph[self.V].append(v)
+            self.path = []
             self.V = self.V + 1
      
-    # To print the shortest path stored in parent[]
-    def printPath(self, parent, j):
+    # To find the shortest path stored in parent[]
+    def Path(self, parent, j):
         Path_len = 1
         if parent[j] == -1 and j < self.V_org : #Base Case : If j is source
-            print j,
+            self.path.append(j)
             return 0 # when parent[-1] then path length = 0   
-        l = self.printPath(parent , parent[j])
+        l = self.Path(parent , parent[j])
  
         #increment path length
         Path_len = l + Path_len
- 
-        # print node only if its less than original node length.
-        # i.e do not print any new node that has been added later
+
         if j < self.V_org :
-            print j,
+            self.path.append(j)
  
         return Path_len
  
-     '''    This function mainly does BFS and prints the
+    '''This function mainly does BFS and prints the
         shortest path from src to dest. It is assumed
         that weight of every edge is 1'''
     def findShortestPath(self,src, dest):
@@ -82,7 +82,7 @@ class Graph:
              
             # if s = dest then print the path and return
             if s == dest:
-                return self.printPath(parent, s)
+                self.shortestPaths.append(self.Path(parent, s))
                  
   
             # Get all adjacent vertices of the dequeued vertex s
@@ -93,17 +93,14 @@ class Graph:
                     queue.append(i)
                     visited[i] = True
                     parent[i] = s
+            
     
 nm = input().split(" ")
-m, n, paths, adj = int(nm[1]),int(nm[0]), [], defaultdict(dict)
+m, n, adj = int(nm[1]),int(nm[0]), defaultdict(dict)
 g = Graph(n)
 for i in range(m):
     uvd = input().split(" ")
     u, v, d = int(uvd[0]), int(uvd[1]), int(uvd[2])
     g.addEdge(adj,u,v,d)
-find_path(adj, 0, n-1, 0)
-minPath, res = min(paths), 0
-for i in paths:
-    if paths[i] == minPath:
-        res += 1
-print(res)
+g.findShortestPath(adj, 0, n-1)
+print(len(g.shortestPaths))
