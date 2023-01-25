@@ -90,7 +90,6 @@ adj = [[]for i in range(n)]
 
 for i in range(m):
     uvd = input().split(" ")
-    u, v, d = int(uvd[0]), int(uvd[1]), int(uvd[2])
-    add_edge(adj,u,v,d)
+    add_edge(adj,int(uvd[0]),int(uvd[1]),int(uvd[2]))
 
 findShortestPaths(adj, n-1)
