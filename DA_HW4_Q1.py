@@ -1,4 +1,3 @@
-from collections import defaultdict
 from queue import PriorityQueue
 
 
@@ -10,8 +9,8 @@ class Node:
 
 def add_edge(adj, x, y, d):
  
-    adj.get(x).add(Node(y, d));
-    adj.get(y).add(Node(x, d));
+    adj[x].append(Node(y, d))
+    adj[y].append(Node(x, d))
 
 def dijkstra(adj, n, dist, paths):
 
@@ -39,7 +38,7 @@ def dijkstra(adj, n, dist, paths):
             if (settled.contains(to + " " + u)):
                 continue
 
-            if (dist[to] > dist[u] + cost) :
+            if (dist[to] > dist[u] + cost):
 
                 pq.add(Node(to, d + cost))
 
@@ -71,10 +70,12 @@ def findShortestPaths(adj, n) :
     
     
 nm = input().split(" ")
-m, n, adj = int(nm[1]),int(nm[0]), []
+m, n= int(nm[1]),int(nm[0])
+adj = [[]*n]
 
 for i in range(m):
     uvd = input().split(" ")
     u, v, d = int(uvd[0]), int(uvd[1]), int(uvd[2])
     add_edge(adj,u,v,d)
+
 findShortestPaths(adj, n-1)
