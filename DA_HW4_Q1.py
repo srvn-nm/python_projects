@@ -6,8 +6,15 @@ def add_edge(adj, src, dest, d):
     adj[src][dest] = d
     adj[dest][src] = d
 
-def find_path(adj,start,end,minPath):
-    
+# def find_path(adj,s,d):
+#     distance = [float('inf')]
+#     paths = []
+#     priority_queue = {}
+#     priority_queue[0] = s
+#     distance[s] = 0
+#     paths[s] = 1
+#     while not priority_queue.empty():
+        
     # for i in adj:
     #     if i == start:
     #         for j in adj:
