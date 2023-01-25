@@ -35,26 +35,18 @@ def peek(pq):
 
 def dijkstra(adj, n, dist, paths):
 
-    pq = PriorityQueue(n + 1)
-
-    settled = set()
+    pq, settled, dist[0], paths[0] = PriorityQueue(n + 1), set(), 0, 1
 
     pq.put(Node(0, 0))
 
-    dist[0] = 0
-    paths[0] = 1
-
     while (not pq.empty()) :
 
-        u = peek(pq).node
-
-        d = peek(pq).weight
+        u, d = peek(pq).node, peek(pq).weight
 
         pq.get()
 
         for i in range(len(adj[u])):
-            to = adj[u][i].node
-            cost = adj[u][i].weight
+            to, cost = adj[u][i].node, adj[u][i].weight
 
             if ((str(to) + " " + str(u)) in settled):
                 continue
@@ -63,9 +55,7 @@ def dijkstra(adj, n, dist, paths):
 
                 pq.put(Node(to, (d + cost)))
 
-                dist[to] = dist[u] + cost
-
-                paths[to] = paths[u]
+                dist[to], paths[to] = (dist[u] + cost), paths[u]
             
 
             elif (dist[to] == dist[u] + cost) :
@@ -75,9 +65,7 @@ def dijkstra(adj, n, dist, paths):
         
 def findShortestPaths(adj, n) :
 
-        dist = [float('inf')]*(n + 5)
-
-        paths = [0]*(n + 5)
+        dist, paths = [float('inf')]*(n + 5), [0]*(n + 5)
 
         dijkstra(adj, n, dist, paths)
 
