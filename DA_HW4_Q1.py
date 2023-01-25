@@ -1,40 +1,80 @@
 from collections import defaultdict
+from queue import PriorityQueue
 
 
-def add_edge(adj, src, dest, d):
+class Node:
+    def __init__(self, node, weight):
+        self.node = node
+        self.weight = weight
+
+
+def add_edge(adj, x, y, d):
  
-    adj[src][dest] = d
-    adj[dest][src] = d
+    adj.get(x).add(Node(y, d));
+    adj.get(y).add(Node(x, d));
 
-# def find_path(adj,s,d):
-#     distance = [float('inf')]
-#     paths = []
-#     priority_queue = {}
-#     priority_queue[0] = s
-#     distance[s] = 0
-#     paths[s] = 1
-#     while not priority_queue.empty():
+def dijkstra(adj, n, dist, paths):
+
+    pq = PriorityQueue<Node>(n + 1, Node())
+
+    settled = set()
+
+    pq.add(Node(0, 0))
+
+    dist[0] = 0
+    paths[0] = 1
+
+    while (not pq.isEmpty()) :
+
+        u = pq.peek().node
+
+        d = pq.peek().weight
+
+        pq.poll()
+
+        for i in range(adj.get(u).size()):
+            to = adj.get(u).get(i).node
+            cost = adj.get(u).get(i).weight
+
+            if (settled.contains(to + " " + u)):
+                continue
+
+            if (dist[to] > dist[u] + cost) :
+
+                pq.add(Node(to, d + cost))
+
+                dist[to] = dist[u] + cost
+
+                paths[to] = paths[u]
+            
+
+            elif (dist[to] == dist[u] + cost) :
+                paths[to] = (paths[to] + paths[u])
+
+            settled.add(to + " " + u)
         
-    # for i in adj:
-    #     if i == start:
-    #         for j in adj:
-    #             if j == adj[i].keys():
-    #                 minPath += adj[i][j]
-    #                 if j == end:
-    #                     paths.append(minPath)
-    #                     return 
-    #                 else:
-    #                     return find_path(adj,j,end,minPath)
+def findShortestPaths(adj, n) :
+
+        dist = []*(n + 5)
+
+        paths = []*(n + 5)
+
+        for i in range(n+1):
+            dist[i] = int.MAX_VALUE
+
+        for i in range(n+1):
+            paths[i] = 0
+
+        dijkstra(adj, n, dist, paths)
+
+        print(paths[n])
+    
     
 nm = input().split(" ")
-m, n, paths, adj = int(nm[1]),int(nm[0]), [], defaultdict(dict)
+m, n, adj = int(nm[1]),int(nm[0]), []
+
 for i in range(m):
     uvd = input().split(" ")
     u, v, d = int(uvd[0]), int(uvd[1]), int(uvd[2])
     add_edge(adj,u,v,d)
-find_path(adj, 0, n-1, 0)
-minPath, res = min(paths), 0
-for i in paths:
-    if paths[i] == minPath:
-        res += 1
-print(res)
+findShortestPaths(adj, n-1)
