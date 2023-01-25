@@ -5,6 +5,24 @@ class Node:
     def __init__(self, node, weight):
         self.node = node
         self.weight = weight
+    
+    def __eq__(self, other):
+        return (self.node == other.node) and (self.weight == other.weight)
+
+    def __ne__(self, other):
+        return not (self == other)
+
+    def __lt__(self, other):
+        return (self.node < other.node) and (self.weight < other.weight)
+
+    def __gt__(self, other):
+        return (self.node > other.node) and (self.weight > other.weight)
+
+    def __le__(self, other):
+        return (self < other) or (self == other)
+
+    def __ge__(self, other):
+        return (self > other) or (self == other)
 
 
 def add_edge(adj, x, y, d):
@@ -38,7 +56,7 @@ def dijkstra(adj, n, dist, paths):
             to = adj[u][i].node
             cost = adj[u][i].weight
 
-            if ((str(to) + " " + str(u))in settled):
+            if ((str(to) + " " + str(u)) in settled):
                 continue
 
             if (dist[to] > dist[u] + cost):
