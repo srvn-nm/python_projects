@@ -1,4 +1,4 @@
-from queue import PriorityQueue
+from queue import heapq
 
 
 class Node:
@@ -35,15 +35,15 @@ def peek(pq):
 
 def dijkstra(adj, n, dist, paths):
 
-    pq, settled, dist[0], paths[0] = PriorityQueue(n + 1), set(), 0, 1
+    hq, settled, dist[0], paths[0] = heapq(n + 1), set(), 0, 1
 
-    pq.put(Node(0, 0))
+    hq.put(Node(0, 0))
 
-    while (not pq.empty()) :
+    while (not hq.empty()) :
 
-        u, d = peek(pq).node, peek(pq).weight
+        u, d = peek(hq).node, peek(hq).weight
 
-        pq.get()
+        hq.get()
 
         for i in range(len(adj[u])):
             to, cost = adj[u][i].node, adj[u][i].weight
@@ -53,7 +53,7 @@ def dijkstra(adj, n, dist, paths):
 
             if (dist[to] > dist[u] + cost):
 
-                pq.put(Node(to, (d + cost)))
+                hq.put(Node(to, (d + cost)))
 
                 dist[to], paths[to] = (dist[u] + cost), paths[u]
             
