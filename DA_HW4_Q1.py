@@ -11,6 +11,9 @@ def add_edge(adj, x, y, d):
  
     adj[x].append(Node(y, d))
     adj[y].append(Node(x, d))
+    
+def peek(pq):
+  return pq.queue[0]
 
 def dijkstra(adj, n, dist, paths):
 
@@ -23,24 +26,24 @@ def dijkstra(adj, n, dist, paths):
     dist[0] = 0
     paths[0] = 1
 
-    while (not pq.isEmpty()) :
+    while (not pq.empty()) :
 
-        u = pq.peek().node
+        u = peek(pq).node
 
-        d = pq.peek().weight
+        d = peek(pq).weight
 
-        pq.poll()
+        pq.get()
 
-        for i in range(adj.get(u).size()):
-            to = adj.get(u).get(i).node
-            cost = adj.get(u).get(i).weight
+        for i in range(len(adj[u])):
+            to = adj[u][i].node
+            cost = adj[u][i].weight
 
-            if (settled.contains(to + " " + u)):
+            if ((str(to) + " " + str(u))in settled):
                 continue
 
             if (dist[to] > dist[u] + cost):
 
-                pq.add(Node(to, d + cost))
+                pq.put(Node(to, (d + cost)))
 
                 dist[to] = dist[u] + cost
 
@@ -50,7 +53,7 @@ def dijkstra(adj, n, dist, paths):
             elif (dist[to] == dist[u] + cost) :
                 paths[to] = (paths[to] + paths[u])
 
-            settled.add(to + " " + u)
+            settled.add(str(to) + " " + str(u))
         
 def findShortestPaths(adj, n) :
 
