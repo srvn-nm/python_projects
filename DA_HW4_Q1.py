@@ -14,11 +14,11 @@ def add_edge(adj, x, y, d):
 
 def dijkstra(adj, n, dist, paths):
 
-    pq = PriorityQueue<Node>(n + 1, Node())
+    pq = PriorityQueue(n + 1)
 
     settled = set()
 
-    pq.add(Node(0, 0))
+    pq.put(Node(0, 0))
 
     dist[0] = 0
     paths[0] = 1
@@ -54,15 +54,9 @@ def dijkstra(adj, n, dist, paths):
         
 def findShortestPaths(adj, n) :
 
-        dist = []*(n + 5)
+        dist = [float('inf')]*(n + 5)
 
-        paths = []*(n + 5)
-
-        for i in range(n+1):
-            dist[i] = int.MAX_VALUE
-
-        for i in range(n+1):
-            paths[i] = 0
+        paths = [0]*(n + 5)
 
         dijkstra(adj, n, dist, paths)
 
@@ -71,7 +65,7 @@ def findShortestPaths(adj, n) :
     
 nm = input().split(" ")
 m, n= int(nm[1]),int(nm[0])
-adj = [[]*n]
+adj = [[]for i in range(n)]
 
 for i in range(m):
     uvd = input().split(" ")
