@@ -1,4 +1,4 @@
-from queue import PriorityQueue
+from heapq import heappush, heappop
 
 
 class Node:
@@ -30,20 +30,18 @@ def add_edge(adj, x, y, d):
     adj[x].append(Node(y, d))
     adj[y].append(Node(x, d))
     
-def peek(pq):
-  return pq.queue[0]
 
 def dijkstra(adj, n, dist, paths):
 
-    pq, settled, dist[0], paths[0] = PriorityQueue(n + 1), set(), 1
+    pq, settled, dist[0], paths[0] = [], set(), 0, 1
 
-    pq.put(Node(0, 0))
+    heappush(pq,Node(0, 0))
 
-    while (not pq.empty()) :
+    while (pq) :
 
-        u, d = peek(pq).node, peek(pq).weight
+        u, d = pq[0].node, pq[0].weight
 
-        pq.get()
+        heappop(pq)
 
         for i in range(len(adj[u])):
             to, cost = adj[u][i].node, adj[u][i].weight
@@ -53,7 +51,7 @@ def dijkstra(adj, n, dist, paths):
 
             if (dist[to] > dist[u] + cost):
 
-                pq.put(Node(to, (d + cost)))
+                heappush(pq, Node(to, (d + cost)))
 
                 dist[to], paths[to] = (dist[u] + cost), paths[u]
             
