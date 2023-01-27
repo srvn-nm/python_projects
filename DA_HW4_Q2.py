@@ -24,7 +24,7 @@ class Graph():
     def primMST(self):
         key, parent, mstSet = [sys.maxsize] * self.V, [None] * self.V, [False] * self.V
         key[0], parent[0] = 0, -1 
-        for cout in range(self.V):
+        for V in range(self.V):
             u = self.minKey(key, mstSet)
             mstSet[u] = True
             for v in range(self.V):
