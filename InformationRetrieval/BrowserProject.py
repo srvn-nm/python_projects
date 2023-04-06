@@ -31,7 +31,12 @@ def normalize(data, i):
     for i in tokenizedData:
         if i in stopWords_list:
             tokenizedData.remove(i)
+            print(data)
     index(tokenizedData, i)
     
-def index():
+def index(data, i):
     pass
+
+
+read()
+normalize()
