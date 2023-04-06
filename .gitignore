@@ -20,6 +20,7 @@ parts/
 sdist/
 var/
 wheels/
+IR_data_news_12k.json
 share/python-wheels/
 *.egg-info/
 .installed.cfg
