@@ -34,8 +34,20 @@ def normalize(data, i):
             print(data)
     index(tokenizedData, i)
     
-def index(data, i):
-    pass
+def index(tokenizedData, i):
+    for j in range(len(tokenizedData)):
+        data = tokenizedData[j]
+        if data in positionalIndex:
+            positionalIndex[data][0] = positionalIndex[data][0] + 1
+            if i in positionalIndex[data][1]:
+                positionalIndex[data][1][i].append(j)
+            else:
+                positionalIndex[data][1][i] = [j]
+        else:
+            positionalIndex[data] = []
+            positionalIndex[data].append(1)
+            positionalIndex[data].append({})
+            positionalIndex[data][1][i] = [j]
 
 
 read()
