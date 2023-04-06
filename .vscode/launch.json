@@ -1,35 +1,3 @@
-{
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Python: Current File",
-      "type": "python",
-      "request": "launch",
-      "program": "${file}",
-      "console": "integratedTerminal"
-    },
-    {
-      "name": "C/C++ Runner: Debug Session",
-      "type": "cppdbg",
-      "request": "launch",
-      "args": [
-        ""
-      ],
-      "stopAtEntry": false,
-      "cwd": "c:/Users/ASUS.PIESC/Desktop/python",
-      "environment": [],
-      "program": "c:/Users/ASUS.PIESC/Desktop/python/build/Debug/outDebug",
-      "internalConsoleOptions": "openOnSessionStart",
-      "MIMode": "gdb",
-      "miDebuggerPath": "C:\\MinGW\\bin\\gdb.exe",
-      "externalConsole": false,
-      "setupCommands": [
-        {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        }
-      ]
-    }
-  ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:70b7deeae838e1d5c283123947093868d4972c652f13771e60c02b876413f374
+size 893
