@@ -1,1 +1,2 @@
 *.json filter=lfs diff=lfs merge=lfs -text
+InformationRetrieval\IR_data_news_12k.json filter=lfs diff=lfs merge=lfs -text
