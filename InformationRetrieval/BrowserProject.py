@@ -27,7 +27,6 @@ def normalize(data, i):
     for i in tokenizedData:
         if i in stopWordsList:
             tokenizedData.remove(i)
-            print(data)
     index(tokenizedData, i)
     
 def index(tokenizedData, i):
