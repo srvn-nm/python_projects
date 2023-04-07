@@ -1,6 +1,5 @@
-from __future__ import unicode_literals
 import json
-from hazm import *
+from parsivar import *
 
 
 docs_contents = []
@@ -24,10 +23,11 @@ def read():
 def normalize(data, i):
     normalizer = Normalizer()
     data = normalizer.normalize(data)
-    tokenizedData = word_tokenize(data)
-    stemmer = Stemmer()
+    tokenizer = Tokenizer()
+    tokenizedData = tokenizer.tokenize_words(data)
+    stemmer = FindStems()
     for j in range(len(tokenizedData)):
-        tokenizedData[j] = stemmer.stem(tokenizedData[j])
+        tokenizedData[j] = stemmer.convert_to_stem(tokenizedData[j])
     for i in tokenizedData:
         if i in stopWords_list:
             tokenizedData.remove(i)
