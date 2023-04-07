@@ -1,5 +1,6 @@
+from __future__ import unicode_literals
 import json
-from parsivar import *
+from hazm import *
 
 
 docs_contents = []
@@ -12,7 +13,7 @@ stopWords_list = ["با", "و", "در", "ولی", "اما", "نیز", "اگر", 
                 ",", "،", ".", "/", "را", "مانند", "جزو", ":", "به", "؛"]
 
 def read():
-    f = open('IR_data_news_12k.json', encoding='utf8')
+    f = open("IR_data_news_12k.json", encoding='utf8')
     data = json.load(f)
     for i in data:
         docs_titles.append(data[i]["title"])
@@ -23,11 +24,10 @@ def read():
 def normalize(data, i):
     normalizer = Normalizer()
     data = normalizer.normalize(data)
-    tokenizer = Tokenizer()
-    tokenizedData = tokenizer.tokenize_words(data)
-    stemmer = FindStems()
+    tokenizedData = word_tokenize(data)
+    stemmer = Stemmer()
     for j in range(len(tokenizedData)):
-        tokenizedData[j] = stemmer.convert_to_stem(tokenizedData[j])
+        tokenizedData[j] = stemmer.stem(tokenizedData[j])
     for i in tokenizedData:
         if i in stopWords_list:
             tokenizedData.remove(i)
