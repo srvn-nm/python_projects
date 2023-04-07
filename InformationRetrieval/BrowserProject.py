@@ -13,7 +13,7 @@ stopWords_list = ["با", "و", "در", "ولی", "اما", "نیز", "اگر", 
                 ",", "،", ".", "/", "را", "مانند", "جزو", ":", "به", "؛"]
 
 def read():
-    f = open("IR_data_news_12k.json", encoding='utf8')
+    f = open('../../IR_data_news_12k.json', encoding='utf8')
     data = json.load(f)
     for i in data:
         docs_titles.append(data[i]["title"])
