@@ -7,12 +7,15 @@ docsContents = []
 docsTitles = []
 docsUrls = []
 positionalIndex = {}
-docsRanks = {}
-phrase = []
 stopWordsList = ["با", "و", "در", "ولی", "اما", "نیز", "اگر", "که", "مگر", "از", "بر", "تا", "بی", "الا", "غیر", ".",
                 ",", "،", ".", "/", "را", "مانند", "جزو", ":", "به", "؛"]
 
 def read():
+    s = open('./InformationRetrieval/persian-stopwords.txt', 'r')
+    for line in s:
+        if line not in stopWordsList:
+            stopWordsList.append(line)
+    s.close()
     f = open('../IR_data_news_12k.json', encoding='utf8')
     data = json.load(f)
     for i in data:
@@ -53,4 +56,4 @@ def index(tokenizedData, i):
 read()
 for i in range(len(docsContents)):
     normalize(docsContents[i], i)
-print(index())
+print(positionalIndex)
