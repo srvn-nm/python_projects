@@ -51,4 +51,6 @@ def index(tokenizedData, i):
 
 
 read()
-normalize()
+for i in range(len(docsContents)):
+    normalize(docsContents[i], i)
+print(index())
