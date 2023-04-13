@@ -496,6 +496,16 @@ def phraseRank():
         positionCheck(j, phrases[1], positionalIndexCopy[phrases[0]][1][j][0] + 1)
 
 
+def printDocs(docs):
+    flag = 0
+    print("\n\n\n\n\n\n")
+    for i in docs.keys():
+        if flag <= 4:
+            print(docsTitles[i] + ": " + docsUrls[i])
+        else:
+            break
+
+
 read()
 for i in range(len(docsContents)):
     normalize(docsContents[i], i)
