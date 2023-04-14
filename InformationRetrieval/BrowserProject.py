@@ -409,10 +409,10 @@ docsContents, docsTitles, docsUrls, positionalIndex, docsRanks, phrases, stopWor
 def read():
     f = open('../../IR_data_news_12k.json', encoding='utf8')
     data = json.load(f)
-    for i in data:
-        docsTitles.append(data[i]["title"])
-        docsContents.append(data[i]["content"])
-        docsUrls.append(data[i]["url"])
+    for d in data:
+        docsTitles.append(data[d]["title"])
+        docsContents.append(data[d]["content"])
+        docsUrls.append(data[d]["url"])
     f.close()
 
 
@@ -451,13 +451,13 @@ def notIn(word):
 
 
 def phrasal(words):
-    for i in words:
-        if i == '"':
-            words_check = words[words.index(i) + 1:]
+    for w in words:
+        if w == '"':
+            words_check = words[words.index(w) + 1:]
             phraseRank()
             return words_check
         else:
-            phrases.append(i)
+            phrases.append(w)
 
 
 def positionCheck(docId, word, position):
@@ -475,20 +475,20 @@ def positionCheck(docId, word, position):
 def phraseRank():
     docsContentsCopy = copy.deepcopy(docsContents)
     positionalIndexCopy = copy.copy(positionalIndex)
-    for i in phrases:
-        if i not in positionalIndexCopy.keys():
+    for p in phrases:
+        if p not in positionalIndexCopy.keys():
             return
-    for i in list(positionalIndexCopy.keys()):
-        if i not in phrases:
-            del positionalIndexCopy[i]
-    for i in range(len(docsContents)):
+    for p in list(positionalIndexCopy.keys()):
+        if p not in phrases:
+            del positionalIndexCopy[p]
+    for p in range(len(docsContents)):
         for j in phrases:
-            if i not in positionalIndexCopy[j][1]:
-                docsContentsCopy[i] = " "
-    for i in positionalIndexCopy:
-        for j in list(positionalIndexCopy[i][1]):
+            if p not in positionalIndexCopy[j][1]:
+                docsContentsCopy[p] = " "
+    for p in positionalIndexCopy:
+        for j in list(positionalIndexCopy[p][1]):
             if docsContentsCopy[j] == " ":
-                del positionalIndexCopy[i][1][j]
+                del positionalIndexCopy[p][1][j]
     for j in positionalIndexCopy[phrases[0]][1]:
         if j not in docsRanks:
             docsRanks[j] = 0
