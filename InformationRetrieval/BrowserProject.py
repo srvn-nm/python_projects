@@ -418,7 +418,8 @@ def read():
 
 def normalize(data, i):
     normalizer, stemmer = Normalizer(), Stemmer()
-    data, tokenizedData = normalizer.normalize(data), word_tokenize(data)
+    data = normalizer.normalize(data)
+    tokenizedData = word_tokenize(data)
     for j in range(len(tokenizedData)):
         tokenizedData[j] = stemmer.stem(tokenizedData[j])
     for k in tokenizedData:
@@ -505,8 +506,47 @@ def printDocs(docs):
         else:
             break
 
+def search(queryWords):
+    while len(queryWords) != 0:
+        if queryWords[0] == '"':
+            queryWords = phrasal(queryWords[1:])
+        elif queryWords[0] != '!' and queryWords[0] != '"':
+            normalized = queryWords.pop(0)
+            normalWords(normalized)
+        else:
+            queryWords.pop(0)
+            word = queryWords.pop(0)
+            notIn(word)
+    for docs in list(docsRanks.keys()):
+        if docsRanks[docs] == 0:
+            del docsRanks[docs]
+
+
+def normalWords(normalized):
+    if normalized in positionalIndex.keys():
+        for j in positionalIndex[normalized][1]:
+            if j in docsRanks.keys():
+                docsRanks[j] = docsRanks[j] + len(positionalIndex[normalized][1][j])
+            else:
+                docsRanks[j] = len(positionalIndex[normalized][1][j])
+
 
 read()
 for i in range(len(docsContents)):
     normalize(docsContents[i], i)
 print(positionalIndex)
+
+query = input("Please write your query here: ")
+while not query == 0:
+    normalizer2, stemmer2 =  Normalizer(), Stemmer()
+    query = normalizer2.normalize(query)
+    tokenizedQuery = word_tokenize(query)
+
+    for j in range(len(tokenizedQuery)):
+        tokenizedQuery[j] = stemmer2.stem(tokenizedQuery[j])
+    for k in tokenizedQuery:
+        if k in stopWordsList:
+            tokenizedQuery.remove(k)
+    search(tokenizedQuery)
+    printDocs(docsRanks)
+    query = input("Please write your new query here or just type 0 to exit: ")
