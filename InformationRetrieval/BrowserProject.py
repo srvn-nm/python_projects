@@ -403,6 +403,9 @@ docsContents, docsTitles, docsUrls, positionalIndex, docsRanks, phrases, stopWor
                                                                                                                   "افرادی",
                                                                                                                   "می‌گویند",
                                                                                                                   "سالهای",
+                                                                                                                  '\u200cو',
+                                                                                                                  'و\u200c',
+                                                                                                                  '\u200cو',
                                                                                                                   "درون"]
 
 
@@ -503,8 +506,10 @@ def printDocs(docs):
     for i in docs.keys():
         if flag <= 4:
             print(docsTitles[i] + ": " + docsUrls[i])
+            flag += 1
         else:
             break
+
 
 def search(queryWords):
     while len(queryWords) != 0:
@@ -534,11 +539,11 @@ def normalWords(normalized):
 read()
 for i in range(len(docsContents)):
     normalize(docsContents[i], i)
-print(positionalIndex)
+# print(positionalIndex)
 
 query = input("Please write your query here: ")
-while not query == 0:
-    normalizer2, stemmer2 =  Normalizer(), Stemmer()
+while query != 0:
+    normalizer2, stemmer2 = Normalizer(), Stemmer()
     query = normalizer2.normalize(query)
     tokenizedQuery = word_tokenize(query)
 
