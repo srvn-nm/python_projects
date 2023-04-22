@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import copy
 import json
+
 from hazm import *
 
 docsContents, docsTitles, docsUrls, positionalIndex, docsRanks, phrases, stopWordsList = [], [], [], {}, {}, [], ["با",
@@ -505,12 +506,13 @@ def printDocs(docs):
     print()
     for i in docs.keys():
         if flag <= 4:
-            print("doc " + str(flag+1) + ") " + docsTitles[i] + ": " + docsUrls[i])
-            print(docsContents[i])
+            print("doc " + str(flag + 1) + ") " + docsTitles[i] + ": " + docsUrls[i])
+            for line in list(map(''.join,zip(*[iter(docsContents[i])]*300))):
+                print(line)
             flag += 1
+            print()
         else:
             break
-    print()
 
 
 def search(queryWords):
