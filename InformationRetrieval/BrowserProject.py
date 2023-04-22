@@ -505,7 +505,7 @@ def printDocs(docs):
     print()
     for i in docs.keys():
         if flag <= 4:
-            print(docsTitles[i] + ": " + docsUrls[i])
+            print("doc " + str(flag+1) + ") " + docsTitles[i] + ": " + docsUrls[i])
             print(docsContents[i])
             flag += 1
         else:
