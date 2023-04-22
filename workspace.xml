@@ -57,7 +57,7 @@
       <option name="presentableId" value="Default" />
       <updated>1681634329185</updated>
       <workItem from="1681634331728" duration="1558000" />
-      <workItem from="1682070850613" duration="13213000" />
+      <workItem from="1682070850613" duration="14215000" />
     </task>
     <task id="LOCAL-00001" summary="updating my working directory">
       <created>1681637376946</created>
@@ -94,7 +94,14 @@
       <option name="project" value="LOCAL" />
       <updated>1682083319010</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="debugging">
+      <created>1682161238392</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1682161238392</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -118,6 +125,6 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/BrowserProject_py$BrowserProject.coverage" NAME="BrowserProject Coverage Results" MODIFIED="1682154043847" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/OneDrive/Desktop/SarvinCode/python/InformationRetrieval" />
+    <SUITE FILE_PATH="coverage/BrowserProject_py$BrowserProject.coverage" NAME="BrowserProject Coverage Results" MODIFIED="1682161430487" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/OneDrive/Desktop/SarvinCode/python/InformationRetrieval" />
   </component>
 </project>
