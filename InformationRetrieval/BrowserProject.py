@@ -502,13 +502,15 @@ def phraseRank():
 
 def printDocs(docs):
     flag = 0
-    print("\n\n\n\n\n\n")
+    print()
     for i in docs.keys():
         if flag <= 4:
             print(docsTitles[i] + ": " + docsUrls[i])
+            print(docsContents[i])
             flag += 1
         else:
             break
+    print()
 
 
 def search(queryWords):
@@ -542,7 +544,7 @@ for i in range(len(docsContents)):
 # print(positionalIndex)
 
 query = input("Please write your query here: ")
-while query != 0:
+while query:
     normalizer2, stemmer2 = Normalizer(), Stemmer()
     query = normalizer2.normalize(query)
     tokenizedQuery = word_tokenize(query)
@@ -552,6 +554,7 @@ while query != 0:
     for k in tokenizedQuery:
         if k in stopWordsList:
             tokenizedQuery.remove(k)
+    docsRanks.clear()
     search(tokenizedQuery)
     printDocs(docsRanks)
-    query = input("Please write your new query here or just type 0 to exit: ")
+    query = input("Please write your new query here: ")
