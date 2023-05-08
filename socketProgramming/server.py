@@ -11,3 +11,7 @@ def main():
     address = gethostbyname(gethostname())
 
     print(address)
+    
+    
+if __name__ == "__main__":
+    main()
