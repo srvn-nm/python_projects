@@ -33,9 +33,9 @@ def clientHandler(connection, address):
     print(f"CLient from IP address {address} successfully connected! ^-^")
     connected = True
     while connected:
-        # figuring out the length of out massage
+        # figuring out the length of out massage and decoding it
         massageLen = int(connection.recv(MASSAGE_SIZE).decode(ENCODING))
-        # reading the massage to reach the defined length
+        # reading the massage to reach the defined length and decoding it
         msg = connection.recv(massageLen).decode(ENCODING)
         print(f"New Massage:\n{msg}")
         # disconnect time T-T
