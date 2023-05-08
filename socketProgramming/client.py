@@ -11,6 +11,10 @@ def main():
     address = gethostbyname(gethostname())
     SERVER_info = (address, PORT)
     clientSocket.connect(SERVER_info)
+    sendMsg(clientSocket, "Hey Meow to everyone! ^-^")
+    sendMsg(clientSocket, "DISCONNECT")
+    
+def sendMsg(client, msg):
     
     
 if __name__ == "__main__":
