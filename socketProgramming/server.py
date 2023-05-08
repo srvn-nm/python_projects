@@ -9,13 +9,8 @@ PORT = 7447
 
 def main():
     address = gethostbyname(gethostname())
-
-    HOST_info = (address, PORT)
-    
-    mySocket = socket(socket.AF_INET, socket.SOCK_STREAM)
-    
+    HOST_info, mySocket = (address, PORT), socket(socket.AF_INET, socket.SOCK_STREAM)
     mySocket.bind(HOST_info)
-    
     start(mySocket)
     
 def start(server):
@@ -26,8 +21,9 @@ def start(server):
         tread = Thread(target = clientHandler, args = (connection, address))
     
 def clientHandler(connection, address):
+    print(f"CLient from IP address {address} successfully connected! ^-^")
+    connected = True
     
     
-   
 if __name__ == "__main__":
     main()
