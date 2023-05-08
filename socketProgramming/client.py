@@ -11,6 +11,7 @@ def main():
     address = gethostbyname(gethostname())
     SERVER_info = (address, PORT)
     clientSocket.connect(SERVER_info)
+    print("Client is up!")
     sendMsg(clientSocket, "Hey Meow to everyone! ^-^")
     sendMsg(clientSocket, "DISCONNECT")
     
