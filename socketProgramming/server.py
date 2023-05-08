@@ -18,7 +18,8 @@ def start(server):
     server.listen()
     while True:
         connection, address = server.accept()
-        tread = Thread(target = clientHandler, args = (connection, address))
+        thread = Thread(target = clientHandler, args = (connection, address))
+        thread.start()
     
 def clientHandler(connection, address):
     print(f"CLient from IP address {address} successfully connected! ^-^")
