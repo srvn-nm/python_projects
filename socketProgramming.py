@@ -2,5 +2,9 @@
 @author: Sarvin Nami
 
 """
-import socket
-import threading
+from socket import *
+from threading import *
+
+address = gethostbyname(gethostname())
+
+print(address)
