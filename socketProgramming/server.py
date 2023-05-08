@@ -16,10 +16,17 @@ def main():
     
     mySocket.bind(HOST_info)
     
-def start():
+    start(mySocket)
+    
+def start(server):
     print("Server is starting...")
+    server.listen()
+    while True:
+        connection, accept = server.accept()
+        tread = Thread()
     
+def clientHandler():
     
-    
+   
 if __name__ == "__main__":
     main()
