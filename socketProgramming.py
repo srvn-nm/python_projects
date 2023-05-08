@@ -5,6 +5,9 @@
 from socket import *
 from threading import *
 
-address = gethostbyname(gethostname())
+PORT = 7447
 
-print(address)
+def main():
+    address = gethostbyname(gethostname())
+
+    print(address)
