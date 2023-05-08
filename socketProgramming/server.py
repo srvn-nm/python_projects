@@ -5,7 +5,7 @@
 from socket import *
 from threading import *
 
-PORT, MESSAGE_SIZE, ENCODING = 7447, 64, "utf-8"
+PORT, MASSAGE_SIZE, ENCODING = 7447, 64, "utf-8"
 
 def main():
     address = gethostbyname(gethostname())
@@ -24,8 +24,12 @@ def clientHandler(connection, address):
     print(f"CLient from IP address {address} successfully connected! ^-^")
     connected = True
     while connected:
-        messageLen = int(connection.recv(MESSAGE_SIZE).decode(ENCODING))
-        msg = connection.recv(messageLen).decode(ENCODING)
+        massageLen = int(connection.recv(MASSAGE_SIZE).decode(ENCODING))
+        msg = connection.recv(massageLen).decode(ENCODING)
+        print(f"New Massage:\n{msg}")
+        if msg == "DISCONNECT":
+            connected = False
+    connection.close()
     
 if __name__ == "__main__":
     main()
