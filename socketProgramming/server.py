@@ -9,7 +9,7 @@ PORT, MASSAGE_SIZE, ENCODING = 7447, 64, "utf-8"
 
 def main():
     address = gethostbyname(gethostname())
-    HOST_info, mySocket = (address, PORT), socket(socket.AF_INET, socket.SOCK_STREAM)
+    HOST_info, serverSocket = (address, PORT), socket(socket.AF_INET, socket.SOCK_STREAM)
     mySocket.bind(HOST_info)
     start(mySocket)
     
