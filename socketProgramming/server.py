@@ -22,10 +22,11 @@ def start(server):
     print("Server is starting...")
     server.listen()
     while True:
-        connection, accept = server.accept()
-        tread = Thread()
+        connection, address = server.accept()
+        tread = Thread(target = clientHandler, args = (connection, address))
     
-def clientHandler():
+def clientHandler(connection, address):
+    
     
    
 if __name__ == "__main__":
