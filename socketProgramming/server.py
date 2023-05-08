@@ -9,9 +9,9 @@ PORT, MASSAGE_SIZE, ENCODING = 7447, 64, "utf-8"
 
 def main():
     address = gethostbyname(gethostname())
-    HOST_info, serverSocket = (address, PORT), socket(socket.AF_INET, socket.SOCK_STREAM)
-    mySocket.bind(HOST_info)
-    start(mySocket)
+    HOST_info, serverSocket = (address, PORT), socket(AF_INET, SOCK_STREAM)
+    serverSocket.bind(HOST_info)
+    start(serverSocket)
     
 def start(server):
     print("Server is starting...")

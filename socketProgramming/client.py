@@ -7,7 +7,7 @@ from socket import *
 PORT, MASSAGE_SIZE, ENCODING = 7447, 64, "utf-8"
 
 def main():
-    clientSocket = socket(socket.AF_INET, socket.SOCK_STREAM)
+    clientSocket = socket(AF_INET, SOCK_STREAM)
     address = gethostbyname(gethostname())
     SERVER_info = (address, PORT)
     clientSocket.connect(SERVER_info)
@@ -15,6 +15,11 @@ def main():
     sendMsg(clientSocket, "DISCONNECT")
     
 def sendMsg(client, msg):
+    massage = msg.encode(ENCODING)
+    msgLen = str(len(massage)).encode(ENCODING)
+    msgLen += b' ' * (MASSAGE_SIZE - len(msgLen))
+    client.send(msgLen)
+    client.send(massage)
     
     
 if __name__ == "__main__":
