@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import copy
 import json
+import math
 
 from hazm import *
 
@@ -539,6 +540,48 @@ def normalWords(normalized):
             else:
                 docsRanks[j] = len(positionalIndex[normalized][1][j])
 
+
+def tf_idf(positionalIndex):
+    n = len(docsContents)
+    for word in positionalIndex:
+        temp = {}
+        nt = len(positionalIndex[word][1])
+        idf = math.log(n / nt, 10)
+        for j in positionalIndex[word][1]:
+            ftd = len(positionalIndex[word][1][j])
+            tf = 1 + math.log(ftd, 10)
+            positionalIndex[word][1][j].append(1 + math.log(ftd, 10))
+            temp[j] = tf * idf
+        sorted_temp = dict(sorted(temp.items(), key=lambda item: item[1], reverse=True))
+        if word not in champion.keys():
+            champion[word] = []
+        if len(sorted_temp) <= 20:
+            for i in sorted_temp.keys():
+                champion[word].append(i)
+        else:
+            for i in islice(sorted_temp, 20):
+                champion[word].append(i)
+
+        positionalIndex[word].append(idf)
+
+
+def tfIdf_words(words):
+    vec = {}
+    scores = {}
+    for word in words:
+        if (word in positional_indexx.keys()):
+            ftd = words.count(word)
+            tf = 1 + math.log(ftd, 10)
+            idf = positional_indexx[word][2]
+            vec[word] = tf * idf
+    for word in words:
+        if word in positional_indexx.keys():
+            for docId in champion[word]:
+                if (docId not in scores.keys()):
+                    scores[docId] = 0
+                scores[docId] += positional_indexx[word][1][docId][1] * vec[word]
+    sorted_scores = dict(sorted(scores.items(), key=lambda item: item[1], reverse=True))
+    printDoc(sorted_scores)
 
 read()
 for i in range(len(docsContents)):
