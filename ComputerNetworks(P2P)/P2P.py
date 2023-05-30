@@ -63,69 +63,69 @@ class PeerConnectionThread(threading.Thread):
 class Server(object):
 
 
-def start(self):
+    def start(self):
 
-    # Create a TCP/IP socket
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-sock.bind(("0.0.0.0", PORT))
-sock.listen(1)
-print("Server listening...")
-while True:
-    # Wait for a connection
-conn, addr = sock.accept()
-print("Client connected:", addr[0], ":", addr[1])
+        # Create a TCP/IP socket
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        sock.bind(("0.0.0.0", PORT))
+        sock.listen(1)
+        print("Server listening...")
+        while True:
+                # Wait for a connection
+            conn, addr = sock.accept()
+            print("Client connected:", addr[0], ":", addr[1])
 
-# Start thread to manage client communication
-t = ClientHandler(conn, addr)
-t.start()
+            # Start thread to manage client communication
+            t = ClientHandler(conn, addr)
+            t.start()
 
 
 class ClientHandler(threading.Thread):
-def __init__(self, conn, addr):
+    def __init__(self, conn, addr):
 
 
-super().__init__()
-self.conn = conn
-self.addr = addr
+        super().__init__()
+        self.conn = conn
+        self.addr = addr
 
 
-def run(self):
+    def run(self):
 
-    # Send welcome message to client
-self.sendMessage({"message": "Welcome! Please enter your username:"})
+            # Send welcome message to client
+        self.sendMessage({"message": "Welcome! Please enter your username:"})
 
-# Continuously receive messages from client until disconnect
-while True:
-try:
-msg = self.conn.recv(1024).decode().strip('\n')
-if len(msg) == 0:
-raise ConnectionError("Peer disconnected unexpectedly.")
+        # Continuously receive messages from client until disconnect
+        while True:
+            try:
+                msg = self.conn.recv(1024).decode().strip('\n')
+                if len(msg) == 0:
+                    raise ConnectionError("Peer disconnected unexpectedly.")
 
-response = processInput(msg)
-if isinstance(response, str):
-self.sendMessage({'message': response})
+                response = processInput(msg)
+                if isinstance(response, str):
+                    self.sendMessage({'message': response})
 
-except KeyboardInterrupt:
-quitProgram()
-except Exception as ex:
-logger.error(f"Exception occurred when communicating with {self.addr}: {ex}")
-continue
-
-
-def sendMessage(self, msgDict):
+            except KeyboardInterrupt:
+                quitProgram()
+            except Exception as ex:
+                logger.error(f"Exception occurred when communicating with {self.addr}: {ex}")
+                continue
 
 
-encodedMsg = json.dumps(msgDict).encode() + b'\r\n'
-self.conn.sendall(encodedMsg)
+    def sendMessage(self, msgDict):
 
 
-def processInput(inputStr):
+        encodedMsg = json.dumps(msgDict).encode() + b'\r\n'
+        self.conn.sendall(encodedMsg)
 
 
-pass  # Replace this function with logic specific to your application
+    def processInput(inputStr):
+
+
+        pass  # Replace this function with logic specific to your application
 
 
 if __name__ == "__main__":
-server = Server()
-server.start()
+    server = Server()
+    server.start()
