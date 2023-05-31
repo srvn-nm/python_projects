@@ -1,5 +1,6 @@
 import json
 from base64 import b64encode, b64decode
+import socket
 
 # Import standard Python modules for networking and multithreading support
 import threading
