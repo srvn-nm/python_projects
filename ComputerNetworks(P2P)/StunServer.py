@@ -10,7 +10,7 @@ def is_string_data(data):
     return isinstance(data, str)
 
 # Use RedisCluster library for Redis Cluster operations
-redis_nodes = [{'host': 'localhost', 'port': 7000}]
+redis_nodes = [{'host': 'localhost', 'port': 6379}]
 redis_client = rediscluster.RedisCluster(startup_nodes=redis_nodes)
 
 # Custom exception for Redis connection errors
