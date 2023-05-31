@@ -74,20 +74,20 @@ class Peer:
             tcp_socket.close()
 
     def file_receiver(self, my_ip, target_ip, filename):
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         port_and_ip = (target_ip, 10000)
-        sock.connect(port_and_ip)
+        tcp_socket.connect(port_and_ip)
         empty_port = 1
         for i in range(10001, 10011):
             if not self.is_port_busy(empty_port):
                 empty_port = i
         if empty_port == 1:
-            print("You don't have any free legal port!!")
+            print("You can't connect to ports right now! >-<")
             return
         message = f"{my_ip}:{empty_port}:{filename}"
         udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         udp_socket.bind((my_ip, empty_port))
-        sock.sendall(message.encode())
+        tcp_socket.sendall(message.encode())
 
         data = sock.recv(1024)
         response = json.loads(data.decode())
@@ -112,7 +112,7 @@ class Peer:
 
         # Close the sockets
         udp_socket.close()
-        sock.close()
+        tcp_socket.close()
 
     def listener(self):
         while True:
@@ -168,19 +168,19 @@ class Peer:
         threading.Thread(target=self.file_receiver, args=(self.ip_address, target_ip, filename)).start()
 
     def run(self):
-        print("Welcome to this p2p app")
+        print("Hello ^-^\nYou can connect others in here for transferring data!")
         while True:
-            inp = input('Choose your action:\n1. Init\n2. Get usernames\n3. Get specific IP\n4. Request for connection\nInput: ')
-            if inp == '1':
+            choice = input('Choose one option below:\n1. Initialization\n2. Get near usernames\n3. Get specific IP\n4. Request for connection\nInput: ')
+            if choice == '1':
                 self.init_action()
-            elif inp == '2':
+            elif choice == '2':
                 self.get_usernames_action()
-            elif inp == '3':
+            elif choice == '3':
                 self.get_specific_ip_action()
-            elif inp == '4':
+            elif choice == '4':
                 self.request_for_connection_action()
             else:
-                print("Wrong command!!")
+                print("Wrong choice! Please try again.")
 
 
 if __name__ == "__main__":
