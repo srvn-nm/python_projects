@@ -8,7 +8,7 @@ import io
 
 class Peer:
     def __init__(self):
-        self.tcp_handshake_port = 10001
+        self.tcp_handshake_port = 10000
         self.hostname = socket.gethostname()
         self.ip_address = socket.gethostbyname(self.hostname)
         self.init_url = 'http://127.1.1.2:8080/init'
