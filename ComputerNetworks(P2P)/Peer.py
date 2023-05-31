@@ -89,7 +89,7 @@ class Peer:
         udp_socket.bind((my_ip, empty_port))
         tcp_socket.sendall(message.encode())
 
-        data = sock.recv(1024)
+        data = tcp_socket.recv(1024)
         response = json.loads(data.decode())
 
         if response["type"] == "string":
