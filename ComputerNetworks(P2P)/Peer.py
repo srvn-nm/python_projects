@@ -121,7 +121,7 @@ class Peer:
             tcp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             tcp_socket.bind(local_address)
             tcp_socket.listen()
-            client_sock, client_address = sock.accept()
+            client_sock, client_address = tcp_socket.accept()
             data = client_sock.recv(1024).decode('utf-8')
             data = data.split(':')
             dest_ip = data[0]
