@@ -116,10 +116,11 @@ class Peer:
 
     def listener(self):
         while True:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             local_address = (self.ip_address, self.tcp_handshake_port)
-            sock.bind(local_address)
-            sock.listen()
+            tcp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            tcp_socket.bind(local_address)
+            tcp_socket.listen()
             client_sock, client_address = sock.accept()
             data = client_sock.recv(1024).decode('utf-8')
             data = data.split(':')
@@ -138,11 +139,11 @@ class Peer:
                 else:
                     print('Invalid input!')
             if acceptance:
-                sock.sendall(b"Done")
+                tcp_socket.sendall(b"Done")
                 threading.Thread(target=self.file_sender, args=(dest_ip, dest_port, dest_filename)).start()
             else:
-                sock.sendall(b"None")
-            sock.close()
+                tcp_socket.sendall(b"None")
+            tcp_socket.close()
 
     def init_action(self):
         username = input("Enter a username:")

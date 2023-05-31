@@ -1,7 +1,7 @@
 import json
 import socket
 import threading
-import rediscluster
+import redis
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qs
 
@@ -9,9 +9,9 @@ from urllib.parse import urlparse, parse_qs
 def is_string_data(data):
     return isinstance(data, str)
 
-# Use RedisCluster library for Redis Cluster operations
-redis_nodes = [{'host': 'localhost', 'port': 6379}]
-redis_client = rediscluster.RedisCluster(startup_nodes=redis_nodes)
+# Use Redis library for Redis Cluster operations
+
+redis_client = redis.Redis(host='localhost', port=6379)
 
 # Custom exception for Redis connection errors
 class RedisConnectionError(Exception):
@@ -21,7 +21,7 @@ class RedisConnectionError(Exception):
 def check_redis_connection():
     try:
         redis_client.ping()
-    except rediscluster.exceptions.RedisClusterException:
+    except redis.exceptions.RedisClusterException:
         raise RedisConnectionError("Failed to connect to Redis Cluster")
 
 
