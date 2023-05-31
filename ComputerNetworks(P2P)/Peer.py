@@ -48,8 +48,6 @@ class Peer:
                 print("File could'nt be found! >-<")
                 return
 
-        tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        tcp_socket.connect((HOST, PORT))
 
         if is_string:
             message = {"type": "string", "data": data}
@@ -58,8 +56,6 @@ class Peer:
 
         encoded_message = json.dumps(message).encode()
 
-        # Send the message over TCP connection
-        tcp_socket.sendall(encoded_message)
 
         if not is_string:
             # Send image data over UDP connection
@@ -70,8 +66,12 @@ class Peer:
 
             udp_socket.sendto(b'', (HOST, PORT))
             udp_socket.close()
-
-        tcp_socket.close()
+        else:
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket.connect((HOST, PORT))
+            # Send the message over TCP connection
+            tcp_socket.sendall(encoded_message)
+            tcp_socket.close()
 
     def file_receiver(self, my_ip, target_ip, filename):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
