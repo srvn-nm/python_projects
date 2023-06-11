@@ -585,7 +585,7 @@ read()
 for i in range(len(docsContents)):
     normalize(docsContents[i], i)
 # print(positionalIndex)
-
+tf_idf(positionalIndex)
 query = input("Please write your query here: ")
 while query:
     normalizer2, stemmer2 = Normalizer(), Stemmer()
@@ -598,6 +598,7 @@ while query:
         if k in stopWordsList:
             tokenizedQuery.remove(k)
     docsRanks.clear()
-    search(tokenizedQuery)
-    printDocs(docsRanks)
+    # search(tokenizedQuery)
+    # printDocs(docsRanks)
+    tfidf_words(words)
     query = input("Please write your new query here: ")
