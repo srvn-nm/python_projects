@@ -6,4 +6,4 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
-/IR_data_news_12k.json
+../IR_data_news_12k.json
