@@ -600,5 +600,5 @@ while query:
     docsRanks.clear()
     # search(tokenizedQuery)
     # printDocs(docsRanks)
-    tfidf_words(words)
+    tfIdf_words(tokenizedQuery)
     query = input("Please write your new query here: ")
