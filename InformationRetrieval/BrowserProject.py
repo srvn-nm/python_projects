@@ -413,7 +413,7 @@ docsContents, docsTitles, docsUrls, positionalIndex, docsRanks, phrases, champio
 
 
 def read():
-    f = open('../IR_data_news_12k.json', encoding='utf8')
+    f = open('./IR_data_news_12k.json', encoding='utf8')
     data = json.load(f)
     for d in data:
         docsTitles.append(data[d]["title"])
@@ -568,14 +568,14 @@ def tf_idf(positionalIndex):
 def tfIdf_words(words):
     vec, scores = {}, {}
     for word in words:
-        if (word in positionalIndex.keys()):
+        if word in positionalIndex.keys():
             ftd = words.count(word)
             tf, idf = 1 + log(ftd, 10), positionalIndex[word][2]
             vec[word] = tf * idf
     for word in words:
         if word in positionalIndex.keys():
             for docId in champion[word]:
-                if (docId not in scores.keys()):
+                if docId not in scores.keys():
                     scores[docId] = 0
                 scores[docId] += positionalIndex[word][1][docId][1] * vec[word]
     sorted_scores = dict(sorted(scores.items(), key=lambda item: item[1], reverse=True))
