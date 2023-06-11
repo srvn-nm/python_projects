@@ -7,7 +7,7 @@ from math import *
 
 from hazm import *
 
-docsContents, docsTitles, docsUrls, positionalIndex, docsRanks, phrases, stopWordsList, champion = {}, [], [], [], {}, {}, [], ["با",
+docsContents, docsTitles, docsUrls, positionalIndex, docsRanks, phrases, stopWordsList, champion = [], [], [], {}, {}, {}, [], ["با",
                                                                                                                   "و",
                                                                                                                   "در",
                                                                                                                   "ولی",
