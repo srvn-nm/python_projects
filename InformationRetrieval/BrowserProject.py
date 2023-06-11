@@ -413,7 +413,7 @@ docsContents, docsTitles, docsUrls, positionalIndex, docsRanks, phrases, stopWor
 
 
 def read():
-    f = open('../../IR_data_news_12k.json', encoding='utf8')
+    f = open('../IR_data_news_12k.json', encoding='utf8')
     data = json.load(f)
     for d in data:
         docsTitles.append(data[d]["title"])
