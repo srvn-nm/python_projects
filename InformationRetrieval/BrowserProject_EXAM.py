@@ -413,7 +413,7 @@ docsContents, docsTitles, docsUrls, positionalIndex, docsRanks, phrases, champio
 
 
 def read():
-    f = open('C:\Users\ASUS.PIESC\Downloads\IR_data_news_5k.json', encoding='utf8')
+    f = open('..\IR_data_news_5k.json', encoding='utf8')
     data = json.load(f)
     for d in data:
         docsTitles.append(data[d]["title"])
@@ -509,8 +509,11 @@ def printDocs(docs):
     for i in docs.keys():
         if flag <= 4:
             print("doc " + str(flag + 1) + ") " + docsTitles[i] + ": " + docsUrls[i])
+            lineNum = 0
             for line in list(map(''.join,zip(*[iter(docsContents[i])]*300))):
-                print(line)
+                if lineNum <= 5:
+                    print(line)
+                    lineNum += 1
             flag += 1
             print()
         else:
