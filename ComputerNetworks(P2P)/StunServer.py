@@ -128,17 +128,25 @@ class RequestHandler(BaseHTTPRequestHandler):
 
         if self.path == '/getAll':
             self.send_response(200)
-            self.send_header('Content-type', 'text/plain')
+            self.send_header('Content-type', 'application/json') # Change content-type to 'application/json'
             self.end_headers()
             usernames = redis_client.keys('*')
-            self.wfile.write(json.dumps(usernames).encode('utf-8'))
+
+            # Convert usernames to a list of strings
+            usernames_list = [username.decode('utf-8') for username in usernames]
+
+            self.wfile.write(json.dumps(usernames_list).encode('utf-8')) # Serialize usernames_list to JSON
         elif self.path.split('?')[0] == '/getIp':
             username = query_components.get('username', [''])[0]
             self.send_response(200)
-            self.send_header('Content-type', 'text/plain')
+            self.send_header('Content-type', 'application/json') # Change content-type to 'application/json'
             self.end_headers()
             ip_address = redis_client.get(username)
-            self.wfile.write(json.dumps(ip_address).encode('utf-8'))
+
+            if ip_address:
+                ip_address = ip_address.decode('utf-8')
+
+            self.wfile.write(json.dumps(ip_address).encode('utf-8')) # Serialize ip_address to JSON
         else:
             # Send a 404 Not Found response
             self.send_response(404)

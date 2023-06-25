@@ -6,6 +6,107 @@ import requests
 import io
 
 
+def is_port_busy(port):
+    try:
+        tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        tcp_socket.settimeout(1)
+        tcp_socket.bind(("localhost", port))
+        tcp_socket.close()
+        udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        udp_socket.settimeout(1)
+        udp_socket.bind(("localhost", port))
+        udp_socket.close()
+        return False
+    except socket.error:
+        return True
+
+
+def file_receiver(my_ip, target_ip, filename):
+    tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    port_and_ip = (target_ip, 10000)
+    tcp_socket.connect(port_and_ip)
+    empty_port = 1
+    for i in range(10001, 10011):
+        if not is_port_busy(empty_port):
+            empty_port = i
+    if empty_port == 1:
+        print("You can't connect to ports right now! >-<")
+        return
+    message = f"{my_ip}:{empty_port}:{filename}"
+    udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    udp_socket.bind((my_ip, empty_port))
+    tcp_socket.sendall(message.encode())
+
+    data = tcp_socket.recv(1024)
+    response = json.loads(data.decode())
+
+    if response["type"] == "string":
+        # Process received text data over TCP connection
+        received_text = response["data"]
+        print("Received text:", received_text)
+    elif response["type"] == "image":
+        # Process received image/video data over UDP connection
+        chunks = []
+        while True:
+            chunk, addr = udp_socket.recvfrom(1024)
+            if not chunk:
+                break
+            chunks.append(chunk)
+
+        # Combine the received chunks into a single byte string
+        data = b''.join(chunks)
+        received_image = Image.open(io.BytesIO(data))
+        received_image.show()
+
+    # Close the sockets
+    udp_socket.close()
+    tcp_socket.close()
+
+
+def file_sender(dest_ip, dest_port, dest_filename):
+    HOST = dest_ip
+    PORT = int(dest_port)
+    BUFFER_SIZE = 1024
+
+    try:
+        with open('./files/' + dest_filename, 'rb') as f:
+            data = f.read()
+            is_string = False
+    except FileNotFoundError:
+        try:
+            image = Image.open('./files/' + dest_filename)
+            data = image.tobytes()
+            is_string = True
+        except FileNotFoundError:
+            print("File couldn't be found! >-<")
+            return
+
+
+    if is_string:
+        message = {"type": "string", "data": data}
+    else:
+        message = {"type": "image", "data": data}
+
+    encoded_message = json.dumps(message).encode()
+
+
+    if not is_string:
+        # Send image data over UDP connection
+        udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        for i in range(0, len(data), BUFFER_SIZE):
+            chunk = data[i:i + BUFFER_SIZE]
+            udp_socket.sendto(chunk, (HOST, PORT))
+
+        udp_socket.sendto(b'', (HOST, PORT))
+        udp_socket.close()
+    else:
+        tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        tcp_socket.connect((HOST, PORT))
+        # Send the message over TCP connection
+        tcp_socket.sendall(encoded_message)
+        tcp_socket.close()
+
+
 class Peer:
     def __init__(self):
         self.tcp_handshake_port = 10000
@@ -15,104 +116,6 @@ class Peer:
         self.get_usernames = 'http://127.1.1.2:8080/getAll'
         self.get_ip = 'http://127.1.1.2:8080/getIp?username='
         threading.Thread(target=self.listener).start()
-
-    def is_port_busy(port):
-        try:
-            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            tcp_socket.settimeout(1)
-            tcp_socket.bind(("localhost", port))
-            tcp_socket.close()
-            udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            udp_socket.settimeout(1)
-            udp_socket.bind(("localhost", port))
-            udp_socket.close()
-            return False
-        except socket.error:
-            return True
-
-    def file_sender(dest_ip, dest_port, dest_filename):
-        HOST = dest_ip
-        PORT = int(dest_port)
-        BUFFER_SIZE = 1024
-
-        try:
-            with open('./files/' + dest_filename, 'r') as f:
-                data = f.read()
-                is_string = True
-        except FileNotFoundError:
-            try:
-                image = Image.open('./files/' + dest_filename)
-                data = image.tobytes()
-                is_string = False
-            except FileNotFoundError:
-                print("File couldn't be found! >-<")
-                return
-
-
-        if is_string:
-            message = {"type": "string", "data": data}
-        else:
-            message = {"type": "image", "data": data}
-
-        encoded_message = json.dumps(message).encode()
-
-
-        if not is_string:
-            # Send image data over UDP connection
-            udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            for i in range(0, len(data), BUFFER_SIZE):
-                chunk = data[i:i + BUFFER_SIZE]
-                udp_socket.sendto(chunk, (HOST, PORT))
-
-            udp_socket.sendto(b'', (HOST, PORT))
-            udp_socket.close()
-        else:
-            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            tcp_socket.connect((HOST, PORT))
-            # Send the message over TCP connection
-            tcp_socket.sendall(encoded_message)
-            tcp_socket.close()
-
-    def file_receiver(self, my_ip, target_ip, filename):
-        tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        port_and_ip = (target_ip, 10000)
-        tcp_socket.connect(port_and_ip)
-        empty_port = 1
-        for i in range(10001, 10011):
-            if not self.is_port_busy(empty_port):
-                empty_port = i
-        if empty_port == 1:
-            print("You can't connect to ports right now! >-<")
-            return
-        message = f"{my_ip}:{empty_port}:{filename}"
-        udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        udp_socket.bind((my_ip, empty_port))
-        tcp_socket.sendall(message.encode())
-
-        data = tcp_socket.recv(1024)
-        response = json.loads(data.decode())
-
-        if response["type"] == "string":
-            # Process received text data over TCP connection
-            received_text = response["data"]
-            print("Received text:", received_text)
-        elif response["type"] == "image":
-            # Process received image/video data over UDP connection
-            chunks = []
-            while True:
-                chunk, addr = udp_socket.recvfrom(1024)
-                if not chunk:
-                    break
-                chunks.append(chunk)
-
-            # Combine the received chunks into a single byte string
-            data = b''.join(chunks)
-            received_image = Image.open(io.BytesIO(data))
-            received_image.show()
-
-        # Close the sockets
-        udp_socket.close()
-        tcp_socket.close()
 
     def listener(self):
         while True:
@@ -140,7 +143,7 @@ class Peer:
                     print('Invalid input!')
             if acceptance:
                 tcp_socket.sendall(b"Done")
-                threading.Thread(target=self.file_sender, args=(dest_ip, dest_port, dest_filename)).start()
+                threading.Thread(target=file_sender, args=(dest_ip, dest_port, dest_filename)).start()
             else:
                 tcp_socket.sendall(b"None")
             tcp_socket.close()
@@ -151,7 +154,7 @@ class Peer:
             "username": username,
             "ip": self.ip_address
         }
-        response = requests.post(self.init_url, json=data)
+        response = requests.post(self.init_url, data=json.dumps(data))
         print('HTTP Server Response:', response.text)
 
     def get_usernames_action(self):
@@ -166,7 +169,7 @@ class Peer:
     def request_for_connection_action(self):
         target_ip = input('Enter your target IP:')
         filename = input('Enter filename:')
-        threading.Thread(target=self.file_receiver, args=(self.ip_address, target_ip, filename)).start()
+        threading.Thread(target=file_receiver, args=(self.ip_address, target_ip, filename)).start()
 
     def run(self):
         print("Hello ^-^\nYou can connect others in here for transferring data!\nWhenever you want to exit press enter!")
