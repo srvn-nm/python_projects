@@ -4,7 +4,7 @@ import copy
 from itertools import *
 import json
 from math import *
-
+import pickle
 from hazm import *
 
 docsContents, docsTitles, docsUrls, positionalIndex, docsRanks, phrases, champion, stopWordsList = [], [], [], {}, {}, [], {}, ["با",
@@ -411,9 +411,10 @@ docsContents, docsTitles, docsUrls, positionalIndex, docsRanks, phrases, champio
                                                                                                                   '\u200cو',
                                                                                                                   "درون"]
 
+# repeatWords = {}
 
 def read():
-    f = open('..\IR_data_news_5k.json', encoding='utf8')
+    f = open('..\..\IR_data_news_5k.json', encoding='utf8')
     data = json.load(f)
     for d in data:
         docsTitles.append(data[d]["title"])
@@ -432,6 +433,7 @@ def normalize(data, i):
         if k in stopWordsList:
             tokenizedData.remove(k)
     index(tokenizedData, i)
+    # index(data, i)
 
 
 def index(tokenizedData, i):
@@ -507,7 +509,7 @@ def printDocs(docs):
     flag = 0
     print()
     for i in docs.keys():
-        if flag <= 4:
+        if flag <= 9:
             print("doc " + str(flag + 1) + ") " + docsTitles[i] + ": " + docsUrls[i])
             lineNum = 0
             for line in list(map(''.join,zip(*[iter(docsContents[i])]*300))):
@@ -544,12 +546,13 @@ def normalWords(normalized):
             else:
                 docsRanks[j] = len(positionalIndex[normalized][1][j])
 
-
+idfCount = {}
 def tf_idf(positionalIndex):
     n = len(docsContents)
     for word in positionalIndex:
         temp, nt = {}, len(positionalIndex[word][1])
-        idf = log(n / nt, 10)
+        # idf = log(n / nt, 10)
+        idf = max(0,log((n - nt) / nt, 10))
         for j in positionalIndex[word][1]:
             ftd = len(positionalIndex[word][1][j])
             tf = 1 + log(ftd, 10)
@@ -562,19 +565,70 @@ def tf_idf(positionalIndex):
             for i in sorted_temp.keys():
                 champion[word].append(i)
         else:
+            # for i in sorted_temp.keys():
+            #     try:
+            #         repeatWords[word] += 1
+            #     except:
+            #         repeatWords[word] = 0
             for i in islice(sorted_temp, 20):
                 champion[word].append(i)
-
+        # for i in sorted_temp.keys():
+        #     champion[word].append(i)
         positionalIndex[word].append(idf)
+        idfCount[word] = idf
 
 
 def tfIdf_words(words):
     vec, scores = {}, {}
+    # idfCount = {}
+
+    tfCount = [0 for i in range(len(words))]
+    index = 0
     for word in words:
         if word in positionalIndex.keys():
             ftd = words.count(word)
-            tf, idf = 1 + log(ftd, 10), positionalIndex[word][2]
+            tfCount[index] = (1 + log(ftd, 10))
+            index += 1
+    sum = 0
+    for i in range(len(words)):
+        sum += tfCount[i]
+
+    for word in words:
+        if word in positionalIndex.keys():
+            ftd = words.count(word)
+            tf, idf = (1 + log(ftd, 10))/(1 + log(sum/(len(words)))), positionalIndex[word][2]
             vec[word] = tf * idf
+            # idfCount[word] = idf
+            # vec[word] = idf
+
+    # idfs = [0 for i in range(2*len(idfCount.keys()))]
+    # wordsinidfs = [0 for i in range(2*len(idfCount.keys()))]
+    # index = 0
+    # idfCountKeys = {}
+    # for word in idfCount.keys():
+    #     idfCountKeys[word] = idfCount[word]
+    # for word in idfCountKeys.keys():
+    #     idfs[index] = idfCount[word]
+    #     wordsinidfs[index] =word
+    #     index += 1
+    # newWords = {}
+    # newWords[wordsinidfs[idfs.index(max(idfs))]] = max(idfs)
+    # idfCountKeys.pop(wordsinidfs[idfs.index(max(idfs))])
+    # for word in idfCountKeys.keys():
+    #     idfs[index] = idfCount[word]
+    #     wordsinidfs[index] =word
+    #     index += 1
+    # newWords[wordsinidfs[idfs.index(max(idfs))]] = max(idfs)
+    # for word in newWords:
+    #     if word in positionalIndex.keys():
+    #         for docId in champion[word]:
+    #             if docId not in scores.keys():
+    #                 scores[docId] = 0
+    #             scores[docId] += positionalIndex[word][1][docId][1] * vec[word]
+    # sorted_scores = dict(sorted(scores.items(), key=lambda item: item[1], reverse=True))
+    # printDocs(sorted_scores)
+
+
     for word in words:
         if word in positionalIndex.keys():
             for docId in champion[word]:
@@ -584,11 +638,47 @@ def tfIdf_words(words):
     sorted_scores = dict(sorted(scores.items(), key=lambda item: item[1], reverse=True))
     printDocs(sorted_scores)
 
+
+def loadData():
+    # for reading also binary mode is important
+    dbfile = open('examplePickle', 'rb')
+    db = pickle.load(dbfile)
+    for keys in db:
+        print(keys, '=>', db[keys])
+    dbfile.close()
+
 read()
 for i in range(len(docsContents)):
     normalize(docsContents[i], i)
 # print(positionalIndex)
+
+# print(f"the length of the positional index is: {len(positionalIndex)}")
+#
+# dbfile = open('examplePickle', 'ab')
+# pickle.dump(positionalIndex, dbfile)
+# dbfile.close()
+
 tf_idf(positionalIndex)
+
+# print(repeatWords)
+# idfs = [0 for i in range(len(idfCount.keys()))]
+# wordsinidfs = [0 for i in range(len(idfCount.keys()))]
+# index = 0
+# idfCountKeys = {}
+# for word in idfCount.keys():
+#     idfCountKeys[word] = idfCount[word]
+# idfCountKeys.pop("فارس")
+# idfCountKeys.pop("سیماک")
+# # idfCountKeys.pop('0')
+# idfCountKeys.pop("کپه")
+# for word in idfCountKeys.keys():
+#     idfs[index] = idfCount[word]
+#     wordsinidfs[index] =word
+#     index += 1
+# print(idfCount)
+# print("min idf is: ", min(idfs), " the word is: ", wordsinidfs[idfs.index(min(idfs))])
+# print("max idf is: ", max(idfs), " the word is: ", wordsinidfs[idfs.index(max(idfs))])
+
 query = input("\nPlease write your query here: \n")
 while query:
     normalizer2, stemmer2 = Normalizer(), Stemmer()
