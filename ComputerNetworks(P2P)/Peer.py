@@ -169,7 +169,7 @@ class Peer:
         threading.Thread(target=self.file_receiver, args=(self.ip_address, target_ip, filename)).start()
 
     def run(self):
-        print("Hello ^-^\nYou can connect others in here for transferring data!\nWhenever you want to exit just press enter!")
+        print("Hello ^-^\nYou can connect others in here for transferring data!\nWhenever you want to exit press enter!")
         choice = input('Choose one option below:\n1. Initialization\n2. Get near usernames\n3. Get specific IP\n4. Request for connection\nInput: ')
         while choice:
             if choice == '1':
