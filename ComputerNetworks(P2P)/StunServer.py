@@ -25,6 +25,29 @@ def check_redis_connection():
         raise RedisConnectionError("Failed to connect to Redis Cluster")
 
 
+def process_non_string_message(message):
+    # Process non-string data (e.g., images) via UDP and Pillow library
+    # Implement your logic here
+    print("Processing non-string message:", message)
+
+
+def process_string_message(message):
+    # Process string data via TCP
+    # Implement your logic here
+    print("Processing string message:", message)
+    return {"status": "success"}  # Example response
+
+
+def process_message(message, conn):
+    # Check if the data is string and send/receive via TCP
+    if is_string_data(message):
+        response = process_string_message(message)
+        if response:
+            conn.sendall(json.dumps(response).encode())
+    else:
+        process_non_string_message(message)
+
+
 class P2PServer:
     def __init__(self, ip_address, tcp_handshake_port):
         self.ip_address = ip_address
@@ -79,7 +102,7 @@ class P2PServer:
 
                 # Process the received data
                 message = json.loads(data.decode())
-                self.process_message(message, conn)
+                process_message(message, conn)
             except ConnectionError:
                 break
             except json.JSONDecodeError:
@@ -87,26 +110,6 @@ class P2PServer:
 
         # Close the connection
         conn.close()
-
-    def process_message(self, message, conn):
-        # Check if the data is string and send/receive via TCP
-        if is_string_data(message):
-            response = self.process_string_message(message)
-            if response:
-                conn.sendall(json.dumps(response).encode())
-        else:
-            self.process_non_string_message(message)
-
-    def process_string_message(self, message):
-        # Process string data via TCP
-        # Implement your logic here
-        print("Processing string message:", message)
-        return {"status": "success"}  # Example response
-
-    def process_non_string_message(self, message):
-        # Process non-string data (e.g., images) via UDP and Pillow library
-        # Implement your logic here
-        print("Processing non-string message:", message)
 
     def send_message(self, message, dest_ip, dest_port):
         # Send a message to the destination IP and port via UDP
@@ -169,7 +172,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 if __name__ == '__main__':
     server_address = ('', 8080)
     httpd = HTTPServer(server_address, RequestHandler)
-    print(f'Starting server on http://{server_address[0]}:{server_address[1]}')
+    print(f'Starting server on https://{server_address[0]}:{server_address[1]}')
     threading.Thread(target=check_redis_connection).start()
 
     p2p_server = P2PServer(socket.gethostbyname(socket.gethostname()), 10000)

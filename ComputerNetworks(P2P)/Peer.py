@@ -45,7 +45,7 @@ class Peer:
                 data = image.tobytes()
                 is_string = False
             except FileNotFoundError:
-                print("File could'nt be found! >-<")
+                print("File couldn't be found! >-<")
                 return
 
 
@@ -169,9 +169,9 @@ class Peer:
         threading.Thread(target=self.file_receiver, args=(self.ip_address, target_ip, filename)).start()
 
     def run(self):
-        print("Hello ^-^\nYou can connect others in here for transferring data!")
-        while True:
-            choice = input('Choose one option below:\n1. Initialization\n2. Get near usernames\n3. Get specific IP\n4. Request for connection\nInput: ')
+        print("Hello ^-^\nYou can connect others in here for transferring data!\nWhenever you want to exit just press enter!")
+        choice = input('Choose one option below:\n1. Initialization\n2. Get near usernames\n3. Get specific IP\n4. Request for connection\nInput: ')
+        while choice:
             if choice == '1':
                 self.init_action()
             elif choice == '2':
@@ -182,7 +182,7 @@ class Peer:
                 self.request_for_connection_action()
             else:
                 print("Wrong choice! Please try again.")
-
+            choice = input('Choose one option below:\n1. Initialization\n2. Get near usernames\n3. Get specific IP\n4. Request for connection\nInput: ')
 
 if __name__ == "__main__":
     peer = Peer()
