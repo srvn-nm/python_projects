@@ -39,7 +39,7 @@ def file_receiver(my_ip, target_ip, filename):
 
 
     udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    udp_socket.bind((my_ip, empty_port))
+    udp_socket.bind((target_ip, empty_port))
     # Process received image/video data over UDP connection
     chunks = []
     while True:
@@ -121,31 +121,31 @@ class Peer:
         while True:
             tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             local_address = (self.ip_address, self.tcp_handshake_port)
-            # tcp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            print("local address: "+str(local_address))
+            tcp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             tcp_socket.bind(local_address)
             tcp_socket.listen()
             client_sock, client_address = tcp_socket.accept()
             data = client_sock.recv(1024).decode('utf-8')
             data = data.split(':')
+            print("data in listener: "+str(data))
             dest_ip = data[0]
             dest_port = data[1]
             dest_filename = data[2]
-            acceptance = False
-            while True:
-                inp = input(
-                    f"A system with IP {client_address} wants to connect you and receive '{dest_filename}', do you want to accept?\n1. Yes\n2. No\nInput: ")
+            inp = input(f"A system with IP {client_address} wants to connect you and receive '{dest_filename}', do you want to accept?\n1. Yes\n2. No\nInput: ")
+            while inp:
                 if inp == '1':
-                    acceptance = True
+                    tcp_socket.sendall(b"Done")
+                    threading.Thread(target=file_sender, args=(dest_ip, dest_port, dest_filename)).start()
+                    print('option 1 in listener')
                     break
                 elif inp == '2':
+                    tcp_socket.sendall(b"None")
+                    print('option 2 in listener')
                     break
                 else:
                     print('Invalid input!')
-            if acceptance:
-                tcp_socket.sendall(b"Done")
-                threading.Thread(target=file_sender, args=(dest_ip, dest_port, dest_filename)).start()
-            else:
-                tcp_socket.sendall(b"None")
+                inp = input(f"A system with IP {client_address} wants to connect you and receive '{dest_filename}', do you want to accept?\n1. Yes\n2. No\nInput: ")
             tcp_socket.close()
 
     def init_action(self):
@@ -171,9 +171,9 @@ class Peer:
 
     def get_specific_ip_action(self):
         print("get_specific_ip_action")
-        target_ip = input("Enter Target IP:")
+        target_username = input("Enter Target username:")
         try:
-            response = requests.get(self.get_ip + target_ip).text
+            response = requests.get(url = self.get_ip + target_username).text
         except:
             response = "Error"
         print('HTTP Server Response:', response)
