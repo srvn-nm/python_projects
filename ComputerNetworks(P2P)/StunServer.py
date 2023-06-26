@@ -124,11 +124,13 @@ class P2PServer:
 # Define the handler for incoming HTTP requests
 class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
+        print('do_GET')
         CODE = int
         msg = json
         query_components = parse_qs(urlparse(self.path).query)
 
         if '/getAll' in self.path:
+            print('getAll')
             try:
                 usernames = str(redis_client.keys('*'))
 
@@ -149,6 +151,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(msg).encode('utf-8')) # Serialize usernames_list to JSON
 
         elif '/getIp' in self.path:
+            print('getIp')
             try:
                 username = query_components.get('username', [''])[0]
                 ip_address = redis_client.get(username)
@@ -178,6 +181,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(b'404 Not Found')
 
     def do_POST(self):
+        print('do_POST')
         CODE = int
         msg = json
         content_length = int(self.headers['Content-Length'])
@@ -185,6 +189,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 
         form_data = json.loads(body.decode())
         if '/init' in self.path:
+            print('init')
             try:
                 if not form_data['username'] or not form_data['ip'] or redis_client.get(form_data['username']) == form_data['ip']:
                     CODE = 400
@@ -222,7 +227,7 @@ if __name__ == '__main__':
     print(f'Starting server on https://{server_address[0]}:{server_address[1]}')
     threading.Thread(target=check_redis_connection).start()
 
-    p2p_server = P2PServer(socket.gethostbyname(socket.gethostname()), 10000)
-    p2p_server.start()
+    # p2p_server = P2PServer(socket.gethostbyname(socket.gethostname()), 10000)
+    # p2p_server.start()
 
     httpd.serve_forever()

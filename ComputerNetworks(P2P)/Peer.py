@@ -117,7 +117,7 @@ class Peer:
         self.get_ip = 'http://127.1.1.2:8080/getIp?username='
         threading.Thread(target=self.listener, args=(self.ip_address, )).start()
 
-    def listener(self):
+    def listener(self, k):
         while True:
             tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             local_address = (self.ip_address, self.tcp_handshake_port)
@@ -149,6 +149,7 @@ class Peer:
             tcp_socket.close()
 
     def init_action(self):
+        print('init_action')
         username = input("Enter a username:")
         data = {
             "username": username,
@@ -161,6 +162,7 @@ class Peer:
         print('HTTP Server Response:', response)
 
     def get_usernames_action(self):
+        print('get_usernames_action')
         try:
             response = requests.get(url=self.get_usernames).text
         except:
@@ -168,6 +170,7 @@ class Peer:
         print('HTTP Server Response:', response)
 
     def get_specific_ip_action(self):
+        print("get_specific_ip_action")
         target_ip = input("Enter Target IP:")
         try:
             response = requests.get(self.get_ip + target_ip).text
@@ -176,6 +179,7 @@ class Peer:
         print('HTTP Server Response:', response)
 
     def request_for_connection_action(self):
+        print('request_for_connection_action')
         target_ip = input('Enter your target IP: ')
         filename = input('Enter file route: ')
         threading.Thread(target=file_receiver, args=(self.ip_address, target_ip, filename)).start()
