@@ -149,17 +149,22 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(msg).encode('utf-8')) # Serialize usernames_list to JSON
 
         elif '/getIp' in self.path:
-            username = query_components.get('username', [''])[0]
-            ip_address = redis_client.get(username)
-            if not ip_address:
-                CODE = 404
-                msg = {'error' : 'not found'}
-            elif not username or not query_components.get('address', [''])[0]:
-                CODE = 400
-                msg = {'error' : 'incorrect username or address'}
-            elif ip_address.decode('utf-8') == query_components.get('address', [''])[0]:
-                CODE = 200
-                msg = {"ip" : ip_address.decode('utf-8')}
+            try:
+                username = query_components.get('username', [''])[0]
+                ip_address = redis_client.get(username)
+                if not ip_address:
+                    CODE = 404
+                    msg = {'error' : 'not found'}
+                elif not username or not query_components.get('address', [''])[0]:
+                    CODE = 400
+                    msg = {'error' : 'incorrect username or address'}
+                elif ip_address.decode('utf-8') == query_components.get('address', [''])[0]:
+                    CODE = 200
+                    msg = {"ip" : ip_address.decode('utf-8')}
+
+            except:
+                CODE = 500
+                msg = {'error' : 'Server is not working!'}
 
             self.send_response(CODE)
             self.send_header('Content-type', 'application/json')  # Change content-type to 'application/json'
@@ -173,19 +178,35 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(b'404 Not Found')
 
     def do_POST(self):
+        CODE = int
+        msg = json
         content_length = int(self.headers['Content-Length'])
         body = self.rfile.read(content_length)
 
-        form_data = parse_qs(body.decode())
-        if self.path == '/init':
-            username = form_data.get('username', [''])[0]
-            ip = form_data.get('ip', [''])[0]
-            self.send_response(200)
-            self.send_header('Content-type', 'text/plain')
+        form_data = json.loads(body.decode())
+        if '/init' in self.path:
+            try:
+                if not form_data['username'] or not form_data['ip'] or redis_client.get(form_data['username']) == form_data['ip']:
+                    CODE = 400
+                    msg = {'error' : 'incorrect username or ip!'}
+                elif redis_client.get(form_data['username']) == form_data['ip']:
+                    msg = {'error' : 'already registered!'}
+                else:
+                    username = form_data.get('username', [''])[0]
+                    ip = form_data.get('ip', [''])[0]
+                    redis_client.set(username, ip)
+                    CODE = 200
+                    msg = {"username": username, "ip": ip}
+
+            except:
+                CODE = 500
+                msg = {'error' : 'Server is not working!'}
+
+            self.send_response(CODE)
+            self.send_header('Content-type', 'application/json')
             self.end_headers()
-            data = {"username": username, "ip": ip}
-            redis_client.set(username, ip)
-            self.wfile.write(json.dumps(data).encode('utf-8'))
+
+            self.wfile.write(json.dumps(msg).encode('utf-8'))
         else:
             # Send a 404 Not Found response
             self.send_response(404)
