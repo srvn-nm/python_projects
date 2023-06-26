@@ -35,7 +35,7 @@ def file_receiver(my_ip, target_ip, filename):
     message = f"{target_ip}:{empty_port}:{filename}"
     tcp_socket.sendall(message.encode())
     data = tcp_socket.recv(1024)
-    response = json.loads(data.decode())
+    # response = json.loads(data.decode())
 
 
     udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -121,14 +121,14 @@ class Peer:
         while True:
             tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             local_address = (self.ip_address, self.tcp_handshake_port)
-            print("local address: "+str(local_address))
+            # print("local address: "+str(local_address))
             tcp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             tcp_socket.bind(local_address)
             tcp_socket.listen()
             client_sock, client_address = tcp_socket.accept()
             data = client_sock.recv(1024).decode('utf-8')
             data = data.split(':')
-            print("data in listener: "+str(data))
+            # print("data in listener: "+str(data))
             dest_ip = data[0]
             dest_port = data[1]
             dest_filename = data[2]
@@ -137,19 +137,20 @@ class Peer:
                 if inp == '1':
                     tcp_socket.sendall(b"Done")
                     threading.Thread(target=file_sender, args=(dest_ip, dest_port, dest_filename)).start()
-                    print('option 1 in listener')
+                    # print('option 1 in listener')
                     break
                 elif inp == '2':
                     tcp_socket.sendall(b"None")
-                    print('option 2 in listener')
+                    # print('option 2 in listener')
                     break
                 else:
                     print('Invalid input!')
                 inp = input(f"A system with IP {client_address} wants to connect you and receive '{dest_filename}', do you want to accept?\n1. Yes\n2. No\nInput: ")
             tcp_socket.close()
+            self.run()
 
     def init_action(self):
-        print('init_action')
+        # print('init_action')
         username = input("Enter a username:")
         data = {
             "username": username,
@@ -162,7 +163,7 @@ class Peer:
         print('HTTP Server Response:', response)
 
     def get_usernames_action(self):
-        print('get_usernames_action')
+        # print('get_usernames_action')
         try:
             response = requests.get(url=self.get_usernames).text
         except:
@@ -170,7 +171,7 @@ class Peer:
         print('HTTP Server Response:', response)
 
     def get_specific_ip_action(self):
-        print("get_specific_ip_action")
+        # print("get_specific_ip_action")
         target_username = input("Enter Target username:")
         try:
             response = requests.get(url = self.get_ip + target_username).text
@@ -196,6 +197,7 @@ class Peer:
                 self.get_specific_ip_action()
             elif choice == '4':
                 self.request_for_connection_action()
+                break
             else:
                 print("Wrong choice! Please try again.")
             choice = input('Choose one option below:\n1. Initialization\n2. Get near usernames\n3. Get specific IP\n4. Request for connection\nInput: ')

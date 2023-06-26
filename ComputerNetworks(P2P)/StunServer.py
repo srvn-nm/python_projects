@@ -126,15 +126,15 @@ class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         global CODE
         msg = {}
-        print('do_GET')
+        # print('do_GET')
         query_components = parse_qs(urlparse(self.path).query)
-        print(query_components)
+        # print(query_components)
 
         if '/getAll' in self.path:
-            print('getAll')
+            # print('getAll')
             try:
                 usernames = str(redis_client.keys('*'))
-                print(usernames)
+                # print(usernames)
                 if len(usernames) > 0:
                     CODE = 200
                     msg = {'peers' : usernames}
@@ -152,14 +152,14 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(msg).encode('utf-8')) # Serialize usernames_list to JSON
 
         elif '/getIp' in self.path:
-            print('getIp')
+            # print('getIp')
             try:
                 username = query_components.get('username', [''])[0]
-                print(username)
+                # print(username)
                 ip_address = redis_client.get(username)
-                print(str(ip_address)+'meow')
-                print(query_components.get('address', [''])[0])
-                print(ip_address.decode('utf-8'))
+                # print(str(ip_address)+'meow')
+                # print(query_components.get('address', [''])[0])
+                # print(ip_address.decode('utf-8'))
                 if not ip_address.decode('utf-8'):
                     CODE = 404
                     msg = {'error' : 'not found'}
@@ -178,7 +178,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.send_header('Content-type', 'application/json')  # Change content-type to 'application/json'
             self.end_headers()
             self.wfile.write(json.dumps(msg).encode('utf-8')) # Serialize ip_address to JSON
-            print(msg)
+            # print(msg)
         else:
             # Send a 404 Not Found response
             self.send_response(404)
@@ -187,19 +187,19 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(b'404 Not Found')
 
     def do_POST(self):
-        print('do_POST')
+        # print('do_POST')
         global CODE
         msg = {}
         content_length = int(self.headers['Content-Length'])
-        print(content_length)
+        # print(content_length)
         body = self.rfile.read(content_length)
-        print(body)
+        # print(body)
 
         form_data = json.loads(body.decode())
-        print(form_data)
-        print(redis_client.get(form_data['username']))
+        # print(form_data)
+        # print(redis_client.get(form_data['username']))
         if '/init' in self.path:
-            print('init')
+            # print('init')
             try:
                 if not form_data['username'] or not form_data['ip'] or redis_client.get(form_data['username']) == form_data['ip']:
                     CODE = 400
