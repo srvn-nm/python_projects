@@ -25,100 +25,100 @@ def check_redis_connection():
         raise RedisConnectionError("Failed to connect to Redis Cluster")
 
 
-def process_non_string_message(message):
-    # Process non-string data (e.g., images) via UDP and Pillow library
-    # Implement your logic here
-    print("Processing non-string message:", message)
-
-
-def process_string_message(message):
-    # Process string data via TCP
-    # Implement your logic here
-    print("Processing string message:", message)
-    return {"status": "success"}  # Example response
-
-
-def process_message(message, conn):
-    # Check if the data is string and send/receive via TCP
-    if is_string_data(message):
-        response = process_string_message(message)
-        if response:
-            conn.sendall(json.dumps(response).encode())
-    else:
-        process_non_string_message(message)
-
-
-class P2PServer:
-    def __init__(self, ip_address, tcp_handshake_port):
-        self.ip_address = ip_address
-        self.tcp_handshake_port = tcp_handshake_port
-        self.tcp_sock = None
-        self.udp_sock = None
-        self.stop_event = threading.Event()
-
-    def start(self):
-        # Create TCP socket for handshake
-        self.tcp_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.tcp_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.tcp_sock.bind((self.ip_address, self.tcp_handshake_port))
-        self.tcp_sock.listen()
-
-        # Create UDP socket for data transfer
-        self.udp_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.udp_sock.bind((self.ip_address, 0))
-
-        # Start listening for incoming connections and data transfer requests
-        threading.Thread(target=self.accept_connections).start()
-
-    def stop(self):
-        # Close the TCP and UDP sockets
-        if self.tcp_sock:
-            self.tcp_sock.close()
-        if self.udp_sock:
-            self.udp_sock.close()
-
-        # Set the stop event to stop all threads
-        self.stop_event.set()
-
-    def accept_connections(self):
-        while not self.stop_event.is_set():
-            try:
-                # Wait for a TCP connection
-                conn, addr = self.tcp_sock.accept()
-                print("Client connected:", addr[0], ":", addr[1])
-
-                # Start a thread to handle the client connection
-                threading.Thread(target=self.handle_connection, args=(conn,)).start()
-            except OSError:
-                break
-
-    def handle_connection(self, conn):
-        while not self.stop_event.is_set():
-            try:
-                # Receive data from the client
-                data = conn.recv(1024)
-                if not data:
-                    break
-
-                # Process the received data
-                message = json.loads(data.decode())
-                process_message(message, conn)
-            except ConnectionError:
-                break
-            except json.JSONDecodeError:
-                print("Invalid JSON data received")
-
-        # Close the connection
-        conn.close()
-
-    def send_message(self, message, dest_ip, dest_port):
-        # Send a message to the destination IP and port via UDP
-        if self.stop_event.is_set():
-            return
-
-        message_data = {"message": message}
-        message_bytes = json.dumps(message_data).encode()
-        self.udp_sock.sendto(message_bytes, (dest_ip, dest_port))
+# def process_non_string_message(message):
+#     # Process non-string data (e.g., images) via UDP and Pillow library
+#     # Implement your logic here
+#     print("Processing non-string message:", message)
+#
+#
+# def process_string_message(message):
+#     # Process string data via TCP
+#     # Implement your logic here
+#     print("Processing string message:", message)
+#     return {"status": "success"}  # Example response
+#
+#
+# def process_message(message, conn):
+#     # Check if the data is string and send/receive via TCP
+#     if is_string_data(message):
+#         response = process_string_message(message)
+#         if response:
+#             conn.sendall(json.dumps(response).encode())
+#     else:
+#         process_non_string_message(message)
+#
+#
+# class P2PServer:
+#     def __init__(self, ip_address, tcp_handshake_port):
+#         self.ip_address = ip_address
+#         self.tcp_handshake_port = tcp_handshake_port
+#         self.tcp_sock = None
+#         self.udp_sock = None
+#         self.stop_event = threading.Event()
+#
+#     def start(self):
+#         # Create TCP socket for handshake
+#         self.tcp_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#         self.tcp_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+#         self.tcp_sock.bind((self.ip_address, self.tcp_handshake_port))
+#         self.tcp_sock.listen()
+#
+#         # Create UDP socket for data transfer
+#         self.udp_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+#         self.udp_sock.bind((self.ip_address, 0))
+#
+#         # Start listening for incoming connections and data transfer requests
+#         threading.Thread(target=self.accept_connections).start()
+#
+#     def stop(self):
+#         # Close the TCP and UDP sockets
+#         if self.tcp_sock:
+#             self.tcp_sock.close()
+#         if self.udp_sock:
+#             self.udp_sock.close()
+#
+#         # Set the stop event to stop all threads
+#         self.stop_event.set()
+#
+#     def accept_connections(self):
+#         while not self.stop_event.is_set():
+#             try:
+#                 # Wait for a TCP connection
+#                 conn, addr = self.tcp_sock.accept()
+#                 print("Client connected:", addr[0], ":", addr[1])
+#
+#                 # Start a thread to handle the client connection
+#                 threading.Thread(target=self.handle_connection, args=(conn,)).start()
+#             except OSError:
+#                 break
+#
+#     def handle_connection(self, conn):
+#         while not self.stop_event.is_set():
+#             try:
+#                 # Receive data from the client
+#                 data = conn.recv(1024)
+#                 if not data:
+#                     break
+#
+#                 # Process the received data
+#                 message = json.loads(data.decode())
+#                 process_message(message, conn)
+#             except ConnectionError:
+#                 break
+#             except json.JSONDecodeError:
+#                 print("Invalid JSON data received")
+#
+#         # Close the connection
+#         conn.close()
+#
+#     def send_message(self, message, dest_ip, dest_port):
+#         # Send a message to the destination IP and port via UDP
+#         if self.stop_event.is_set():
+#             return
+#
+#         message_data = {"message": message}
+#         message_bytes = json.dumps(message_data).encode()
+#         self.udp_sock.sendto(message_bytes, (dest_ip, dest_port))
 
 
 # Define the handler for incoming HTTP requests
@@ -153,15 +153,15 @@ class RequestHandler(BaseHTTPRequestHandler):
         elif '/getIp' in self.path:
             print('getIp')
             try:
-                username = query_components.get('username', [''])[0]
+                username = query_components.get('username', [''])
                 ip_address = redis_client.get(username)
                 if not ip_address:
                     CODE = 404
                     msg = {'error' : 'not found'}
-                elif not username or not query_components.get('address', [''])[0]:
+                elif not username or not query_components.get('address', ['']):
                     CODE = 400
                     msg = {'error' : 'incorrect username or address'}
-                elif ip_address.decode('utf-8') == query_components.get('address', [''])[0]:
+                elif ip_address.decode('utf-8') == query_components.get('address', ['']):
                     CODE = 200
                     msg = {"ip" : ip_address.decode('utf-8')}
 
@@ -197,8 +197,8 @@ class RequestHandler(BaseHTTPRequestHandler):
                 elif redis_client.get(form_data['username']) == form_data['ip']:
                     msg = {'error' : 'already registered!'}
                 else:
-                    username = form_data.get('username', [''])[0]
-                    ip = form_data.get('ip', [''])[0]
+                    username = form_data.get('username', [''])
+                    ip = form_data.get('ip', [''])
                     redis_client.set(username, ip)
                     CODE = 200
                     msg = {"username": username, "ip": ip}
