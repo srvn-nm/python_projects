@@ -124,29 +124,47 @@ class P2PServer:
 # Define the handler for incoming HTTP requests
 class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
+        CODE = int
+        msg = json
         query_components = parse_qs(urlparse(self.path).query)
 
-        if self.path == '/getAll':
-            self.send_response(200)
-            self.send_header('Content-type', 'application/json') # Change content-type to 'application/json'
+        if '/getAll' in self.path:
+            try:
+                usernames = str(redis_client.keys('*'))
+
+                if len(usernames) > 0:
+                    CODE = 200
+                    msg = {'peers' : usernames}
+                else:
+                    CODE = 404
+                    msg = {'error' : 'no peers around >-<'}
+
+            except:
+                CODE = 500
+                msg ={'error' : 'Server is not working!'}
+
+            self.send_response(CODE)
+            self.send_header('Content-type', 'application/json')  # Change content-type to 'application/json'
             self.end_headers()
-            usernames = redis_client.keys('*')
+            self.wfile.write(json.dumps(msg).encode('utf-8')) # Serialize usernames_list to JSON
 
-            # Convert usernames to a list of strings
-            usernames_list = [username.decode('utf-8') for username in usernames]
-
-            self.wfile.write(json.dumps(usernames_list).encode('utf-8')) # Serialize usernames_list to JSON
-        elif self.path.split('?')[0] == '/getIp':
+        elif '/getIp' in self.path:
             username = query_components.get('username', [''])[0]
-            self.send_response(200)
-            self.send_header('Content-type', 'application/json') # Change content-type to 'application/json'
-            self.end_headers()
             ip_address = redis_client.get(username)
+            if not ip_address:
+                CODE = 404
+                msg = {'error' : 'not found'}
+            elif not username or not query_components.get('address', [''])[0]:
+                CODE = 400
+                msg = {'error' : 'incorrect username or address'}
+            elif ip_address.decode('utf-8') == query_components.get('address', [''])[0]:
+                CODE = 200
+                msg = {"ip" : ip_address.decode('utf-8')}
 
-            if ip_address:
-                ip_address = ip_address.decode('utf-8')
-
-            self.wfile.write(json.dumps(ip_address).encode('utf-8')) # Serialize ip_address to JSON
+            self.send_response(CODE)
+            self.send_header('Content-type', 'application/json')  # Change content-type to 'application/json'
+            self.end_headers()
+            self.wfile.write(json.dumps(msg).encode('utf-8')) # Serialize ip_address to JSON
         else:
             # Send a 404 Not Found response
             self.send_response(404)
