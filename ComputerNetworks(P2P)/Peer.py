@@ -21,48 +21,6 @@ def is_port_busy(port):
         return True
 
 
-def file_receiver(my_ip, target_ip, filename):
-    empty_port = 1
-    for ip in range(10001, 10011):
-        if not is_port_busy(ip):
-            empty_port = ip
-    if empty_port == 1:
-        print("You can't connect to ports right now! >-<")
-        return
-    tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    port_and_ip = (my_ip, 10000)
-    tcp_socket.connect(port_and_ip)
-    message = f"{target_ip}:{empty_port}:{filename}"
-    tcp_socket.sendall(message.encode())
-    data = tcp_socket.recv(1024)
-    # response = json.loads(data.decode())
-
-
-    udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    udp_socket.bind((target_ip, empty_port))
-    # Process received image/video data over UDP connection
-    chunks = []
-    while True:
-        chunk, addr = udp_socket.recvfrom(1024)
-        if not chunk:
-            break
-        chunks.append(chunk)
-
-    # Combine the received chunks into a single byte string
-    data = b''.join(chunks)
-    try:
-        received_image = Image.open(io.BytesIO(data))
-        received_image.show()
-        file = open(f'./file/{filename}', "wb")
-        file.write(data)
-    except:
-        print("Error appeared while using the file!")
-
-    # Close the sockets
-    udp_socket.close()
-    tcp_socket.close()
-
-
 def file_sender(dest_ip, dest_port, dest_filename):
     HOST = dest_ip
     PORT = int(dest_port)
@@ -109,6 +67,7 @@ def file_sender(dest_ip, dest_port, dest_filename):
 
 class Peer:
     def __init__(self):
+        self.terminateFlag = True
         self.tcp_handshake_port = 10000
         self.hostname = socket.gethostname()
         self.ip_address = socket.gethostbyname(self.hostname)
@@ -133,6 +92,7 @@ class Peer:
             dest_port = data[1]
             dest_filename = data[2]
             inp = input(f"A system with IP {client_address} wants to connect you and receive '{dest_filename}', do you want to accept?\n1. Yes\n2. No\nInput: ")
+            self.terminateFlag = False
             while inp:
                 if inp == '1':
                     tcp_socket.sendall(b"Done")
@@ -147,7 +107,55 @@ class Peer:
                     print('Invalid input!')
                 inp = input(f"A system with IP {client_address} wants to connect you and receive '{dest_filename}', do you want to accept?\n1. Yes\n2. No\nInput: ")
             tcp_socket.close()
+            self.terminateFlag = True
             self.run()
+
+    def file_receiver(self, my_ip, target_ip, filename):
+        self.terminateFlag = False
+        empty_port = 1
+        for ip in range(10001, 10011):
+            if not is_port_busy(ip):
+                empty_port = ip
+        if empty_port == 1:
+            print("You can't connect to ports right now! >-<")
+            return
+
+        try:
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            port_and_ip = (my_ip, 10000)
+            tcp_socket.connect(port_and_ip)
+            message = f"{target_ip}:{empty_port}:{filename}"
+            tcp_socket.sendall(message.encode())
+            data = tcp_socket.recv(1024)
+            print(data.decode())
+            response = json.loads(data.decode())
+            tcp_socket.close()
+
+            udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            udp_socket.bind((target_ip, empty_port))
+            # Process received image/video data over UDP connection
+            chunks = []
+            while True:
+                chunk, addr = udp_socket.recvfrom(1024)
+                if not chunk:
+                    break
+                chunks.append(chunk)
+
+            # Combine the received chunks into a single byte string
+            data = b''.join(chunks)
+            try:
+                received_image = Image.open(io.BytesIO(data))
+                received_image.show()
+                file = open(f'./file/{filename}', "wb")
+                file.write(data)
+            except:
+                print("Error appeared while using the file!")
+
+            udp_socket.close()
+        except:
+            print('Error connecting to peers >-<')
+        self.terminateFlag = True
+        self.run()
 
     def init_action(self):
         # print('init_action')
@@ -183,12 +191,12 @@ class Peer:
         print('request_for_connection_action')
         target_ip = input('Enter your target IP: ')
         filename = input('Enter file route: ')
-        threading.Thread(target=file_receiver, args=(self.ip_address, target_ip, filename)).start()
+        threading.Thread(target=self.file_receiver, args=(self.ip_address, target_ip, filename)).start()
 
     def run(self):
         print("Hello ^-^\nYou can connect others in here for transferring data!\nWhenever you want to exit press enter!")
         choice = input('Choose one option below:\n1. Initialization\n2. Get near usernames\n3. Get specific IP\n4. Request for connection\nInput: ')
-        while choice:
+        while choice and self.terminateFlag:
             if choice == '1':
                 self.init_action()
             elif choice == '2':
