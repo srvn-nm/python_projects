@@ -1,0 +1,49 @@
+{
+    "new": [
+        {
+            "path2": "mysite"
+        },
+        {
+            "path2": "mysite/manage.py"
+        },
+        {
+            "path2": "mysite/.vscode"
+        },
+        {
+            "path2": "mysite/mysite"
+        },
+        {
+            "path2": "mysite/.vscode/settings.json"
+        },
+        {
+            "path2": "mysite/mysite/asgi.py"
+        },
+        {
+            "path2": "mysite/mysite/settings.py"
+        },
+        {
+            "path2": "mysite/mysite/urls.py"
+        },
+        {
+            "path2": "mysite/mysite/wsgi.py"
+        },
+        {
+            "path2": "mysite/mysite/__init__.py"
+        },
+        {
+            "path2": "mysite/mysite/.vscode"
+        },
+        {
+            "path2": "mysite/mysite/__pycache__"
+        },
+        {
+            "path2": "mysite/mysite/.vscode/settings.json"
+        }
+    ],
+    "count_of_new": 13,
+    "modify": [],
+    "count_of_modify": 0,
+    "delete": [],
+    "count_of_delete": 0,
+    "log_identifier": "fqsnw6op5yf8coy3j75x6v98ag8id7x41qsq8c3s1lqn6ch6ml"
+}
