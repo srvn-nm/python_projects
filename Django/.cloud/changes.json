@@ -22,6 +22,9 @@
             "path2": "mysite/mysite/asgi.py"
         },
         {
+            "path2": "mysite/mysite/requirements.txt"
+        },
+        {
             "path2": "mysite/mysite/settings.py"
         },
         {
@@ -43,10 +46,10 @@
             "path2": "mysite/mysite/.vscode/settings.json"
         }
     ],
-    "count_of_new": 14,
+    "count_of_new": 15,
     "modify": [],
     "count_of_modify": 0,
     "delete": [],
     "count_of_delete": 0,
-    "log_identifier": "fb1zfko8keclornstzfzxkr2fp4qy3nabogeywjftiqm4c2v6g"
+    "log_identifier": "8vz3t85d9kr84zbpspkkh8yhxaeyblezaewfiji98q8wncw9y6"
 }
