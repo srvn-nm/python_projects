@@ -7,6 +7,9 @@
             "path2": "mysite/manage.py"
         },
         {
+            "path2": "mysite/requirements.txt"
+        },
+        {
             "path2": "mysite/.vscode"
         },
         {
@@ -40,10 +43,10 @@
             "path2": "mysite/mysite/.vscode/settings.json"
         }
     ],
-    "count_of_new": 13,
+    "count_of_new": 14,
     "modify": [],
     "count_of_modify": 0,
     "delete": [],
     "count_of_delete": 0,
-    "log_identifier": "4x1i21jsogbaw4hwvno7qw1plymbdr2b7zfpc9dqz6k3qaz7xe"
+    "log_identifier": "1hot4xlh1ukmoz67sy3mn76ytk9sp6unprufpgkx717ba69o26"
 }
