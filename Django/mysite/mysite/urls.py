@@ -16,7 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+import API
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('register_request/', API.views.register_request, name='register_request'),
+    path('check_request_status/<str:national_id>/', API.views.check_request_status, name='check_request_status'),
+
 ]
