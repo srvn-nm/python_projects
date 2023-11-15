@@ -3,7 +3,7 @@ import string
 import itertools
 import time
 
-def crack_password(password, mode, search_space):
+def crack_password(password, mode, search_space, length, k=None):
     attempts = 0
     start_time = time.time()
 
@@ -39,8 +39,9 @@ def main():
     parser = argparse.ArgumentParser(description="Password Cracker Tool")
     parser.add_argument("password", help="Password to crack")
     parser.add_argument("mode", type=int, choices=[1, 2, 3], help="Select mode (1: Known first character, 2: Standard, 3: Known k characters)")
-    parser.add_argument("search_space", choices=['numbers', 'lowercase', 'all'], help="Select search space (numbers, lowercase, all)")
-    parser.add_argument("--k", type=int, help="Specify the number of characters for mode 3")
+    parser.add_argument("search_space", choices=['numbers', 'lowercase', 'uppercase', 'character', 'all'], help="Select search space (numbers, lowercase, uppercase, character, all)")
+    parser.add_argument("n", type=int, help="Specify the length of password")
+    parser.add_argument("k", type=string, help="Specify a part of password")
 
     args = parser.parse_args()
 
@@ -48,10 +49,14 @@ def main():
         search_space = string.digits
     elif args.search_space == 'lowercase':
         search_space = string.ascii_lowercase
+    elif args.search_space == 'uppercase':
+        search_space = string.ascii_uppercase
+    elif args.search_space == 'character':
+        search_space = string.ascii_characters
     else:
-        search_space = string.ascii_letters + string.digits
+        search_space = string.ascii_letters + string.digits + string.ascii_characters
 
-    attempts, execution_time = crack_password(args.password, args.mode, search_space)
+    attempts, execution_time = crack_password(args.password, args.mode, search_space, args.n, args.k)
 
     if attempts == -1:
         print(f"Password not found within the specified {args.k} characters.")
