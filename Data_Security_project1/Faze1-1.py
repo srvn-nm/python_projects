@@ -1,5 +1,4 @@
 import argparse
-# import getpass
 import string
 
 parser = argparse.ArgumentParser(description="Password Security Assessment Tool")
@@ -58,21 +57,5 @@ def check_password_strength(password):
     return strength
 
 
-# max_attempts = 3  # Maximum unsuccessful authentication attempts
-
-# try:
-        # Security algorithms - Rate limiting
-        # attempts = 0
-        # while attempts < max_attempts:
-            # user_input = getpass.getpass("Please enter your password again: ")
-            # if user_input == args.password:
-            #     print("Authentication successful.")
-            #     break
-            # else:
-            #     print("Incorrect password. Please try again.")
-            #     attempts += 1
-
-# except argparse.ArgumentTypeError as e:
-#         print(f"Error: {e}")
 grade = check_password_strength(args.password)
 print("The security strength grade is " + str(grade) + " out of 7! : " + str(grade/7))
