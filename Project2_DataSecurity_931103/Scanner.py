@@ -94,7 +94,7 @@ def main():
             save_report_to_txt(report=report, file_path="C:/prj2.txt")
         elif args.udp:
             report = scan_open_ports('127.0.0.1', args.udp[0], args.udp[1], 'UDP')
-            save_report_to_txt(report=report, file_path="C://prj2.txt")
+            save_report_to_txt(report=report, file_path=r"C:\prj2.txt")
         else:
             print("Please specify TCP or UDP port range")
 
