@@ -3,30 +3,31 @@ import socket
 import struct
 
 #function for scanning the ip range
-# noinspection PyBroadException
 def scan_ip_range(start_ip, end_ip, subnet_mask):
     active_machines = []
 
-    # تبدیل آدرس‌های IP به شکل عددی برای اسکن
     start = struct.unpack("!I", socket.inet_aton(start_ip))[0]
     end = struct.unpack("!I", socket.inet_aton(end_ip))[0]
 
-    # Loop اسکن برای هر IP در محدوده مشخص شده
-    for ip in range(start, end + 1):
-        current_ip = socket.inet_ntoa(struct.pack("!I", ip))
+    subnet_bits = sum(bin(int(x)).count('1') for x in subnet_mask.split('.'))
+    num_addresses = 2 ** (32 - subnet_bits)
 
-        # تست کردن اتصال به IP جاری
+    network_address = start & end
+#   wildcard = (2 ** 32 - 1) - (2 ** (32 - subnet_bits) - 1)
+
+    for i in range(num_addresses):
+        current_ip = socket.inet_ntoa(struct.pack("!I", network_address + i))
+
         try:
-            socket.setdefaulttimeout(1)  # تنظیم تایم‌اوت برای اتصال سریع‌تر
+            socket.setdefaulttimeout(1)
             socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((current_ip, 80))
-
-            # اگر بتوان به پورت 80 متصل شد، IP فعال است
             active_machines.append(current_ip)
             print("Machine {} is active".format(current_ip))
-        except:
-            pass  # اگر اتصال برقرار نشود، به IP بعدی برو
+        except (socket.timeout, socket.error) as e:
+            print("Error while connecting to {}: {}".format(current_ip, e))
 
     return active_machines
+
 
 #function for scanning open ports
 def scan_open_ports(ip_address, start_port, end_port, protocol):
