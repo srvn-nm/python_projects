@@ -27,6 +27,7 @@ def scan_ip_range(start_ip, end_ip, subnet_mask):
 
     return active_machines
 
+#function for scanning open ports
 def scan_open_ports(ip_address, start_port, end_port, protocol):
     open_ports = []
 
