@@ -9,8 +9,7 @@ def scan_ip_range(start_ip, end_ip, subnet_mask):
     start = struct.unpack("!I", socket.inet_aton(start_ip))[0]
     end = struct.unpack("!I", socket.inet_aton(end_ip))[0]
 
-    subnet_bits = sum(bin(int(x)).count('1') for x in str(subnet_mask).split('.'))
-    num_addresses = 2 ** (32 - subnet_bits)
+    num_addresses = 2 ** (32 - subnet_mask)
 
     network_address = start & end
 
@@ -95,7 +94,7 @@ def main():
             save_report_to_txt(report=report, file_path="C:/prj2.txt")
         elif args.udp:
             report = scan_open_ports('127.0.0.1', args.udp[0], args.udp[1], 'UDP')
-            save_report_to_txt(report=report, file_path="C:/prj2.txt")
+            save_report_to_txt(report=report, file_path="C://prj2.txt")
         else:
             print("Please specify TCP or UDP port range")
 
