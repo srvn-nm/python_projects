@@ -9,7 +9,7 @@ def scan_ip_range(start_ip, end_ip, subnet_mask):
     start = struct.unpack("!I", socket.inet_aton(start_ip))[0]
     end = struct.unpack("!I", socket.inet_aton(end_ip))[0]
 
-    subnet_bits = sum(bin(int(x)).count('1') for x in subnet_mask.split('.'))
+    subnet_bits = sum(bin(int(x)).count('1') for x in str(subnet_mask).split('.'))
     num_addresses = 2 ** (32 - subnet_bits)
 
     network_address = start & end
