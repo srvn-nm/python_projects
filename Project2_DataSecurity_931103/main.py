@@ -3,6 +3,7 @@ import socket
 import struct
 
 #function for scanning the ip range
+# noinspection PyBroadException
 def scan_ip_range(start_ip, end_ip, subnet_mask):
     active_machines = []
 
@@ -21,7 +22,7 @@ def scan_ip_range(start_ip, end_ip, subnet_mask):
 
             # اگر بتوان به پورت 80 متصل شد، IP فعال است
             active_machines.append(current_ip)
-            print(f"Machine {current_ip} is active")
+            print("Machine {} is active".format(current_ip))
         except:
             pass  # اگر اتصال برقرار نشود، به IP بعدی برو
 
@@ -49,10 +50,10 @@ def scan_open_ports(ip_address, start_port, end_port, protocol):
 
             # اگر نتوان به پورت متصل شد، پورت بسته است
             if result != 0:
-                print(f"Port {port} is closed")
+                print("Port {} is closed".format(port))
             else:
                 open_ports.append(port)
-                print(f"Port {port} is open")
+                print("Port {} is open".format(port))
 
             sock.close()
         except socket.error:
@@ -66,7 +67,7 @@ def save_report_to_txt(report, file_path):
         with open(file_path, 'w') as file:
             for line in report:
                 file.write(str(line) + '\n')
-        print(f"Report saved successfully to {file_path}")
+        print("Report saved successfully to {}".format(file_path))
     except IOError:
         print("Could not write to file")
 
