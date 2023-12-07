@@ -78,7 +78,7 @@ def main():
     parser.add_argument('--ipscan', action='store_true', help='Scan an IP range and find active machines')
     parser.add_argument('--portscan', action='store_true', help='Scan open TCP/UDP ports on a machine')
     parser.add_argument('--ip', nargs='+', help='IP address range')
-    parser.add_argument('--m', type=int, help='Subnet mask')
+    parser.add_argument('-m', type=int, help='Subnet mask')
     parser.add_argument('--tcp', nargs=2, type=int, help='TCP port range')
     parser.add_argument('--udp', nargs=2, type=int, help='UDP port range')
 
