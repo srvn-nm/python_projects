@@ -2,7 +2,7 @@ import argparse
 import socket
 import struct
 
-
+#function for scanning the ip range
 def scan_ip_range(start_ip, end_ip, subnet_mask):
     active_machines = []
 
