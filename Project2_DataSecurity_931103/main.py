@@ -60,6 +60,7 @@ def scan_open_ports(ip_address, start_port, end_port, protocol):
 
     return open_ports
 
+#function for saving into a.txt file
 def save_report_to_txt(report, file_path):
     try:
         with open(file_path, 'w') as file:
