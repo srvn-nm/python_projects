@@ -6,6 +6,7 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 import base64
 import os
 
+# Function to derive a key from a password using PBKDF2HMAC
 def derive_key(password):
     salt = b'salt_1234'
     kdf = PBKDF2HMAC(
@@ -18,6 +19,7 @@ def derive_key(password):
     key = base64.urlsafe_b64encode(kdf.derive(password.encode()))
     return key
 
+# Function to encrypt plaintext using AES in CFB mode
 def encrypt(password, plaintext):
     key = derive_key(password)
     cipher = Cipher(algorithms.AES(key), modes.CFB(os.urandom(16)))
@@ -25,6 +27,7 @@ def encrypt(password, plaintext):
     ciphertext = encryptor.update(plaintext.encode()) + encryptor.finalize()
     return base64.urlsafe_b64encode(ciphertext).decode()
 
+# Function to decrypt ciphertext using AES in CFB mode
 def decrypt(password, ciphertext):
     key = derive_key(password)
     cipher = Cipher(algorithms.AES(key), modes.CFB(os.urandom(16)))
@@ -32,6 +35,7 @@ def decrypt(password, ciphertext):
     plaintext = decryptor.update(base64.urlsafe_b64decode(ciphertext)) + decryptor.finalize()
     return plaintext.decode()
 
+# Function to save a password to a file along with its metadata
 def save_password_to_file(name, encrypted_password, comment, key):
     # Load existing passwords from the file
     passwords = load_passwords_from_file(key)
@@ -42,6 +46,7 @@ def save_password_to_file(name, encrypted_password, comment, key):
     # Save the updated passwords to the file
     save_passwords_to_file(passwords, key)
 
+# Function to load passwords from a file and decrypt them
 def load_passwords_from_file(key):
     try:
         with open('passwords.txt', 'r') as file:
@@ -51,11 +56,13 @@ def load_passwords_from_file(key):
     except (FileNotFoundError, json.JSONDecodeError):
         return {}
 
+# Function to save encrypted passwords to a file
 def save_passwords_to_file(passwords, key):
     encrypted_passwords = encrypt(key, json.dumps(passwords))
     with open('passwords.txt', 'w') as file:
         file.write(encrypted_passwords)
 
+# Main function to handle command-line arguments
 def main():
     parser = argparse.ArgumentParser(description="Password Manager CLI Tool")
     parser.add_argument("--newpass", help="Create a new password", action="store_true")
@@ -99,6 +106,7 @@ def main():
         delete_name = args.dell
         delete_password(key, delete_name)
 
+# Function to generate a complex password, encrypt it, and save to file
 def generate_complex_password(simple_password, name, comment, key):
     # Generate a complex password based on the simple password
     complex_password = simple_password.upper() + "123!"
@@ -111,12 +119,14 @@ def generate_complex_password(simple_password, name, comment, key):
 
     return encrypted_password
 
+# Function to show all passwords
 def show_passwords(key):
     passwords = load_passwords_from_file(key)
     print("List of passwords:")
     for name, info in passwords.items():
         print(f"Name: {name}, Password: {info['password']}, Comment: {info['comment']}")
 
+# Function to show a selected password
 def show_selected_password(key, selected_name):
     passwords = load_passwords_from_file(key)
     if selected_name in passwords:
@@ -124,6 +134,7 @@ def show_selected_password(key, selected_name):
     else:
         print(f"Password with name '{selected_name}' not found.")
 
+# Function to update a password
 def update_password(key, update_name):
     passwords = load_passwords_from_file(key)
     if update_name in passwords:
@@ -133,6 +144,7 @@ def update_password(key, update_name):
     else:
         print(f"Password with name '{update_name}' not found.")
 
+# Function to delete a password
 def delete_password(key, delete_name):
     passwords = load_passwords_from_file(key)
     if delete_name in passwords:
@@ -142,5 +154,6 @@ def delete_password(key, delete_name):
     else:
         print(f"Password with name '{delete_name}' not found.")
 
+# Entry point of the script
 if __name__ == "__main__":
     main()
