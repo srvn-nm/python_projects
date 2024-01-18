@@ -1,24 +1,21 @@
 import argparse
 import json
+from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from base64 import urlsafe_b64encode, urlsafe_b64decode
-import os
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 import base64
-import hashlib
-
+import os
 
 def derive_key(password):
-    salt = b'salt_1234'  # مقدار تصادفی برای استفاده در تولید کلید
+    salt = b'salt_1234'
     kdf = PBKDF2HMAC(
         algorithm=algorithms.SHA256(),
         length=32,
         salt=salt,
-        iterations=100000,  # تعداد تکرارها برای تقویت امنیت
+        iterations=100000,
+        backend=default_backend()
     )
-    key = urlsafe_b64encode(kdf.derive(password.encode()))
+    key = base64.urlsafe_b64encode(kdf.derive(password.encode()))
     return key
 
 def encrypt(password, plaintext):
@@ -26,31 +23,38 @@ def encrypt(password, plaintext):
     cipher = Cipher(algorithms.AES(key), modes.CFB(os.urandom(16)))
     encryptor = cipher.encryptor()
     ciphertext = encryptor.update(plaintext.encode()) + encryptor.finalize()
-    return urlsafe_b64encode(ciphertext)
+    return base64.urlsafe_b64encode(ciphertext).decode()
 
 def decrypt(password, ciphertext):
     key = derive_key(password)
     cipher = Cipher(algorithms.AES(key), modes.CFB(os.urandom(16)))
     decryptor = cipher.decryptor()
-    plaintext = decryptor.update(urlsafe_b64decode(ciphertext)) + decryptor.finalize()
+    plaintext = decryptor.update(base64.urlsafe_b64decode(ciphertext)) + decryptor.finalize()
     return plaintext.decode()
 
-def save_passwords(passwords, password):
-    encrypted_passwords = encrypt(password, json.dumps(passwords))
-    with open('passwords.txt', 'wb') as file:
-        file.write(encrypted_passwords)
+def save_password_to_file(name, encrypted_password, comment, key):
+    # Load existing passwords from the file
+    passwords = load_passwords_from_file(key)
 
-def load_passwords(password):
-    if not os.path.exists('passwords.txt'):
-        return {}
-    with open('passwords.txt', 'rb') as file:
-        encrypted_passwords = file.read()
+    # Add the new password to the password manager
+    passwords[name] = {"password": encrypted_password, "comment": comment}
+
+    # Save the updated passwords to the file
+    save_passwords_to_file(passwords, key)
+
+def load_passwords_from_file(key):
     try:
-        decrypted_passwords = decrypt(password, encrypted_passwords)
-        return json.loads(decrypted_passwords)
-    except Exception as e:
-        print(f"Error decrypting passwords: {e}")
+        with open('passwords.txt', 'r') as file:
+            encrypted_passwords = file.read()
+            decrypted_passwords = decrypt(key, encrypted_passwords)
+            return json.loads(decrypted_passwords)
+    except (FileNotFoundError, json.JSONDecodeError):
         return {}
+
+def save_passwords_to_file(passwords, key):
+    encrypted_passwords = encrypt(key, json.dumps(passwords))
+    with open('passwords.txt', 'w') as file:
+        file.write(encrypted_passwords)
 
 def main():
     parser = argparse.ArgumentParser(description="Password Manager CLI Tool")
@@ -71,69 +75,72 @@ def main():
         key = input("Enter the user simple password: ")
 
         # Generate a complex password based on the simple password
-        complex_password = generate_complex_password(password)
+        complex_password = generate_complex_password(password, name, comment, key)
 
-        # Load existing passwords
-        passwords = load_passwords(key)
-
-        # Add the new password to the password manager
-        passwords[name] = {"password": complex_password, "comment": comment}
-
-        # Save the updated passwords
-        save_passwords(passwords, key)
+        print(f"Generated Password: {complex_password}")
         print("Password created successfully!")
 
     elif args.showpass:
         key = input("Enter the user simple password: ")
-        passwords = load_passwords(key)
-        print("List of passwords:")
-        for name, info in passwords.items():
-            print(f"Name: {name}, Password: {info['password']}, Comment: {info['comment']}")
+        show_passwords(key)
 
     elif args.sel:
         key = input("Enter the user simple password: ")
-        passwords = load_passwords(key)
         selected_name = args.sel
-        if selected_name in passwords:
-            print(f"Name: {selected_name}, Password: {passwords[selected_name]['password']}, Comment: {passwords[selected_name]['comment']}")
-        else:
-            print(f"Password with name '{selected_name}' not found.")
+        show_selected_password(key, selected_name)
 
     elif args.update:
         key = input("Enter the user simple password: ")
-        passwords = load_passwords(key)
         update_name = args.update
-        if update_name in passwords:
-            new_password = input("Enter the new password: ")
-            complex_password = generate_complex_password(new_password)
-            passwords[update_name]['password'] = complex_password
-            save_passwords(passwords, key)
-            print(f"Password with name '{update_name}' updated successfully!")
-        else:
-            print(f"Password with name '{update_name}' not found.")
+        update_password(key, update_name)
 
     elif args.dell:
         key = input("Enter the user simple password: ")
-        passwords = load_passwords(key)
         delete_name = args.dell
-        if delete_name in passwords:
-            del passwords[delete_name]
-            save_passwords(passwords, key)
-            print(f"Password with name '{delete_name}' deleted successfully!")
-        else:
-            print(f"Password with name '{delete_name}' not found.")
+        delete_password(key, delete_name)
 
-def generate_complex_password(simple_password):
-    # Derive a key from the simple password using a key derivation function
-    key = hashlib.sha256(simple_password.encode()).digest()
+def generate_complex_password(simple_password, name, comment, key):
+    # Generate a complex password based on the simple password
+    complex_password = simple_password.upper() + "123!"
 
-    # Use AES in CFB mode to encrypt a fixed value (e.g., '123!') to create the complex password
-    cipher = Cipher(algorithms.AES(key), modes.CFB(b'\x00' * 16), backend=default_backend())
-    encryptor = cipher.encryptor()
-    complex_password = encryptor.update(b'123!') + encryptor.finalize()
+    # Encrypt the complex password using AES
+    encrypted_password = encrypt(key, complex_password)
 
-    # Convert the complex password to a base64-encoded string
-    return base64.urlsafe_b64encode(complex_password).decode()
+    # Save the generated password along with its metadata to a file
+    save_password_to_file(name, encrypted_password, comment, key)
+
+    return encrypted_password
+
+def show_passwords(key):
+    passwords = load_passwords_from_file(key)
+    print("List of passwords:")
+    for name, info in passwords.items():
+        print(f"Name: {name}, Password: {info['password']}, Comment: {info['comment']}")
+
+def show_selected_password(key, selected_name):
+    passwords = load_passwords_from_file(key)
+    if selected_name in passwords:
+        print(f"Name: {selected_name}, Password: {passwords[selected_name]['password']}, Comment: {passwords[selected_name]['comment']}")
+    else:
+        print(f"Password with name '{selected_name}' not found.")
+
+def update_password(key, update_name):
+    passwords = load_passwords_from_file(key)
+    if update_name in passwords:
+        new_password = input("Enter the new password: ")
+        complex_password = generate_complex_password(new_password, update_name, passwords[update_name]['comment'], key)
+        print(f"Password with name '{update_name}' updated successfully!")
+    else:
+        print(f"Password with name '{update_name}' not found.")
+
+def delete_password(key, delete_name):
+    passwords = load_passwords_from_file(key)
+    if delete_name in passwords:
+        del passwords[delete_name]
+        save_passwords_to_file(passwords, key)
+        print(f"Password with name '{delete_name}' deleted successfully!")
+    else:
+        print(f"Password with name '{delete_name}' not found.")
 
 if __name__ == "__main__":
     main()
