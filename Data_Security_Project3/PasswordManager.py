@@ -5,10 +5,11 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 import base64
 import os
+import secrets
 
 # Function to derive a key from a password using PBKDF2HMAC
 def derive_key(password):
-    salt = b'salt_1234'
+    salt = os.urandom(16)  # Generate a random salt
     kdf = PBKDF2HMAC(
         algorithm=algorithms.SHA256(),
         length=32,
@@ -17,7 +18,7 @@ def derive_key(password):
         backend=default_backend()
     )
     key = base64.urlsafe_b64encode(kdf.derive(password.encode()))
-    return key
+    return key, salt
 
 # Function to encrypt plaintext using AES in CFB mode
 def encrypt(password, plaintext):
@@ -65,21 +66,22 @@ def save_passwords_to_file(passwords, key):
 # Main function to handle command-line arguments
 def main():
     parser = argparse.ArgumentParser(description="Password Manager CLI Tool")
-    parser.add_argument("--newpass", help="Create a new password", action="store_true")
-    parser.add_argument("--showpass", help="Show all passwords", action="store_true")
-    parser.add_argument("--sel", help="Select and show a password by name")
-    parser.add_argument("--update", help="Update a password by name")
-    parser.add_argument("--dell", help="Delete a password by name")
-    parser.add_argument("--c", help="Comment for the new password")
-    parser.add_argument("--key", help="User simple password")
+    parser.add_argument("-newpass", help="Create a new password", action="store_true")
+    parser.add_argument("-showpass", help="Show all passwords", action="store_true")
+    parser.add_argument("-sel", help="Select and show a password by name")
+    parser.add_argument("-update", help="Update a password by name")
+    parser.add_argument("-dell", help="Delete a password by name")
+    parser.add_argument("-c", help="Comment for the new password")
+    parser.add_argument("-key", help="User simple password")
+    parser.add_argument("-generate_passwords", help="Generate 10,000 passwords", action="store_true")
 
     args = parser.parse_args()
 
     if args.newpass:
-        name = input("Enter a name for the new password: ")
-        comment = input("Enter a comment for the new password: ")
-        password = input("Enter a simple password: ")
-        key = input("Enter the user simple password: ")
+        name = args.newpass
+        comment = args.c
+        password = args.key
+        key = args.key
 
         # Generate a complex password based on the simple password
         complex_password = generate_complex_password(password, name, comment, key)
@@ -88,36 +90,60 @@ def main():
         print("Password created successfully!")
 
     elif args.showpass:
-        key = input("Enter the user simple password: ")
+        key = args.key
         show_passwords(key)
 
     elif args.sel:
-        key = input("Enter the user simple password: ")
+        key = args.key
         selected_name = args.sel
         show_selected_password(key, selected_name)
 
     elif args.update:
-        key = input("Enter the user simple password: ")
+        key = args.key
         update_name = args.update
         update_password(key, update_name)
 
     elif args.dell:
-        key = input("Enter the user simple password: ")
+        key = args.key
         delete_name = args.dell
         delete_password(key, delete_name)
+        
+    elif args.generate_passwords:
+        key = args.key
+        generate_10000_passwords(key)
+        print("Generated 10,000 passwords successfully!")
 
 # Function to generate a complex password, encrypt it, and save to file
 def generate_complex_password(simple_password, name, comment, key):
     # Generate a complex password based on the simple password
-    complex_password = simple_password.upper() + "123!"
+    random_suffix = secrets.token_hex(4)  # Generate a random hexadecimal string of length 4
+    complex_password = simple_password.upper() + random_suffix
 
-    # Encrypt the complex password using AES
-    encrypted_password = encrypt(key, complex_password)
+    # Derive key and salt
+    derived_key, salt = derive_key(key)
+
+     # Encrypt the complex password using AES with the derived key and salt
+    encrypted_password = encrypt(derived_key, salt + complex_password)
 
     # Save the generated password along with its metadata to a file
     save_password_to_file(name, encrypted_password, comment, key)
 
     return encrypted_password
+
+# Function to generate 10,000 passwords based on the provided simple password
+def generate_10000_passwords(simple_password):
+    # Open a file to write all passwords
+    with open('all_passwords.txt', 'w') as file:
+        for i in range(10000):
+            name = f"Generated_Password_{i}"
+            comment = f"Generated Password {i} for testing"
+            key = simple_password  # Use the provided simple password as the key
+
+            # Generate complex password and write to the file
+            complex_password = generate_complex_password(simple_password, name, comment, key)
+            file.write(f"Name: {name}, Password: {complex_password}, Comment: {comment}\n")
+
+    print("All 10,000 passwords generated and saved in 'all_passwords.txt'")
 
 # Function to show all passwords
 def show_passwords(key):
