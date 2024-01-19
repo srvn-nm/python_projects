@@ -90,11 +90,8 @@ def main():
         print("Password created successfully!")
 
     elif args.showpass:
-        if args.key:
-            key = args.key
-            show_passwords(key)
-        else:
-            show_passwords()
+        key = args.key
+        show_passwords(key)
 
     elif args.sel:
         key = args.key
@@ -154,19 +151,6 @@ def show_passwords(key):
     print("List of passwords:")
     for name, info in passwords.items():
         print(f"Name: {name}, Password: {info['password']}, Comment: {info['comment']}")
-
-def show_passwords():
-    passwords = {}
-    try:
-        with open('passwords.txt', 'r') as file:
-            encrypted_passwords = file.read()
-            passwords = json.loads(encrypted_passwords)
-    except (FileNotFoundError, json.JSONDecodeError):
-        passwords = {}
-    print("List of passwords:")
-    for name, info in passwords.items():
-        print(f"Name: {name}, Password: {info['password']}, Comment: {info['comment']}")
-
 
 # Function to show a selected password
 def show_selected_password(key, selected_name):
