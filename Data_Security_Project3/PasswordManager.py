@@ -1,168 +1,262 @@
-import argparse
 import base64
-import json
-import os
 # noinspection PyCompatibility
 import secrets
-# from cryptography.fernet import Fernet
+import string
+# noinspection PyCompatibility
+import tkinter as tk
+# noinspection PyCompatibility
+from tkinter import messagebox
+
+from cryptography.fernet import Fernet
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 
-# Function to derive a key from a password using PBKDF2HMAC
-# noinspection PyGlobalUndefined,PyCompatibility
-def derive_key(password):
-    key = b''
-    salt = os.urandom(16)  # Generate a random salt
-    kdf = PBKDF2HMAC(
-        algorithm=hashes.SHA256(),
-        length=16,
-        salt=salt,
-        iterations=100000,
-        backend=default_backend()
-    )
-    if isinstance(password, bytes):
-        key = base64.urlsafe_b64encode(kdf.derive(password))
-    elif isinstance(password, int):
-        key = base64.urlsafe_b64encode(kdf.derive(str(password).encode('utf-8')))
-    elif isinstance(password, str):  # handle case when password is of str type
-        key = base64.urlsafe_b64encode(kdf.derive(password.encode('utf-8')))
-    else:
-        print(f"Unhandled password type: {type(password)}")
-    return key, salt
+# noinspection PyMethodMayBeStatic
+class PasswordManager:
+    def __init__(self, key):
+        self.key = key
+        self.passwords = {}
 
+    def encrypt(self, data):
+        cipher_suite = Fernet(self.key)
+        cipher_text = cipher_suite.encrypt(data.encode())
+        return cipher_text
 
-# Function to encrypt plaintext using AES in CFB mode
-# noinspection PyShadowingNames
-def encrypt_data(data, key):
-    cipher = Cipher(algorithms.AES(key), modes.CFB(os.urandom(16)))
-    encryptor = cipher.encryptor()
-    ciphertext = encryptor.update(data.encode()) + encryptor.finalize()
-    return base64.urlsafe_b64encode(ciphertext).decode()
-    #
-    # cipher_suite = Fernet(key)
-    # encrypted_data = cipher_suite.encrypt(data.encode())
-    # return encrypted_data
+    def decrypt(self, cipher_text):
+        cipher_suite = Fernet(self.key)
+        plain_text = cipher_suite.decrypt(cipher_text).decode()
+        return plain_text
 
+    def save_password(self, name, password, comment):
+        encrypted_password = self.encrypt(password)
+        self.passwords[name] = {"password": encrypted_password, "comment": comment}
 
-# Function to decrypt ciphertext using AES in CFB mode
-# noinspection PyShadowingNames
-def decrypt_data(encrypted_data, key):
-    cipher = Cipher(algorithms.AES(key), modes.CFB(os.urandom(16)))
-    decryptor = cipher.decryptor()
-    plaintext = decryptor.update(base64.urlsafe_b64decode(encrypted_data)) + decryptor.finalize()
-    return plaintext.decode()
-    # cipher_suite = Fernet(key)
-    # decrypted_data = cipher_suite.decrypt(encrypted_data).decode()
-    # return decrypted_data
-
-
-# Function to save a password to a file along with its metadata
-# noinspection PyShadowingNames,PyCompatibility
-def save_password(name, password, comment, key):
-    with open('passwords.txt', 'a') as file:
-        encrypted_password = encrypt_data(password, key)
-        file.write(f"{name}:{encrypted_password}:{comment}\n")
-
-
-# Function to load passwords from a file and decrypt them
-# noinspection PyShadowingNames
-def load_passwords(key):
-    with open('passwords.txt', 'r') as file:
-        encrypted_passwords = json.load(file)
-    passwords = {name: (decrypt_data(password.encode(), key), comment.rstrip()) for name, (password, comment) in
-                 encrypted_passwords.items()}
-    return passwords
-
-
-# Function to save passwords to a file
-def save_passwords(passwords, key):
-    encrypted_passwords = {name: (encrypt_data(password, key), comment) for name, (password, comment) in
-                           passwords.items()}
-    with open('passwords.txt', 'w') as file:
-        json.dump(encrypted_passwords, file)
-
-
-# Main function to handle command-line arguments
-# noinspection PyCompatibility,PyShadowingNames
-def main():
-    parser = argparse.ArgumentParser(description='Password Management Tool')
-    subparsers = parser.add_subparsers(dest='command')
-
-    newpass_parser = subparsers.add_parser('newpass', help='Create a new password')
-    newpass_parser.add_argument('name', type=str, help='Name of the password')
-    newpass_parser.add_argument('-c', '--comment', type=str, help='Comment for the password', nargs='*')
-    newpass_parser.add_argument('--key', type=str, help='Simple password for encryption')
-
-    sel_parser = subparsers.add_parser('sel', help='Select a specific password to view')
-    sel_parser.add_argument('name', type=str, help='Name of the password to view')
-
-    update_parser = subparsers.add_parser('update', help='Update an existing password')
-    update_parser.add_argument('name', type=str, help='Name of the password to update')
-
-    del_parser = subparsers.add_parser('del', help='Delete an existing password')
-    del_parser.add_argument('name', type=str, help='Name of the password to delete')
-
-    showpass_parser = subparsers.add_parser('showpass', help='Show all passwords')
-    showpass_parser.add_argument('--key', type=str, help='Simple password for decryption')
-
-    args = parser.parse_args()
-
-    if args.command == 'newpass':
-        password = generate_complex_password(simple_password=args.key, name=args.name, comment=args.comment, key=args.key)
-        save_password(name=args.name, key=args.key, comment=args.comment, password=str(password))
-    elif args.command == 'showpass':
-        saved_passwords = load_passwords(args.key)
-        for name in saved_passwords:
-            print(name)
-    elif args.command == 'sel':
-        saved_passwords = load_passwords(args.key)
-        if args.name in saved_passwords:
-            print(f"Password: {saved_passwords[args.name][0]}")
-            print(f"Comment: {saved_passwords[args.name][1]}")
-    elif args.command == 'update':
-        saved_passwords = load_passwords(args.key)
-        if args.name in saved_passwords:
-            updated_password = input("Enter the updated password: ")
-            updated_comment = input("Enter the updated comment: ")
-            saved_passwords[args.name] = (updated_password, updated_comment)
-            save_passwords(saved_passwords, args.key)
-            print(f"Password '{args.name}' updated successfully!")
+    def get_password(self, name):
+        if name in self.passwords:
+            return self.decrypt(self.passwords[name]["password"]), self.passwords[name]["comment"]
         else:
-            print(f"No password found with the name '{args.name}'")
-    elif args.command == 'del':
-        saved_passwords = load_passwords(args.key)
-        if args.name in saved_passwords:
-            del saved_passwords[args.name]
-            save_passwords(saved_passwords, args.key)
-            print(f"Password '{args.name}' deleted successfully!")
+            return None, None
+
+    def update_password(self, name, new_password):
+        if name in self.passwords:
+            encrypted_password = self.encrypt(new_password)
+            self.passwords[name]["password"] = encrypted_password
+            return True
         else:
-            print(f"No password found with the name '{args.name}'")
+            return False
+
+    def delete_password(self, name):
+        if name in self.passwords:
+            del self.passwords[name]
+            return True
+        else:
+            return False
+
+    def show_passwords(self):
+        return list(self.passwords.keys())
+
+    def generate_variable_length_password(self, length):
+        if length <= 0:
+            raise ValueError("Invalid password length")
+
+        characters = string.ascii_letters + string.digits + string.punctuation
+        password = ''.join(secrets.choice(characters) for _ in range(length))
+        return password
 
 
-# Function to generate a complex password, encrypt it, and save to file
-# noinspection PyShadowingNames
-def generate_complex_password(simple_password, name, comment, key):
-    # Generate a complex password based on the simple password
-    random_suffix = secrets.token_hex(4)  # Generate a random hexadecimal string of length 4
-    complex_password = simple_password.upper() + random_suffix
+class PasswordManagerGUI:
+    def __init__(self):
+        self.key_label = None
+        self.key_entry = None
+        self.key_button = None
+        self.root = tk.Tk()
+        self.root.title("Password Manager")
 
-    # Derive key and salt
-    derived_key, salt = derive_key(key)
-    print(derived_key)
+        self.password_manager = None
+        self.create_key_entry()
+        self.create_password_manager()
 
-    # Make sure both salt and complex password are string before concatenation
-    data_to_encrypt = str(salt) + complex_password
-    encrypted_password = encrypt_data(key=derived_key, data=data_to_encrypt)
+    def create_key_entry(self):
+        self.key_label = tk.Label(self.root, text="Enter a simple password:")
+        self.key_entry = tk.Entry(self.root, show="*")
+        self.key_button = tk.Button(self.root, text="Create Key", command=self.create_password_manager)
 
-    # Save the generated password along with its metadata to a file
-    save_password(name, str(encrypted_password), comment, key)
+        self.key_label.pack(pady=10)
+        self.key_entry.pack(pady=10)
+        self.key_button.pack(pady=10)
 
-    return encrypted_password
+    def create_password_manager(self):
+        key_password = self.key_entry.get()
+        kdf = PBKDF2HMAC(
+            algorithm=hashes.SHA256(),
+            salt=b'salt',
+            iterations=100000,
+            length=32,
+            backend=default_backend()
+        )
+        # key = Fernet(base64.urlsafe_b64encode(kdf.derive(key_password.encode())))
+        key = base64.urlsafe_b64encode(kdf.derive(key_password.encode()))
+        self.password_manager = PasswordManager(key)
+        self.show_password_manager_menu()
+
+    def show_password_manager_menu(self):
+        self.root.destroy()
+        menu = PasswordManagerMenu(self.password_manager)
+        menu.show_menu()
 
 
-# Entry point of the script
-if __name__ == "__main__":
-    main()
+# noinspection PyCompatibility
+class PasswordManagerMenu:
+    def __init__(self, password_manager):
+        self.password_manager = password_manager
+        self.menu = tk.Tk()
+        self.menu.title("Password Manager Menu")
+
+        self.menu_options = [
+            ("Create New Password", self.show_new_password_entry),
+            ("Show Passwords", self.show_passwords),
+            ("Get Password", self.show_get_password_entry),
+            ("Update Password", self.show_update_password_entry),
+            ("Delete Password", self.show_delete_password_entry),
+            ("Quit", self.quit_menu)
+        ]
+
+        self.create_menu_buttons()
+
+    def create_menu_buttons(self):
+        for option, command in self.menu_options:
+            button = tk.Button(self.menu, text=option, command=command)
+            button.pack(pady=10)
+
+    def show_new_password_entry(self):
+        entry = tk.Toplevel(self.menu)
+        entry.title("Create New Password")
+
+        name_label = tk.Label(entry, text="Enter password name:")
+        name_entry = tk.Entry(entry)
+        comment_label = tk.Label(entry, text="Enter comment:")
+        comment_entry = tk.Entry(entry)
+        length_label = tk.Label(entry, text="Enter password length:")
+        length_entry = tk.Entry(entry)
+
+        name_label.grid(row=0, column=0, padx=10, pady=5, sticky="e")
+        name_entry.grid(row=0, column=1, padx=10, pady=5)
+        comment_label.grid(row=1, column=0, padx=10, pady=5, sticky="e")
+        comment_entry.grid(row=1, column=1, padx=10, pady=5)
+        length_label.grid(row=2, column=0, padx=10, pady=5, sticky="e")
+        length_entry.grid(row=2, column=1, padx=10, pady=5)
+
+        create_button = tk.Button(entry, text="Create Password",
+                                  command=lambda: self.create_password(entry, name_entry.get(), comment_entry.get(),
+                                                                       length_entry.get()))
+        create_button.grid(row=3, column=0, columnspan=2, pady=10)
+
+    def create_password(self, entry, name, comment, length):
+        if not name or not length.isdigit():
+            messagebox.showerror("Error", "Invalid input. Please enter a name and a valid length.")
+            return
+
+        password = self.password_manager.generate_variable_length_password(int(length))
+        self.password_manager.save_password(name, password, comment)
+        messagebox.showinfo("Success", f"Password '{name}' created successfully.\nPassword: {password}")
+        entry.destroy()
+
+    def show_passwords(self):
+        passwords = self.password_manager.show_passwords()
+        if passwords:
+            messagebox.showinfo("Passwords", "\n".join(passwords))
+        else:
+            messagebox.showinfo("Passwords", "No passwords found.")
+
+    def show_get_password_entry(self):
+        entry = tk.Toplevel(self.menu)
+        entry.title("Get Password")
+
+        name_label = tk.Label(entry, text="Enter password name:")
+        name_entry = tk.Entry(entry)
+
+        name_label.grid(row=0, column=0, padx=10, pady=5, sticky="e")
+        name_entry.grid(row=0, column=1, padx=10, pady=5)
+
+        get_button = tk.Button(entry, text="Get Password", command=lambda: self.get_password(entry, name_entry.get()))
+        get_button.grid(row=1, column=0, columnspan=2, pady=10)
+
+    def get_password(self, entry, name):
+        if not name:
+            messagebox.showerror("Error", "Please enter a name.")
+            return
+
+        password, comment = self.password_manager.get_password(name)
+        if password is not None:
+            messagebox.showinfo("Password", f"Password for '{name}': {password}\nComment: {comment}")
+        else:
+            messagebox.showinfo("Password", f"No password found for '{name}'.")
+        entry.destroy()
+
+    def show_update_password_entry(self):
+        entry = tk.Toplevel(self.menu)
+        entry.title("Update Password")
+
+        name_label = tk.Label(entry, text="Enter password name:")
+        name_entry = tk.Entry(entry)
+        new_password_label = tk.Label(entry, text="Enter new password:")
+        new_password_entry = tk.Entry(entry)
+
+        name_label.grid(row=0, column=0, padx=10, pady=5, sticky="e")
+        name_entry.grid(row=0, column=1, padx=10, pady=5)
+        new_password_label.grid(row=1, column=0, padx=10, pady=5, sticky="e")
+        new_password_entry.grid(row=1, column=1, padx=10, pady=5)
+
+        update_button = tk.Button(entry, text="Update Password",
+                                  command=lambda: self.update_password(entry, name_entry.get(),
+                                                                       new_password_entry.get()))
+        update_button.grid(row=2, column=0, columnspan=2, pady=10)
+
+    def update_password(self, entry, name, new_password):
+        if not name:
+            messagebox.showerror("Error", "Please enter a name.")
+            return
+
+        if self.password_manager.update_password(name, new_password):
+            messagebox.showinfo("Success", f"Password for '{name}' updated successfully.")
+        else:
+            messagebox.showinfo("Password", f"No password found for '{name}'.")
+        entry.destroy()
+
+    def show_delete_password_entry(self):
+        entry = tk.Toplevel(self.menu)
+        entry.title("Delete Password")
+
+        name_label = tk.Label(entry, text="Enter password name:")
+        name_entry = tk.Entry(entry)
+
+        name_label.grid(row=0, column=0, padx=10, pady=5, sticky="e")
+        name_entry.grid(row=0, column=1, padx=10, pady=5)
+
+        delete_button = tk.Button(entry, text="Delete Password",
+                                  command=lambda: self.delete_password(entry, name_entry.get()))
+        delete_button.grid(row=1, column=0, columnspan=2, pady=10)
+
+    def delete_password(self, entry, name):
+        if not name:
+            messagebox.showerror("Error", "Please enter a name.")
+            return
+
+        if self.password_manager.delete_password(name):
+            messagebox.showinfo("Success", f"Password for '{name}' deleted successfully.")
+        else:
+            messagebox.showinfo("Password", f"No password found for '{name}'.")
+        entry.destroy()
+
+    def quit_menu(self):
+        self.menu.destroy()
+
+    def show_menu(self):
+        self.menu.mainloop()
+
+
+if __name__ == '__main__':
+    gui = PasswordManagerGUI()
+    gui.show_password_manager_menu()
