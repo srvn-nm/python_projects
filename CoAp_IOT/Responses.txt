@@ -1,0 +1,83 @@
+Source: ('127.0.0.1', 5683)
+Destination: None
+Type: ACK
+MID: 1219
+Code: CONTENT
+Token: 8ac5
+Content-Type: 40
+Payload:
+</basic>;obs,
+
+Source: ('127.0.0.1', 5683)
+Destination: None
+Type: ACK
+MID: 1220
+Code: METHOD_NOT_ALLOWED
+Token: ea60
+Payload:
+None
+
+Source: ('127.0.0.1', 5683)
+Destination: None
+Type: ACK
+MID: 1221
+Code: NOT_FOUND
+Token: b6a5
+Payload:
+None
+
+Source: ('127.0.0.1', 5683)
+Destination: None
+Type: ACK
+MID: 1222
+Code: METHOD_NOT_ALLOWED
+Token: 66e6
+Payload:
+None
+
+Source: ('127.0.0.1', 5683)
+Destination: None
+Type: ACK
+MID: 1223
+Code: NOT_FOUND
+Token: e0ea
+Payload:
+None
+
+Source: ('127.0.0.1', 5683)
+Destination: None
+Type: ACK
+MID: 1224
+Code: NOT_FOUND
+Token: fa3a
+Payload:
+None
+
+Source: ('127.0.0.1', 5683)
+Destination: None
+Type: ACK
+MID: 1225
+Code: NOT_FOUND
+Token: None
+Payload:
+None
+
+
+Source: ('127.0.0.1', 5683)
+Destination: None
+Type: ACK
+MID: 53432
+Code: CONTENT
+Token: 8bf3
+Payload:
+Original resource
+
+Source: ('127.0.0.1', 5683)
+Destination: None
+Type: ACK
+MID: 53434
+Code: CONTENT
+Token: d782
+Payload:
+Posted resource
+
