@@ -1,4 +1,5 @@
 import base64
+import json
 import random
 # noinspection PyCompatibility
 import secrets
@@ -14,7 +15,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 
-# noinspection PyMethodMayBeStatic
+# noinspection PyMethodMayBeStatic,PyCompatibility
 class PasswordManager:
     def __init__(self, key):
         self.key = key
@@ -33,6 +34,8 @@ class PasswordManager:
     def save_password(self, name, password, comment):
         encrypted_password = self.encrypt(password)
         self.passwords[name] = {"password": encrypted_password, "comment": comment}
+        with open('passwords.txt', 'a') as file:
+            file.write(f"{name}:{encrypted_password}:{comment}\n")
 
     def get_password(self, name):
         if name in self.passwords:
@@ -40,18 +43,41 @@ class PasswordManager:
         else:
             return None, None
 
+    def get_all_passwords(self):
+        passwords = {}
+        with open('passwords.txt', 'r') as file:
+            for line in file:
+                name, encrypted_password, comment = line.strip().split(':')
+                passwords[name] = {"password": encrypted_password, "comment": comment}
+        return passwords
+
     def update_password(self, name, new_password):
-        if name in self.passwords:
-            encrypted_password = self.encrypt(new_password)
-            self.passwords[name]["password"] = encrypted_password
-            return True
+        passwords = self.get_all_passwords()
+        if name in passwords:
+            if name in self.passwords:
+                encrypted_password = self.encrypt(new_password)
+                self.passwords[name]["password"] = encrypted_password
+                new_comment = passwords[name]["comment"]
+                with open('passwords.txt', 'w') as file:
+                    for n, p, c in [(n, p["password"], p["comment"]) for n, p in passwords.items()]:
+                        file.write(f"{n}:{p}:{c}\n")
+                return True
+            else:
+                return False
         else:
             return False
 
     def delete_password(self, name):
-        if name in self.passwords:
-            del self.passwords[name]
-            return True
+        passwords = self.get_all_passwords()
+        if name in passwords:
+            if name in self.passwords:
+                del self.passwords[name]
+                with open('passwords.txt', 'w') as file:
+                    for n, p, c in [(n, p["password"], p["comment"]) for n, p in passwords.items() if n != name]:
+                        file.write(f"{n}:{p}:{c}\n")
+                return True
+            else:
+                return False
         else:
             return False
 
