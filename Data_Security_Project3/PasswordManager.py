@@ -1,4 +1,5 @@
 import base64
+import random
 # noinspection PyCompatibility
 import secrets
 import string
@@ -138,26 +139,26 @@ class PasswordManagerMenu:
         name_entry = tk.Entry(entry)
         comment_label = tk.Label(entry, text="Enter comment:")
         comment_entry = tk.Entry(entry)
-        length_label = tk.Label(entry, text="Enter password length:")
-        length_entry = tk.Entry(entry)
+        # length_label = tk.Label(entry, text="Enter password length:")
+        # length_entry = tk.Entry(entry)
 
         name_label.grid(row=0, column=0, padx=10, pady=5, sticky="e")
         name_entry.grid(row=0, column=1, padx=10, pady=5)
         comment_label.grid(row=1, column=0, padx=10, pady=5, sticky="e")
         comment_entry.grid(row=1, column=1, padx=10, pady=5)
-        length_label.grid(row=2, column=0, padx=10, pady=5, sticky="e")
-        length_entry.grid(row=2, column=1, padx=10, pady=5)
+        # length_label.grid(row=2, column=0, padx=10, pady=5, sticky="e")
+        # length_entry.grid(row=2, column=1, padx=10, pady=5)
 
         create_button = tk.Button(entry, text="Create Password",
-                                  command=lambda: self.create_password(entry, name_entry.get(), comment_entry.get(),
-                                                                       length_entry.get()))
+                                  command=lambda: self.create_password(entry, name_entry.get(), comment_entry.get()))
+        # ,length_entry.get()))
         create_button.grid(row=3, column=0, columnspan=2, pady=10)
 
-    def create_password(self, entry, name, comment, length):
-        if not name or not length.isdigit():
-            messagebox.showerror("Error", "Invalid input. Please enter a name and a valid length.")
+    def create_password(self, entry, name, comment):
+        if not name:
+            messagebox.showerror("Error", "Invalid input. Please enter a name.")
             return
-
+        length = random.randint(len(name), 2 * len(name))
         password = self.password_manager.generate_variable_length_password(int(length))
         self.password_manager.save_password(name, password, comment)
         messagebox.showinfo("Success", f"Password '{name}' created successfully.\nPassword: {password}")
