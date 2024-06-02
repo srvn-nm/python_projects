@@ -1,0 +1,50 @@
+digraph {
+	Customer [label="Customer
+CustomerID (PK)
+FirstName
+LastName
+PhoneNumber"]
+	Request [label="Request
+RequestID (PK)
+CustomerID (FK)
+URLID (FK)
+StatusID (FK)"]
+	Invoice [label="Invoice
+InvoiceID (PK)
+RequestID (FK)
+Amount
+CustomerID (FK)"]
+	URL [label="URL
+URLID (PK)
+OriginalURL
+CreatedAt"]
+	ShortenedURL [label="Shortened URL
+ShortenedURLID (PK)
+ShortenedURL
+CreatedAt"]
+	DeletedURLs [label="Deleted URLs
+DeletedURLID (PK)
+ShortenedURLID (FK)
+DeletedAt"]
+	RequestStatus [label="Request Status
+StatusID (PK)
+StatusName"]
+	FAQ [label="FAQ
+FAQID (PK)
+Title"]
+	FAQEntry [label="FAQ Entry
+FAQEntryID (PK)
+FAQID (FK)
+AuthorName
+Question
+Answer"]
+	Customer -> Request [label="1 to N"]
+	Request -> Invoice [label="1 to 1"]
+	Request -> URL [label="1 to 1"]
+	URL -> ShortenedURL [label="1 to 1"]
+	ShortenedURL -> DeletedURLs [label="1 to 1"]
+	Request -> RequestStatus [label="1 to 1"]
+	Customer -> Invoice [label="1 to N"]
+	Customer -> FAQEntry [label="1 to N"]
+	FAQ -> FAQEntry [label="1 to N"]
+}
